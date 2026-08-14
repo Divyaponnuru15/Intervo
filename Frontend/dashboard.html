@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard | Intervo</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body class="dashboard-body">
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-nav-container">
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <span class="dashboard-logo-icon">
+                AI
+            </span>
+
+            <span>
+                Intervo
+            </span>
+
+        </a>
+
+
+        <button
+            type="button"
+            class="dashboard-logout"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="dashboard-main">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <span class="dashboard-label">
+                DASHBOARD
+            </span>
+
+            <h1>
+                Prepare for your interview.
+            </h1>
+
+            <p>
+                Upload your resume and choose an interview
+                to start practicing.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PROGRESS
+    ====================================================== -->
+
+    <section class="progress-card">
+
+        <div class="progress-top">
+
+            <div>
+
+                <span class="progress-label">
+                    PROGRESS
+                </span>
+
+                <h2 id="progressStatus">
+                    Upload your resume to get started
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="progress-line">
+
+            <span
+                class="progress-active"
+                id="progressBar"
+            ></span>
+
+        </div>
+
+
+        <div class="progress-steps">
+
+            <div
+                class="progress-item active"
+                id="progressResume"
+            >
+
+                <div class="progress-number">
+                    1
+                </div>
+
+                <div>
+
+                    <strong>
+                        Upload Resume
+                    </strong>
+
+                    <small>
+                        Add your resume
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="progress-item"
+                id="progressInterview"
+            >
+
+                <div class="progress-number">
+                    2
+                </div>
+
+                <div>
+
+                    <strong>
+                        Start Interview
+                    </strong>
+
+                    <small>
+                        Choose an interview
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DASHBOARD CONTENT
+    ====================================================== -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- =================================================
+             RESUME
+        ================================================== -->
+
+        <article class="dashboard-card resume-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    RESUME
+                </span>
+
+                <h2>
+                    Upload your resume
+                </h2>
+
+                <p>
+                    Upload your latest resume so the interviewer
+                    can use your skills, education, experience,
+                    and projects during the interview.
+                </p>
+
+
+                <div class="upload-area">
+
+                    <strong>
+                        Select your resume
+                    </strong>
+
+                    <span>
+                        PDF or DOCX · Maximum 10MB
+                    </span>
+
+
+                    <input
+                        type="file"
+                        id="resumeFile"
+                        accept=".pdf,.docx"
+                    >
+
+
+                    <label
+                        for="resumeFile"
+                        class="file-button"
+                    >
+                        Choose File
+                    </label>
+
+
+                    <!-- Selected filename -->
+
+                    <span
+                        id="selectedFileName"
+                        class="selected-file-name"
+                    ></span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="dashboard-primary-button"
+                    onclick="uploadResume()"
+                >
+                    Upload Resume
+                </button>
+
+
+                <p
+                    id="uploadMessage"
+                    class="dashboard-message"
+                    aria-live="polite"
+                ></p>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             INTERVIEW
+        ================================================== -->
+
+        <article
+            class="dashboard-card interview-card"
+            id="categorySection"
+        >
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    INTERVIEW
+                </span>
+
+                <h2>
+                    Choose an interview
+                </h2>
+
+                <p>
+                    Select the type of interview you want
+                    to practice.
+                </p>
+
+
+                <div class="interview-options">
+
+
+                    <!-- HR -->
+
+                    <button
+                        type="button"
+                        class="interview-option"
+                        onclick="startInterview('HR')"
+                    >
+
+                        <div class="option-icon">
+                            HR
+                        </div>
+
+                        <div class="option-content">
+
+                            <strong>
+                                HR Interview
+                            </strong>
+
+                            <small>
+                                Behavioral and communication
+                            </small>
+
+                        </div>
+
+                        <span class="option-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- TECHNICAL -->
+
+                    <button
+                        type="button"
+                        class="interview-option"
+                        onclick="startInterview('Technical')"
+                    >
+
+                        <div class="option-icon">
+                            T
+                        </div>
+
+                        <div class="option-content">
+
+                            <strong>
+                                Technical Interview
+                            </strong>
+
+                            <small>
+                                Technical knowledge and skills
+                            </small>
+
+                        </div>
+
+                        <span class="option-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- CODING -->
+
+                    <button
+                        type="button"
+                        class="interview-option"
+                        onclick="startInterview('Coding')"
+                    >
+
+                        <div class="option-icon">
+                            C
+                        </div>
+
+                        <div class="option-content">
+
+                            <strong>
+                                Coding Interview
+                            </strong>
+
+                            <small>
+                                Programming and problem solving
+                            </small>
+
+                        </div>
+
+                        <span class="option-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+
+
+                    <!-- PROJECT -->
+
+                    <button
+                        type="button"
+                        class="interview-option"
+                        onclick="startInterview('Project')"
+                    >
+
+                        <div class="option-icon">
+                            P
+                        </div>
+
+                        <div class="option-content">
+
+                            <strong>
+                                Project Interview
+                            </strong>
+
+                            <small>
+                                Questions about your projects
+                            </small>
+
+                        </div>
+
+                        <span class="option-arrow">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <p
+                    id="categoryMessage"
+                    class="dashboard-message"
+                    aria-live="polite"
+                ></p>
+
+            </div>
+
+        </article>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 Intervo
+    </span>
+
+</footer>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="js/dashboard.js"></script>
+
+<script src="js/resume.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Interview</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-nav-container">
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+            <span class="dashboard-logo-icon">
+                AI
+            </span>
+
+            <span>
+                Intervo
+            </span>
+        </a>
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logout"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <h1>
+        AI Interview Preparation Platform 🚀
+    </h1>
+
+
+    <div class="card">
+
+
+        <h2>
+            Interview Question
+        </h2>
+
+
+        <p id="progress">
+            Question 1 / 30
+        </p>
+
+
+        <h3 id="questionText">
+            Loading question...
+        </h3>
+
+
+        <textarea
+            id="answer"
+            rows="8"
+            placeholder="Write your answer here..."
+        ></textarea>
+
+
+        <br><br>
+
+
+        <button
+            id="submitButton"
+            onclick="submitAnswer()"
+        >
+            Submit Answer
+        </button>
+
+
+        <p id="message"></p>
+
+
+    </div>
+
+
+</div>
+
+
+<script src="js/interview.js"></script>
+
+
+</body>
+
+</html>
+

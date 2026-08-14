@@ -1,0 +1,50 @@
+# Virtual environment
+venv/
+Backend/venv/
+
+# Python cache
+__pycache__/
+Backend/**/__pycache__/
+
+# Compiled Python files
+*.pyc
+*.pyo
+
+# ENVIRONMENT / SECRETS
+.env
+Backend/.env
+*.env
+
+# USER UPLOADS
+
+uploads/
+Backend/uploads/
+
+
+# DATABASE / LOCAL FILES
+
+*.db
+*.sqlite
+*.sqlite3
+
+
+# IDE / EDITOR
+
+.vscode/
+.idea/
+
+
+
+# OS FILES
+
+.DS_Store
+Thumbs.db
+
+
+
+# LOG FILES
+
+*.log
+
+# Generated reports
+Backend/reports/

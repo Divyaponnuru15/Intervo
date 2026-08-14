@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Account | Intervo</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ✦
+            </span>
+
+            <span>
+            
+             Intervo
+            </span>
+
+        </a>
+
+
+        <nav class="nav-links">
+
+            <a href="index.html#features">
+                Features
+            </a>
+
+            <a href="index.html#how-it-works">
+                How It Works
+            </a>
+
+            <a
+                href="index.html"
+                class="nav-button"
+            >
+                Sign In
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     REGISTER
+===================================================== -->
+
+<main class="register-page">
+
+    <div class="register-card">
+
+
+        <!-- HEADER -->
+
+        <div class="register-header">
+
+            <div class="register-icon">
+                ✦
+            </div>
+
+
+            <h1>
+                Create your account
+            </h1>
+
+
+            <p>
+                Start preparing for your next interview.
+            </p>
+
+        </div>
+
+
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+            <label for="name">
+                Full name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your name"
+                autocomplete="name"
+            >
+
+        </div>
+
+
+
+        <!-- EMAIL -->
+
+        <div class="form-group">
+
+            <label for="email">
+                Email address
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+            >
+
+        </div>
+
+
+
+        <!-- PASSWORD -->
+
+        <div class="form-group">
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Create a password"
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+
+        <!-- REGISTER BUTTON -->
+
+        <button
+            onclick="registerUser()"
+            class="register-button"
+        >
+
+            Create Account
+
+            <span>
+                →
+            </span>
+
+        </button>
+
+
+
+        <!-- MESSAGE -->
+
+        <p
+            id="message"
+            class="message"
+        ></p>
+
+
+
+        <!-- LOGIN -->
+
+        <div class="register-login">
+
+            <span>
+                Already have an account?
+            </span>
+
+            <a href="index.html">
+                Sign in
+            </a>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+<script src="js/auth.js"></script>
+
+</body>
+
+</html>

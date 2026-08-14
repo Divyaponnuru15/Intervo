@@ -1,0 +1,5 @@
+venv/         #Virtual environment
+__pycache__/  #Python cache files
+*.pyc         #Compiled Python files
+.env          #Contains secrets
+uploads/      #User-uploaded files
