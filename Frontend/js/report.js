@@ -3,9 +3,9 @@ const token = localStorage.getItem("token");
 const reportId = localStorage.getItem("report_id");
 
 
-// =====================================================
+// 
 // LOAD REPORT
-// =====================================================
+// 
 
 async function loadReport() {
 
@@ -107,9 +107,9 @@ async function loadReport() {
 
 
 
-// =====================================================
+// 
 // DOWNLOAD PDF
-// =====================================================
+// 
 
 async function downloadReport() {
 
@@ -248,8 +248,8 @@ async function downloadReport() {
 
 
 
-// =====================================================
+// 
 // START
-// =====================================================
+// 
 
 loadReport();

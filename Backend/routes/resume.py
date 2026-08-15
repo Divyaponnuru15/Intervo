@@ -10,9 +10,9 @@ from services.resume_parser import extract_resume_text
 from services.ats_analyzer import analyze_resume
 
 
-# =========================================================
+# 
 # RESUME BLUEPRINT
-# =========================================================
+# 
 
 resume = Blueprint(
     "resume",
@@ -20,9 +20,9 @@ resume = Blueprint(
 )
 
 
-# =========================================================
+# 
 # CONFIGURATION
-# =========================================================
+# 
 
 UPLOAD_FOLDER = "uploads/resumes"
 
@@ -32,9 +32,9 @@ ALLOWED_EXTENSIONS = {
 }
 
 
-# =========================================================
+# 
 # CREATE UPLOAD FOLDER
-# =========================================================
+# 
 
 os.makedirs(
     UPLOAD_FOLDER,
@@ -42,9 +42,9 @@ os.makedirs(
 )
 
 
-# =========================================================
+# 
 # CHECK ALLOWED FILE
-# =========================================================
+# 
 
 def allowed_file(filename):
 
@@ -58,9 +58,9 @@ def allowed_file(filename):
     )
 
 
-# =========================================================
+# 
 # UPLOAD RESUME
-# =========================================================
+# 
 #
 # This route ONLY:
 #
@@ -71,7 +71,7 @@ def allowed_file(filename):
 #
 # Gemini is NOT called here.
 #
-# =========================================================
+# 
 
 @resume.route(
     "/upload-resume",
@@ -80,16 +80,16 @@ def allowed_file(filename):
 @jwt_required()
 def upload_resume():
 
-    # =====================================================
+    # =
     # GET USER ID
-    # =====================================================
+    # =
 
     user_id = get_jwt_identity()
 
 
-    # =====================================================
+    # =
     # CHECK FILE EXISTS
-    # =====================================================
+    # =
 
     if "file" not in request.files:
 
@@ -102,9 +102,9 @@ def upload_resume():
     file = request.files["file"]
 
 
-    # =====================================================
+    # =
     # CHECK FILENAME
-    # =====================================================
+    # =
 
     if file.filename == "":
 
@@ -114,9 +114,9 @@ def upload_resume():
         }), 400
 
 
-    # =====================================================
+    # =
     # CHECK FILE TYPE
-    # =====================================================
+    # =
 
     if not allowed_file(
         file.filename
@@ -128,23 +128,23 @@ def upload_resume():
         }), 400
 
 
-    # =====================================================
+    # =
     # SECURE FILENAME
-    # =====================================================
+    # =
 
     filename = secure_filename(
         file.filename
     )
 
 
-    # =====================================================
+    # =
     # CREATE UNIQUE FILENAME
-    # =====================================================
+    # =
     #
     # Prevents users from overwriting files that have
     # the same original filename.
     #
-    # =====================================================
+    # =
 
     base_name, extension = os.path.splitext(
         filename
@@ -162,9 +162,9 @@ def upload_resume():
     )
 
 
-    # =====================================================
+    # =
     # SAVE RESUME FILE
-    # =====================================================
+    # =
 
     try:
 
@@ -176,7 +176,7 @@ def upload_resume():
 
         print()
         print(
-            "========== FILE SAVE ERROR =========="
+            " FILE SAVE ERROR "
         )
 
         print(
@@ -184,7 +184,7 @@ def upload_resume():
         )
 
         print(
-            "====================================="
+            "="
         )
 
         return jsonify({
@@ -193,9 +193,9 @@ def upload_resume():
         }), 500
 
 
-    # =====================================================
+    # =
     # EXTRACT RESUME TEXT
-    # =====================================================
+    # =
 
     try:
 
@@ -207,7 +207,7 @@ def upload_resume():
 
         print()
         print(
-            "========== RESUME EXTRACTION ERROR =========="
+            " RESUME EXTRACTION ERROR "
         )
 
         print(
@@ -215,7 +215,7 @@ def upload_resume():
         )
 
         print(
-            "============================================="
+            "="
         )
 
         return jsonify({
@@ -224,9 +224,9 @@ def upload_resume():
         }), 500
 
 
-    # =====================================================
+    # =
     # VALIDATE EXTRACTED TEXT
-    # =====================================================
+    # =
 
     if (
         not extracted_text
@@ -240,9 +240,9 @@ def upload_resume():
         }), 400
 
 
-    # =====================================================
+    # =
     # SAVE RESUME TO DATABASE
-    # =====================================================
+    # =
     #
     # ATS analysis is intentionally NOT performed here.
     #
@@ -252,7 +252,7 @@ def upload_resume():
     # Gemini will only run when the user clicks
     # "Analyze Resume".
     #
-    # =====================================================
+    # =
 
     try:
 
@@ -287,7 +287,7 @@ def upload_resume():
 
         print()
         print(
-            "========== DATABASE ERROR =========="
+            " DATABASE ERROR "
         )
 
         print(
@@ -295,7 +295,7 @@ def upload_resume():
         )
 
         print(
-            "===================================="
+            ""
         )
 
         return jsonify({
@@ -304,9 +304,9 @@ def upload_resume():
         }), 500
 
 
-    # =====================================================
+    # =
     # SUCCESS RESPONSE
-    # =====================================================
+    # =
 
     return jsonify({
 
@@ -322,15 +322,15 @@ def upload_resume():
     }), 201
 
 
-# =========================================================
+# 
 # ANALYZE RESUME
-# =========================================================
+# 
 #
 # This route is called ONLY when the user clicks:
 #
 #              "Analyze Resume"
 #
-# =========================================================
+# 
 
 @resume.route(
     "/analyze-resume/<int:resume_id>",
@@ -339,23 +339,23 @@ def upload_resume():
 @jwt_required()
 def analyze_uploaded_resume(resume_id):
 
-    # =====================================================
+    # =
     # GET USER ID
-    # =====================================================
+    # =
 
     user_id = get_jwt_identity()
 
 
-    # =====================================================
+    # =
     # FIND RESUME
-    # =====================================================
+    # =
     #
     # The user_id check is important.
     #
     # It prevents one user from analyzing another user's
     # resume by changing the resume ID.
     #
-    # =====================================================
+    # =
 
     resume_record = Resume.query.filter_by(
 
@@ -366,9 +366,9 @@ def analyze_uploaded_resume(resume_id):
     ).first()
 
 
-    # =====================================================
+    # =
     # RESUME NOT FOUND
-    # =====================================================
+    # =
 
     if not resume_record:
 
@@ -378,9 +378,9 @@ def analyze_uploaded_resume(resume_id):
         }), 404
 
 
-    # =====================================================
+    # =
     # CHECK EXTRACTED TEXT
-    # =====================================================
+    # =
 
     if (
         not resume_record.extracted_text
@@ -394,14 +394,14 @@ def analyze_uploaded_resume(resume_id):
         }), 400
 
 
-    # =====================================================
+    # =
     # CHECK IF ALREADY ANALYZED
-    # =====================================================
+    # =
     #
     # If the resume was already analyzed, do not call
     # Gemini again.
     #
-    # =====================================================
+    # =
 
     if resume_record.ats_analysis is not None:
 
@@ -422,15 +422,15 @@ def analyze_uploaded_resume(resume_id):
         }), 200
 
 
-    # =====================================================
+    # =
     # CALL GEMINI AI
-    # =====================================================
+    # =
 
     try:
 
         print()
         print(
-            "=========================================="
+            "==="
         )
 
         print(
@@ -438,7 +438,7 @@ def analyze_uploaded_resume(resume_id):
         )
 
         print(
-            "=========================================="
+            "==="
         )
 
         print(
@@ -457,7 +457,7 @@ def analyze_uploaded_resume(resume_id):
 
         print()
         print(
-            "========== ATS ANALYSIS ERROR =========="
+            " ATS ANALYSIS ERROR "
         )
 
         print(
@@ -465,7 +465,7 @@ def analyze_uploaded_resume(resume_id):
         )
 
         print(
-            "========================================"
+            "="
         )
 
         return jsonify({
@@ -476,18 +476,18 @@ def analyze_uploaded_resume(resume_id):
         }), 503
 
 
-    # =====================================================
+    # =
     # GET ATS SCORE
-    # =====================================================
+    # =
 
     ats_score = ats_analysis.get(
         "score"
     )
 
 
-    # =====================================================
+    # =
     # SAVE ATS ANALYSIS
-    # =====================================================
+    # =
 
     try:
 
@@ -506,7 +506,7 @@ def analyze_uploaded_resume(resume_id):
 
         print()
         print(
-            "========== DATABASE ERROR =========="
+            " DATABASE ERROR "
         )
 
         print(
@@ -514,7 +514,7 @@ def analyze_uploaded_resume(resume_id):
         )
 
         print(
-            "===================================="
+            ""
         )
 
         return jsonify({
@@ -525,9 +525,9 @@ def analyze_uploaded_resume(resume_id):
         }), 500
 
 
-    # =====================================================
+    # =
     # SUCCESS RESPONSE
-    # =====================================================
+    # =
 
     return jsonify({
 

@@ -1,7 +1,7 @@
 
-// =========================================================
+// ====
 // RESUME FILE SELECTION
-// =========================================================
+// ====
 
 const resumeFile =
     document.getElementById("resumeFile");
@@ -33,9 +33,9 @@ if (resumeFile) {
 }
 
 
-// =========================================================
+// ====
 // UPDATE ATS RESULT
-// =========================================================
+// ====
 
 function updateATSResult(
     atsScore,
@@ -49,9 +49,9 @@ function updateATSResult(
     );
 
 
-    // =====================================================
+    // 
     // ATS SCORE
-    // =====================================================
+    // 
 
     const atsScoreElement =
         document.getElementById("atsScore");
@@ -64,9 +64,9 @@ function updateATSResult(
     }
 
 
-    // =====================================================
+    // 
     // KEYWORDS
-    // =====================================================
+    // 
 
     const keywordsElement =
         document.getElementById("atsKeywords");
@@ -87,9 +87,9 @@ function updateATSResult(
     }
 
 
-    // =====================================================
+    // 
     // SKILLS
-    // =====================================================
+    // 
 
     const skillsElement =
         document.getElementById("atsSkills");
@@ -110,9 +110,9 @@ function updateATSResult(
     }
 
 
-    // =====================================================
+    // 
     // PROJECTS
-    // =====================================================
+    // 
 
     const projectsElement =
         document.getElementById("atsProjects");
@@ -131,9 +131,9 @@ function updateATSResult(
     }
 
 
-    // =====================================================
+    // 
     // STRUCTURE
-    // =====================================================
+    // 
 
     const structureElement =
         document.getElementById("atsStructure");
@@ -183,9 +183,9 @@ function updateATSResult(
 }
 
 
-// =========================================================
+// ====
 // UPLOAD RESUME
-// =========================================================
+// ====
 //
 // IMPORTANT:
 // This function ONLY uploads the resume.
@@ -194,7 +194,7 @@ function updateATSResult(
 //
 // Gemini is called by analyzeResume() below.
 //
-// =========================================================
+// ====
 
 async function uploadResume() {
 
@@ -208,9 +208,9 @@ async function uploadResume() {
         fileInput.files[0];
 
 
-    // =====================================================
+    // 
     // CHECK FILE
-    // =====================================================
+    // 
 
     if (!file) {
 
@@ -221,9 +221,9 @@ async function uploadResume() {
     }
 
 
-    // =====================================================
+    // 
     // CHECK FILE TYPE
-    // =====================================================
+    // 
 
     const allowedTypes = [
 
@@ -243,9 +243,9 @@ async function uploadResume() {
     }
 
 
-    // =====================================================
+    // 
     // CHECK FILE SIZE
-    // =====================================================
+    // 
 
     const maxSize =
         10 * 1024 * 1024;
@@ -260,9 +260,9 @@ async function uploadResume() {
     }
 
 
-    // =====================================================
+    // 
     // GET TOKEN
-    // =====================================================
+    // 
 
     const token =
         localStorage.getItem("token");
@@ -277,9 +277,9 @@ async function uploadResume() {
     }
 
 
-    // =====================================================
+    // 
     // PREPARE FORM DATA
-    // =====================================================
+    // 
 
     const formData =
         new FormData();
@@ -521,15 +521,15 @@ async function uploadResume() {
 }
 
 
-// =========================================================
+// ====
 // ANALYZE RESUME
-// =========================================================
+// ====
 //
 // This function is called ONLY when the user clicks:
 //
 //              "Analyze Resume"
 //
-// =========================================================
+// ====
 
 async function analyzeResume() {
 
@@ -545,9 +545,9 @@ async function analyzeResume() {
         document.getElementById("uploadMessage");
 
 
-    // =====================================================
+    // 
     // CHECK LOGIN
-    // =====================================================
+    // 
 
     if (!token) {
 
@@ -558,9 +558,9 @@ async function analyzeResume() {
     }
 
 
-    // =====================================================
+    // 
     // CHECK RESUME
-    // =====================================================
+    // 
 
     if (!resumeId) {
 
@@ -759,13 +759,13 @@ async function analyzeResume() {
 }
 
 
-// =========================================================
+// ====
 // VIEW ATS DETAILS
-// =========================================================
+// ====
 //
 // This opens the detailed ATS result page.
 //
-// =========================================================
+// ====
 
 function viewATSDetails() {
 

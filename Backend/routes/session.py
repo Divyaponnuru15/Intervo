@@ -9,9 +9,9 @@ from models.resume import Resume
 session = Blueprint("session", __name__)
 
 
-# ==================================================
+# 
 # START INTERVIEW SESSION
-# ==================================================
+# 
 
 @session.route("/start", methods=["POST"])
 @jwt_required()
@@ -34,9 +34,9 @@ def start_session():
     category = data.get("category")
 
 
-    # ==================================================
+    # 
     # CHECK REQUIRED FIELDS
-    # ==================================================
+    # 
 
     if not resume_id:
 
@@ -52,9 +52,9 @@ def start_session():
         }), 400
 
 
-    # ==================================================
+    # 
     # ALLOWED CATEGORIES
-    # ==================================================
+    # 
 
     allowed_categories = [
         "HR",
@@ -76,9 +76,9 @@ def start_session():
         }), 400
 
 
-    # ==================================================
+    # 
     # CHECK RESUME
-    # ==================================================
+    # 
 
     resume = Resume.query.filter_by(
 
@@ -98,9 +98,9 @@ def start_session():
         }), 404
 
 
-    # ==================================================
+    # 
     # CREATE NEW SESSION
-    # ==================================================
+    # 
 
     new_session = InterviewSession(
 
@@ -120,9 +120,9 @@ def start_session():
     db.session.commit()
 
 
-    # ==================================================
+    # 
     # RESPONSE
-    # ==================================================
+    # 
 
     return jsonify({
 

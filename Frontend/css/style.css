@@ -1,13 +1,13 @@
-/* =========================================================
+/* 
    AI INTERVIEW PLATFORM
    PROFESSIONAL AI SAAS THEME
    Emerald • Teal • Amber • Cyan • Indigo • Blue • Violet
-========================================================= */
+ */
 
 
-/* =========================================================
+/* 
    COLOR SYSTEM
-========================================================= */
+ */
 
 :root {
 
@@ -70,9 +70,9 @@
 }
 
 
-/* =========================================================
+/* 
    GLOBAL
-========================================================= */
+ */
 
 * {
     margin: 0;
@@ -116,9 +116,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    NAVBAR
-========================================================= */
+ */
 
 .navbar {
     width: 100%;
@@ -147,9 +147,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    LOGO
-========================================================= */
+ */
 
 .logo {
     display: flex;
@@ -190,9 +190,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    NAV LINKS
-========================================================= */
+ */
 
 .nav-links {
     display: flex;
@@ -214,9 +214,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    NAV BUTTON
-========================================================= */
+ */
 
 .nav-button {
     padding: 9px 18px;
@@ -254,9 +254,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO
-========================================================= */
+ */
 
 .hero {
     min-height: calc(100vh - 69px);
@@ -304,9 +304,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO DECORATION
-========================================================= */
+ */
 
 .hero::before {
     content: "";
@@ -361,9 +361,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO CONTAINER
-========================================================= */
+ */
 
 .hero-container {
     width: 100%;
@@ -388,9 +388,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO CONTENT
-========================================================= */
+ */
 
 .hero-content {
     position: relative;
@@ -398,9 +398,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO BADGE
-========================================================= */
+ */
 
 .hero-badge {
     display: inline-flex;
@@ -440,9 +440,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO TITLE
-========================================================= */
+ */
 
 .hero-content h1 {
     max-width: 680px;
@@ -476,9 +476,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO DESCRIPTION
-========================================================= */
+ */
 
 .hero-description {
     max-width: 590px;
@@ -492,9 +492,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO BUTTONS
-========================================================= */
+ */
 
 .hero-actions {
     display: flex;
@@ -528,9 +528,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    PRIMARY BUTTON
-========================================================= */
+ */
 
 .primary-button {
     background:
@@ -560,9 +560,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    SECONDARY BUTTON
-========================================================= */
+ */
 
 .secondary-button {
     background: rgba(255, 255, 255, 0.82);
@@ -588,9 +588,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HERO STATS
-========================================================= */
+ */
 
 .hero-stats {
     display: flex;
@@ -626,9 +626,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    LOGIN WRAPPER
-========================================================= */
+ */
 
 .login-wrapper {
     display: flex;
@@ -639,9 +639,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    LOGIN CARD
-========================================================= */
+ */
 
 .login-card {
     width: 100%;
@@ -662,9 +662,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    LOGIN HEADER
-========================================================= */
+ */
 
 .login-header {
     text-align: center;
@@ -717,9 +717,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    FORM
-========================================================= */
+ */
 
 .form-group {
     margin-bottom: 19px;
@@ -774,9 +774,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    LOGIN BUTTON
-========================================================= */
+ */
 
 .login-button {
     width: 100%;
@@ -825,9 +825,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    MESSAGE
-========================================================= */
+ */
 
 .message {
     min-height: 20px;
@@ -842,9 +842,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    LOGIN DIVIDER
-========================================================= */
+ */
 
 .login-divider {
     display: flex;
@@ -887,9 +887,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    GENERAL SECTIONS
-========================================================= */
+ */
 
 .section-container {
     max-width: 1180px;
@@ -953,9 +953,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    FEATURES
-========================================================= */
+ */
 
 .features-section {
     background:
@@ -1034,9 +1034,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    FEATURE ICONS
-========================================================= */
+ */
 
 .feature-icon {
     width: 43px;
@@ -1105,9 +1105,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    HOW IT WORKS
-========================================================= */
+ */
 
 .how-section {
     background:
@@ -1148,9 +1148,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    STEP NUMBERS
-========================================================= */
+ */
 
 .step-number {
     width: 43px;
@@ -1224,9 +1224,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    CTA
-========================================================= */
+ */
 
 .cta-section {
     background:
@@ -1314,9 +1314,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    FOOTER
-========================================================= */
+ */
 
 .footer {
     position: relative;
@@ -1408,9 +1408,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER PAGE
-========================================================= */
+ */
 
 .register-page {
     min-height: calc(100vh - 69px);
@@ -1460,9 +1460,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER CARD
-========================================================= */
+ */
 
 .register-card {
     width: 100%;
@@ -1484,9 +1484,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER HEADER
-========================================================= */
+ */
 
 .register-header {
     text-align: center;
@@ -1542,9 +1542,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER FORM
-========================================================= */
+ */
 
 .register-card .form-group {
     margin-bottom: 18px;
@@ -1600,9 +1600,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER BUTTON
-========================================================= */
+ */
 
 .register-button {
     width: 100%;
@@ -1655,9 +1655,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER MESSAGE
-========================================================= */
+ */
 
 .register-card .message {
     min-height: 20px;
@@ -1672,9 +1672,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    REGISTER LOGIN
-========================================================= */
+ */
 
 .register-login {
     display: flex;
@@ -1704,9 +1704,9 @@ button {
 }
 
 
-/* =========================================================
+/* 
    ACCESSIBILITY
-========================================================= */
+ */
 
 button:focus-visible,
 a:focus-visible,
@@ -1719,9 +1719,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD
-========================================================= */
+ */
 
 .dashboard-body {
     min-height: 100vh;
@@ -1748,9 +1748,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD NAVBAR
-========================================================= */
+ */
 
 .dashboard-navbar {
     position: sticky;
@@ -1891,9 +1891,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD MAIN
-========================================================= */
+ */
 
 .dashboard-main {
     max-width: 1180px;
@@ -1904,9 +1904,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD HEADER
-========================================================= */
+ */
 
 .dashboard-header {
     display: flex;
@@ -2029,9 +2029,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    PROGRESS CARD
-========================================================= */
+ */
 
 .progress-card {
     padding: 25px 28px;
@@ -2195,9 +2195,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD GRID
-========================================================= */
+ */
 
 .dashboard-grid {
     display: grid;
@@ -2267,9 +2267,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD CARD
-========================================================= */
+ */
 
 .card-top {
     display: flex;
@@ -2348,9 +2348,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    UPLOAD AREA
-========================================================= */
+ */
 
 .upload-area {
     margin-top: 23px;
@@ -2450,9 +2450,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD PRIMARY BUTTON
-========================================================= */
+ */
 
 .dashboard-primary-button {
     width: 100%;
@@ -2511,9 +2511,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW OPTIONS
-========================================================= */
+ */
 
 .interview-options {
     display: grid;
@@ -2609,9 +2609,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW OPTION COLORS
-========================================================= */
+ */
 
 .option-emerald .option-icon {
     background: #d1fae5;
@@ -2650,9 +2650,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD MESSAGES
-========================================================= */
+ */
 
 .dashboard-message {
     min-height: 20px;
@@ -2669,9 +2669,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    AI INFORMATION
-========================================================= */
+ */
 
 .ai-info-section {
     margin-top: 24px;
@@ -2790,9 +2790,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD FOOTER
-========================================================= */
+ */
 
 .dashboard-footer {
     max-width: 1180px;
@@ -2831,9 +2831,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    AI INTERVIEW PAGE
-========================================================= */
+ */
 
 .interview-page {
     min-height: calc(100vh - 69px);
@@ -2874,9 +2874,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW CONTAINER
-========================================================= */
+ */
 
 .interview-container {
     width: 100%;
@@ -2889,9 +2889,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW TITLE
-========================================================= */
+ */
 
 .interview-container > h1 {
     margin-bottom: 25px;
@@ -2910,9 +2910,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW CARD
-========================================================= */
+ */
 
 .interview-card {
     width: 100%;
@@ -2946,9 +2946,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    PROGRESS
-========================================================= */
+ */
 
 #progress {
     display: inline-flex;
@@ -2974,9 +2974,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    QUESTION BOX
-========================================================= */
+ */
 
 .question-box {
     padding: 24px;
@@ -3028,9 +3028,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    ANSWER
-========================================================= */
+ */
 
 .answer-label {
     display: block;
@@ -3093,9 +3093,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    SUBMIT BUTTON
-========================================================= */
+ */
 
 #submitButton {
     width: 100%;
@@ -3151,9 +3151,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW MESSAGE
-========================================================= */
+ */
 
 #message {
     min-height: 20px;
@@ -3170,9 +3170,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    TABLET RESPONSIVE
-========================================================= */
+ */
 
 @media (max-width: 950px) {
 
@@ -3226,9 +3226,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD TABLET
-========================================================= */
+ */
 
 @media (max-width: 900px) {
 
@@ -3258,9 +3258,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    MOBILE
-========================================================= */
+ */
 
 @media (max-width: 650px) {
 
@@ -3568,9 +3568,9 @@ textarea:focus-visible {
 }
 
 
-/* =========================================================
+/* 
    REDUCED MOTION
-========================================================= */
+ */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -3589,9 +3589,9 @@ textarea:focus-visible {
 
 
 
-/* =========================================================
+/* 
    AI INTERVIEW PAGE
-========================================================= */
+ */
 
 body {
     min-height: 100vh;
@@ -3615,9 +3615,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW CONTAINER
-========================================================= */
+ */
 
 .container {
     width: 100%;
@@ -3629,9 +3629,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW TITLE
-========================================================= */
+ */
 
 .container > h1 {
     margin-bottom: 28px;
@@ -3650,9 +3650,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    INTERVIEW CARD
-========================================================= */
+ */
 
 .card {
     width: 100%;
@@ -3670,9 +3670,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    CARD TITLE
-========================================================= */
+ */
 
 .card h2 {
     margin-bottom: 10px;
@@ -3685,9 +3685,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    PROGRESS
-========================================================= */
+ */
 
 #progress {
     display: inline-block;
@@ -3708,9 +3708,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    QUESTION
-========================================================= */
+ */
 
 #questionText {
     margin: 0 0 24px;
@@ -3739,9 +3739,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    ANSWER BOX
-========================================================= */
+ */
 
 #answer {
     display: block;
@@ -3789,9 +3789,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    SUBMIT BUTTON
-========================================================= */
+ */
 
 #submitButton {
     width: 100%;
@@ -3842,9 +3842,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    MESSAGE
-========================================================= */
+ */
 
 #message {
     min-height: 20px;
@@ -3861,9 +3861,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    MOBILE
-========================================================= */
+ */
 
 @media (max-width: 650px) {
 
@@ -3898,9 +3898,9 @@ body {
     }
 }
 
-/* =========================================================
+/* 
    INTERVIEW NAVBAR
-========================================================= */
+ */
 
 .interview-navbar {
     width: 100%;
@@ -3967,9 +3967,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    ATS SCORE CARD
-========================================================= */
+ */
 
 .ats-card {
     position: relative;
@@ -4029,9 +4029,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    ATS DETAILS
-========================================================= */
+ */
 
 .ats-details {
     display: grid;
@@ -4075,9 +4075,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    ATS BUTTON
-========================================================= */
+ */
 
 #atsButton {
     width: 100%;
@@ -4093,9 +4093,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    MOBILE
-========================================================= */
+ */
 
 @media (max-width: 600px) {
 
@@ -4108,9 +4108,9 @@ body {
     }
 
 }
-/* =========================================================
+/* 
    ATS DETAILS PAGE
-========================================================= */
+ */
 
 /* ---------------------------------------------------------
    PAGE HEADER
@@ -4602,87 +4602,325 @@ body {
 
 }
 
-/* =====================================================
-   AI EVALUATION RESULT
-===================================================== */
+/* 
+   VOICE INTERVIEW
+ */
 
-#message {
-    margin-top: 25px;
-    padding: 25px 28px;
+.voice-interview-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
 
+.voice-interview-container > h1 {
+    text-align: center;
+    font-size: 32px;
+    color: #0f172a;
+}
+
+.voice-subtitle {
+    text-align: center;
+    margin: 10px 0 30px;
+    color: #64748b;
+    font-size: 16px;
+}
+
+.voice-card {
     background: #ffffff;
-
-    border: 1px solid #e2e8f0;
-
+    padding: 30px;
+    margin-bottom: 25px;
     border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+.voice-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #6366f1;
+}
+
+.voice-card h2 {
+    margin-bottom: 15px;
+    color: #0f172a;
+}
+
+.voice-card h3 {
+    font-size: 20px;
+    line-height: 1.7;
+    color: #334155;
+}
+
+.voice-answer-box {
+    min-height: 180px;
+    padding: 20px;
+
+    background: #f8fafc;
+
+    border: 2px solid #e2e8f0;
+
+    border-radius: 12px;
 
     color: #334155;
-
-    font-size: 16px;
-
-    line-height: 1.8;
-
-    box-shadow:
-        0 8px 24px rgba(15, 23, 42, 0.08);
-}
-
-#message strong {
-    color: #0f172a;
-    font-weight: 700;
-}
-
-#message h2 {
-    margin: 0 0 20px;
-
-    font-size: 22px;
-
-    color: #0f172a;
-}
-
-#message h3 {
-    margin: 20px 0 8px;
 
     font-size: 17px;
 
-    color: #334155;
-}
-
-#message p {
-    margin: 8px 0 18px;
-
-    font-size: 16px;
-
     line-height: 1.8;
 
-    color: #475569;
+    white-space: pre-wrap;
 }
 
-#message button {
-    width: 100%;
+.voice-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
 
-    margin-top: 20px;
-
-    padding: 14px 20px;
+.voice-controls button,
+#submitVoiceButton,
+#nextQuestionButton {
+    padding: 12px 20px;
 
     border: none;
 
     border-radius: 10px;
 
-    background: #4f46e5;
-
-    color: #ffffff;
-
-    font-size: 16px;
+    font-size: 15px;
 
     font-weight: 700;
 
     cursor: pointer;
-
-    transition: 0.2s ease;
 }
 
-#message button:hover {
-    background: #4338ca;
+#startVoiceButton {
+    background: #4f46e5;
+    color: white;
+}
 
-    transform: translateY(-1px);
+#startVoiceButton:hover {
+    background: #4338ca;
+}
+
+#stopVoiceButton {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+#stopVoiceButton:disabled,
+#submitVoiceButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#submitVoiceButton {
+    width: 100%;
+    margin-top: 18px;
+
+    background: #0f172a;
+    color: white;
+}
+
+#voiceMessage {
+    margin-top: 15px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+
+/* 
+   INTERVIEW MODE SECTION
+ */
+
+.interview-mode-section {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* 
+   MODE HEADER
+ */
+
+.interview-mode-header {
+    margin-bottom: 20px;
+}
+
+.interview-mode-header .card-label {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.interview-mode-header h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.interview-mode-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* 
+   MODE OPTIONS
+ */
+
+.interview-mode-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* 
+   MODE OPTION
+ */
+
+.interview-mode-option {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding: 18px 20px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* 
+   HOVER
+ */
+
+.interview-mode-option:hover {
+    transform: translateY(-2px);
+
+    border-color: #c7d2fe;
+
+    background: #fafbff;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+
+/* 
+   MODE ICON
+ */
+
+.mode-icon {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #f3f4f6;
+
+    font-size: 21px;
+}
+
+
+/* 
+   MODE CONTENT
+ */
+
+.mode-content {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 14px;
+
+    flex: 1;
+}
+
+.mode-content strong {
+    font-size: 15px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.mode-content small {
+    margin-top: 4px;
+
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+
+/* 
+   MODE ARROW
+ */
+
+.interview-mode-option .option-arrow {
+    margin-left: 16px;
+
+    font-size: 20px;
+
+    color: #6b7280;
+
+    transition:
+        transform 0.2s ease,
+        color 0.2s ease;
+}
+
+.interview-mode-option:hover .option-arrow {
+    transform: translateX(4px);
+
+    color: #111827;
+}
+
+
+/* 
+   MOBILE
+ */
+
+@media (max-width: 600px) {
+
+    .interview-mode-section {
+        margin-top: 24px;
+        padding-top: 24px;
+    }
+
+    .interview-mode-header h3 {
+        font-size: 19px;
+    }
+
+    .interview-mode-option {
+        padding: 15px;
+    }
+
+    .mode-icon {
+        width: 42px;
+        height: 42px;
+    }
+
 }

@@ -3,9 +3,9 @@ import os
 from datetime import datetime
 
 
-# =========================================================
+# 
 # INTERVIEW REPORT PDF
-# =========================================================
+# 
 
 class InterviewReportPDF(FPDF):
 
@@ -45,9 +45,9 @@ class InterviewReportPDF(FPDF):
         )
 
 
-# =========================================================
+# 
 # CREATE INTERVIEW REPORT
-# =========================================================
+# 
 
 def create_report(data):
 
@@ -275,9 +275,9 @@ Improvements:
     return path
 
 
-# =========================================================
+# 
 # ATS REPORT PDF CLASS
-# =========================================================
+# 
 
 class ATSReportPDF(FPDF):
 
@@ -317,9 +317,9 @@ class ATSReportPDF(FPDF):
         )
 
 
-# =========================================================
+# 
 # ATS HELPER
-# =========================================================
+# 
 
 def clean_text(value):
 
@@ -339,9 +339,9 @@ def clean_text(value):
     return str(value)
 
 
-# =========================================================
+# 
 # CREATE ATS REPORT
-# =========================================================
+# 
 
 def create_ats_report(data):
 

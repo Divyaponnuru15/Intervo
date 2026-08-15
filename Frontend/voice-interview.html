@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Voice Interview | Intervo</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="images/intervo-favicon.png"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-nav-container">
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <span class="dashboard-logo-icon">
+                AI
+            </span>
+
+            <span>
+                Intervo
+            </span>
+
+        </a>
+
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logout"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<main class="voice-interview-container">
+
+
+    <h1>
+        🎤 Voice Interview
+    </h1>
+
+
+    <p class="voice-subtitle">
+        Answer the interview question using your voice.
+    </p>
+
+
+
+    <!-- 
+         QUESTION
+     -->
+
+    <section class="voice-card">
+
+
+        <div class="voice-progress">
+
+            <span id="interviewType">
+                HR Interview
+            </span>
+
+            <span id="progress">
+                Question 1 / 5
+            </span>
+
+        </div>
+
+
+        <h2>
+            Interview Question
+        </h2>
+
+
+        <h3 id="questionText">
+            Loading question...
+        </h3>
+
+
+    </section>
+
+
+
+    <!-- 
+         VOICE ANSWER
+     -->
+
+    <section class="voice-card">
+
+
+        <h2>
+            🎤 Your Answer
+        </h2>
+
+
+        <div
+            id="voiceAnswer"
+            class="voice-answer-box"
+        >
+            Your spoken answer will appear here...
+        </div>
+
+
+        <div class="voice-controls">
+
+
+            <button
+                id="startVoiceButton"
+                type="button"
+            >
+                🎙️ Start Speaking
+            </button>
+
+
+            <button
+                id="stopVoiceButton"
+                type="button"
+                disabled
+            >
+                🛑 Stop
+            </button>
+
+
+            <button
+             id="clearVoiceButton"
+            type="button"
+            >
+           Clear Text
+            </button>
+
+
+        </div>
+
+
+        <button
+            id="submitVoiceButton"
+            type="button"
+            disabled
+        >
+            Submit Answer
+        </button>
+
+
+        <p id="voiceMessage"></p>
+
+
+    </section>
+
+
+
+    <!-- 
+         AI EVALUATION
+     -->
+
+    <section
+        id="evaluationSection"
+        class="voice-card ai-evaluation-box"
+        style="display: none;"
+    >
+
+        <h2>
+            🤖 AI Evaluation
+        </h2>
+
+
+        <div id="evaluationContent">
+
+        </div>
+
+
+        <button
+            id="nextQuestionButton"
+            type="button"
+        >
+            Next Question →
+        </button>
+
+
+    </section>
+
+
+</main>
+
+
+
+<script src="js/voice-interview.js"></script>
+
+
+</body>
+
+</html>

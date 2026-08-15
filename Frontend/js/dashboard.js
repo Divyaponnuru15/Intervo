@@ -1,14 +1,15 @@
-// =========================================================
-// DASHBOARD
-// =========================================================
+// ===
+// INTERVO - DASHBOARD
+// ===
 
 
-// =========================================================
+// ===
 // CHECK LOGIN
-// =========================================================
+// ===
 
 const token =
     localStorage.getItem("token");
+
 
 if (!token) {
 
@@ -18,31 +19,42 @@ if (!token) {
 }
 
 
-// =========================================================
+// ===
 // LOGOUT
-// =========================================================
+// ===
 
 function logout() {
 
     localStorage.removeItem("token");
+
     localStorage.removeItem("resume_id");
+
     localStorage.removeItem("session_id");
+
     localStorage.removeItem("report_id");
+
     localStorage.removeItem("interview_category");
+
+    localStorage.removeItem("interview_mode");
+
 
     window.location.href =
         "index.html";
+
 }
 
 
-// =========================================================
+// ===
 // SHOW CATEGORY SECTION
-// =========================================================
+// ===
 
 function showCategorySection() {
 
     const categorySection =
-        document.getElementById("categorySection");
+        document.getElementById(
+            "categorySection"
+        );
+
 
     if (categorySection) {
 
@@ -54,27 +66,74 @@ function showCategorySection() {
 }
 
 
-// =========================================================
+// ===
+// SELECT INTERVIEW TYPE
+// ===
+
+function selectInterviewType(category) {
+
+    const allModes =
+        document.querySelectorAll(
+            ".interview-mode"
+        );
+
+
+    // Hide all other mode selections
+
+    allModes.forEach(
+        function (mode) {
+
+            mode.style.display =
+                "none";
+
+        }
+    );
+
+
+    const selectedMode =
+        document.getElementById(
+            "mode-" + category
+        );
+
+
+    if (selectedMode) {
+
+        selectedMode.style.display =
+            "block";
+
+    }
+
+}
+
+
+// ===
 // START INTERVIEW
-// =========================================================
+// ===
 
-async function startInterview(category) {
+async function startInterview(
+    category,
+    mode
+) {
 
-    const token =
+    const currentToken =
         localStorage.getItem("token");
+
 
     const resumeId =
         localStorage.getItem("resume_id");
 
+
     const message =
-        document.getElementById("categoryMessage");
+        document.getElementById(
+            "categoryMessage"
+        );
 
 
-    // =====================================================
+    // =================
     // CHECK LOGIN
-    // =====================================================
+    // =================
 
-    if (!token) {
+    if (!currentToken) {
 
         window.location.href =
             "index.html";
@@ -84,35 +143,65 @@ async function startInterview(category) {
     }
 
 
-    // =====================================================
+    // =================
     // CHECK RESUME
-    // =====================================================
+    // =================
 
     if (!resumeId) {
 
-        message.textContent =
-            "Please upload your resume first.";
+        if (message) {
+
+            message.textContent =
+                "Please upload your resume first.";
+
+        }
 
         return;
 
     }
 
 
-    // =====================================================
-    // SHOW STATUS
-    // =====================================================
+    // =================
+    // VALIDATE MODE
+    // =================
 
-    message.textContent =
-        "Creating " +
-        category +
-        " interview...";
+    if (
+        mode !== "text" &&
+        mode !== "voice"
+    ) {
+
+        console.error(
+            "Invalid interview mode:",
+            mode
+        );
+
+        return;
+
+    }
+
+
+    // =================
+    // SHOW STATUS
+    // =================
+
+    if (message) {
+
+        message.textContent =
+            "Creating " +
+            category +
+            " " +
+            mode +
+            " interview...";
+
+    }
 
 
     try {
 
-        // =================================================
+
+        // =============
         // CREATE INTERVIEW SESSION
-        // =================================================
+        // =============
 
         const sessionResponse =
             await fetch(
@@ -127,7 +216,8 @@ async function startInterview(category) {
                             "application/json",
 
                         "Authorization":
-                            "Bearer " + token
+                            "Bearer " +
+                            currentToken
 
                     },
 
@@ -159,24 +249,28 @@ async function startInterview(category) {
         );
 
 
-        // =================================================
+        // =============
         // CHECK SESSION
-        // =================================================
+        // =============
 
         if (!sessionResponse.ok) {
 
-            message.textContent =
-                sessionData.message ||
-                "Failed to create interview session.";
+            if (message) {
+
+                message.textContent =
+                    sessionData.message ||
+                    "Failed to create interview session.";
+
+            }
 
             return;
 
         }
 
 
-        // =================================================
-        // SAVE SESSION
-        // =================================================
+        // =============
+        // GET SESSION ID
+        // =============
 
         const sessionId =
             sessionData.session_id;
@@ -184,13 +278,21 @@ async function startInterview(category) {
 
         if (!sessionId) {
 
-            message.textContent =
-                "Interview session ID was not returned.";
+            if (message) {
+
+                message.textContent =
+                    "Interview session ID was not returned.";
+
+            }
 
             return;
 
         }
 
+
+        // =============
+        // SAVE SESSION
+        // =============
 
         localStorage.setItem(
             "session_id",
@@ -204,14 +306,24 @@ async function startInterview(category) {
         );
 
 
-        // =================================================
-        // GENERATE QUESTIONS
-        // =================================================
+        localStorage.setItem(
+            "interview_mode",
+            mode
+        );
 
-        message.textContent =
-            "Generating " +
-            category +
-            " questions...";
+
+        // =============
+        // GENERATE QUESTIONS
+        // =============
+
+        if (message) {
+
+            message.textContent =
+                "Generating " +
+                category +
+                " questions...";
+
+        }
 
 
         const questionResponse =
@@ -227,7 +339,8 @@ async function startInterview(category) {
                             "application/json",
 
                         "Authorization":
-                            "Bearer " + token
+                            "Bearer " +
+                            currentToken
 
                     },
 
@@ -258,38 +371,55 @@ async function startInterview(category) {
         );
 
 
-        // =================================================
+        // =============
         // CHECK QUESTION GENERATION
-        // =================================================
+        // =============
 
         if (!questionResponse.ok) {
 
-            message.textContent =
-                questionData.message ||
-                "Failed to generate questions.";
+            if (message) {
+
+                message.textContent =
+                    questionData.message ||
+                    "Failed to generate questions.";
+
+            }
 
             return;
 
         }
 
 
-        // =================================================
+        // =============
         // SUCCESS
-        // =================================================
+        // =============
 
-        message.textContent =
-            "Questions generated successfully.";
+        if (message) {
+
+            message.textContent =
+                "Questions generated successfully.";
+
+        }
 
 
-        // =================================================
-        // OPEN INTERVIEW
-        // =================================================
+        // =============
+        // REDIRECT BASED ON MODE
+        // =============
 
         setTimeout(
             function () {
 
-                window.location.href =
-                    "interview.html";
+                if (mode === "voice") {
+
+                    window.location.href =
+                        "voice-interview.html";
+
+                } else {
+
+                    window.location.href =
+                        "interview.html";
+
+                }
 
             },
             700
@@ -306,20 +436,26 @@ async function startInterview(category) {
         );
 
 
-        message.textContent =
-            "Server connection failed.";
+        if (message) {
+
+            message.textContent =
+                "Server connection failed.";
+
+        }
 
     }
 
 }
 
 
-// =========================================================
+// ===
 // CHECK EXISTING RESUME
-// =========================================================
+// ===
 
 const savedResumeId =
-    localStorage.getItem("resume_id");
+    localStorage.getItem(
+        "resume_id"
+    );
 
 
 if (savedResumeId) {
@@ -329,16 +465,19 @@ if (savedResumeId) {
 }
 
 
-// =========================================================
+// ===
 // UPDATE PROGRESS
-// =========================================================
+// ===
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
 
+
         const resumeId =
-            localStorage.getItem("resume_id");
+            localStorage.getItem(
+                "resume_id"
+            );
 
 
         const progressBar =
@@ -372,9 +511,9 @@ document.addEventListener(
         }
 
 
-        // =================================================
+        // =============
         // RESUME UPLOADED
-        // =================================================
+        // =============
 
         if (resumeId) {
 
@@ -410,9 +549,9 @@ document.addEventListener(
         }
 
 
-        // =================================================
+        // =============
         // RESUME NOT UPLOADED
-        // =================================================
+        // =============
 
         else {
 

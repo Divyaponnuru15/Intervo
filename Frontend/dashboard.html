@@ -16,8 +16,12 @@
         rel="stylesheet"
         href="css/style.css"
     >
-     <link rel="icon" type="image/png" href="images/intervo-favicon.png">
 
+    <link
+        rel="icon"
+        type="image/png"
+        href="images/intervo-favicon.png"
+    >
 
 </head>
 
@@ -25,9 +29,9 @@
 <body class="dashboard-body">
 
 
-<!-- =========================================================
+<!--
      NAVBAR
-========================================================= -->
+======== -->
 
 <header class="dashboard-navbar">
 
@@ -63,16 +67,16 @@
 
 
 
-<!-- =========================================================
+<!--
      MAIN
-========================================================= -->
+======== -->
 
 <main class="dashboard-main">
 
 
-    <!-- =====================================================
+    <!-- ====
          PAGE HEADER
-    ====================================================== -->
+    ===== -->
 
     <section class="dashboard-header">
 
@@ -87,8 +91,8 @@
             </h1>
 
             <p>
-                Upload your resume and choose an interview
-                to start practicing.
+                Upload your resume, analyze your profile,
+                and practice interviews with Intervo.
             </p>
 
         </div>
@@ -97,9 +101,9 @@
 
 
 
-    <!-- =====================================================
+    <!-- ====
          PROGRESS
-    ====================================================== -->
+    ===== -->
 
     <section class="progress-card">
 
@@ -185,16 +189,16 @@
 
 
 
-    <!-- =====================================================
-         DASHBOARD CONTENT
-    ====================================================== -->
+    <!-- ====
+         DASHBOARD GRID
+    ===== -->
 
     <section class="dashboard-grid">
 
 
-        <!-- =================================================
+        <!-- 
              RESUME
-        ================================================== -->
+        = -->
 
         <article class="dashboard-card resume-card">
 
@@ -209,9 +213,9 @@
                 </h2>
 
                 <p>
-                    Upload your latest resume so the interviewer
-                    can use your skills, education, experience,
-                    and projects during the interview.
+                    Upload your latest resume so Intervo can
+                    understand your skills, education,
+                    experience, and projects.
                 </p>
 
 
@@ -270,9 +274,9 @@
 
 
 
-        <!-- =================================================
+        <!-- 
              ATS SCORE
-        ================================================== -->
+        = -->
 
         <article class="dashboard-card ats-card">
 
@@ -373,11 +377,6 @@
                 </div>
 
 
-
-                <!-- =================================================
-                     ANALYZE BUTTON
-                ================================================== -->
-
                 <button
                     type="button"
                     class="dashboard-primary-button"
@@ -389,11 +388,6 @@
                 </button>
 
 
-
-                <!-- =================================================
-                     VIEW DETAILS BUTTON
-                ================================================== -->
-
                 <button
                     type="button"
                     class="dashboard-secondary-button"
@@ -403,7 +397,6 @@
                 >
                     View Detailed Analysis
                 </button>
-
 
 
                 <p
@@ -418,9 +411,9 @@
 
 
 
-        <!-- =================================================
+        <!-- 
              INTERVIEW
-        ================================================== -->
+        = -->
 
         <article
             class="dashboard-card interview-card"
@@ -444,15 +437,19 @@
                 </p>
 
 
+                <!-- 
+                     INTERVIEW TYPES
+                 -->
+
                 <div class="interview-options">
 
 
-                    <!-- HR -->
+                    <!--========= HR========= -->
 
                     <button
                         type="button"
                         class="interview-option"
-                        onclick="startInterview('HR')"
+                        onclick="selectInterviewType('HR')"
                     >
 
                         <div class="option-icon">
@@ -479,12 +476,12 @@
 
 
 
-                    <!-- TECHNICAL -->
+                    <!--====== TECHNICAL====== -->
 
                     <button
                         type="button"
                         class="interview-option"
-                        onclick="startInterview('Technical')"
+                        onclick="selectInterviewType('Technical')"
                     >
 
                         <div class="option-icon">
@@ -511,12 +508,12 @@
 
 
 
-                    <!-- CODING -->
+                    <!--========= CODING========= -->
 
                     <button
                         type="button"
                         class="interview-option"
-                        onclick="startInterview('Coding')"
+                        onclick="selectInterviewType('Coding')"
                     >
 
                         <div class="option-icon">
@@ -543,12 +540,12 @@
 
 
 
-                    <!-- PROJECT -->
+                    <!--========= PROJECT========= -->
 
                     <button
                         type="button"
                         class="interview-option"
-                        onclick="startInterview('Project')"
+                        onclick="selectInterviewType('Project')"
                     >
 
                         <div class="option-icon">
@@ -576,11 +573,388 @@
                 </div>
 
 
+
+                <!-- 
+                     CATEGORY MESSAGE
+                = -->
+
                 <p
                     id="categoryMessage"
                     class="dashboard-message"
                     aria-live="polite"
                 ></p>
+
+
+
+                <!-- 
+                     HR MODE
+                = -->
+
+                <div
+                    id="mode-HR"
+                    class="interview-mode"
+                    style="display: none;"
+                >
+
+                    <div class="interview-mode-header">
+
+                        <span class="card-label">
+                            HR INTERVIEW
+                        </span>
+
+                        <h3>
+                            Choose your interview mode
+                        </h3>
+
+                        <p>
+                            Practice your HR interview by typing
+                            or speaking your answers.
+                        </p>
+
+                    </div>
+
+
+                    <div class="interview-mode-options">
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('HR', 'text')"
+                        >
+
+                            <div class="mode-icon">
+                                💬
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Text Interview
+                                </strong>
+
+                                <small>
+                                    Type your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('HR', 'voice')"
+                        >
+
+                            <div class="mode-icon">
+                                🎤
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Voice Interview
+                                </strong>
+
+                                <small>
+                                    Speak your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 
+                     TECHNICAL MODE
+                = -->
+
+                <div
+                    id="mode-Technical"
+                    class="interview-mode"
+                    style="display: none;"
+                >
+
+                    <div class="interview-mode-header">
+
+                        <span class="card-label">
+                            TECHNICAL INTERVIEW
+                        </span>
+
+                        <h3>
+                            Choose your interview mode
+                        </h3>
+
+                        <p>
+                            Practice technical questions using
+                            text or voice.
+                        </p>
+
+                    </div>
+
+
+                    <div class="interview-mode-options">
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('Technical', 'text')"
+                        >
+
+                            <div class="mode-icon">
+                                💬
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Text Interview
+                                </strong>
+
+                                <small>
+                                    Type your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('Technical', 'voice')"
+                        >
+
+                            <div class="mode-icon">
+                                🎤
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Voice Interview
+                                </strong>
+
+                                <small>
+                                    Speak your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 
+                     CODING MODE
+                 -->
+
+                <div
+                    id="mode-Coding"
+                    class="interview-mode"
+                    style="display: none;"
+                >
+
+                    <div class="interview-mode-header">
+
+                        <span class="card-label">
+                            CODING INTERVIEW
+                        </span>
+
+                        <h3>
+                            Choose your interview mode
+                        </h3>
+
+                        <p>
+                            Practice coding questions using
+                            text or voice.
+                        </p>
+
+                    </div>
+
+
+                    <div class="interview-mode-options">
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('Coding', 'text')"
+                        >
+
+                            <div class="mode-icon">
+                                💬
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Text Interview
+                                </strong>
+
+                                <small>
+                                    Type your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('Coding', 'voice')"
+                        >
+
+                            <div class="mode-icon">
+                                🎤
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Voice Interview
+                                </strong>
+
+                                <small>
+                                    Speak your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- 
+                     PROJECT MODE
+                 -->
+
+                <div
+                    id="mode-Project"
+                    class="interview-mode"
+                    style="display: none;"
+                >
+
+                    <div class="interview-mode-header">
+
+                        <span class="card-label">
+                            PROJECT INTERVIEW
+                        </span>
+
+                        <h3>
+                            Choose your interview mode
+                        </h3>
+
+                        <p>
+                            Practice project questions using
+                            text or voice.
+                        </p>
+
+                    </div>
+
+
+                    <div class="interview-mode-options">
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('Project', 'text')"
+                        >
+
+                            <div class="mode-icon">
+                                💬
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Text Interview
+                                </strong>
+
+                                <small>
+                                    Type your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="interview-mode-option"
+                            onclick="startInterview('Project', 'voice')"
+                        >
+
+                            <div class="mode-icon">
+                                🎤
+                            </div>
+
+                            <div class="mode-content">
+
+                                <strong>
+                                    Voice Interview
+                                </strong>
+
+                                <small>
+                                    Speak your answers
+                                </small>
+
+                            </div>
+
+                            <span class="option-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -592,22 +966,23 @@
 
 
 
-<!-- =========================================================
+<!--
      FOOTER
-========================================================= -->
+======== -->
 
 <footer class="dashboard-footer">
 
     <span>
         © 2026 Intervo
     </span>
+
 </footer>
 
 
 
-<!-- =========================================================
+<!--
      JAVASCRIPT
-========================================================= -->
+ -->
 
 <script src="js/dashboard.js"></script>
 
@@ -617,4 +992,3 @@
 </body>
 
 </html>
-

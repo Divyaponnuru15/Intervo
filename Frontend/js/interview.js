@@ -5,9 +5,9 @@ let currentQuestion = 0;
 const MAX_QUESTIONS = 5;
 
 
-// =====================================================
+// 
 // GET LOCAL STORAGE DATA
-// =====================================================
+// 
 
 const token =
     localStorage.getItem("token");
@@ -19,9 +19,9 @@ const category =
     localStorage.getItem("interview_category");
 
 
-// =====================================================
+// 
 // LOAD QUESTIONS
-// =====================================================
+// 
 
 async function loadQuestions() {
 
@@ -57,9 +57,9 @@ async function loadQuestions() {
         }
 
 
-        // =================================================
+        // 
         // REQUEST QUESTIONS
-        // =================================================
+        // 
 
         const response =
             await fetch(
@@ -85,9 +85,9 @@ async function loadQuestions() {
         );
 
 
-        // =================================================
+        // 
         // CHECK RESPONSE
-        // =================================================
+        // 
 
         if (!response.ok) {
 
@@ -99,9 +99,9 @@ async function loadQuestions() {
         }
 
 
-        // =================================================
+        // 
         // STORE ONLY FIRST 5 QUESTIONS
-        // =================================================
+        // 
 
         if (
             !data.questions ||
@@ -128,9 +128,9 @@ async function loadQuestions() {
         );
 
 
-        // =================================================
+        // 
         // CHECK QUESTIONS
-        // =================================================
+        // 
 
         if (questions.length === 0) {
 
@@ -141,9 +141,9 @@ async function loadQuestions() {
         }
 
 
-        // =================================================
+        // 
         // START INTERVIEW
-        // =================================================
+        // 
 
         currentQuestion = 0;
 
@@ -166,9 +166,9 @@ async function loadQuestions() {
 }
 
 
-// =====================================================
+// 
 // DISPLAY CURRENT QUESTION
-// =====================================================
+// 
 
 function showQuestion() {
 
@@ -182,9 +182,9 @@ function showQuestion() {
         document.getElementById("message");
 
 
-    // =================================================
+    // 
     // QUESTIONS REMAINING
-    // =================================================
+    // 
 
     if (
         currentQuestion <
@@ -195,9 +195,9 @@ function showQuestion() {
             questions[currentQuestion];
 
 
-        // =================================================
+        // 
         // PROGRESS
-        // =================================================
+        // 
 
         document.getElementById("progress").innerHTML =
 
@@ -206,39 +206,39 @@ function showQuestion() {
             } / ${questions.length}`;
 
 
-        // =================================================
+        // 
         // DISPLAY QUESTION
-        // =================================================
+        // 
 
         document.getElementById("questionText").innerHTML =
             question.question;
 
 
-        // =================================================
+        // 
         // CLEAR PREVIOUS ANSWER
-        // =================================================
+        // 
 
         answerBox.value = "";
 
 
-        // =================================================
+        // 
         // CLEAR MESSAGE
-        // =================================================
+        // 
 
         message.innerHTML = "";
 
 
-        // =================================================
+        // 
         // SHOW ANSWER BOX
-        // =================================================
+        // 
 
         answerBox.style.display =
             "block";
 
 
-        // =================================================
+        // 
         // SHOW SUBMIT BUTTON
-        // =================================================
+        // 
 
         submitButton.style.display =
             "inline-block";
@@ -252,9 +252,9 @@ function showQuestion() {
     }
 
 
-    // =================================================
+    // 
     // INTERVIEW COMPLETED
-    // =================================================
+    // 
 
     document.getElementById("progress").innerHTML =
         "Interview Completed";
@@ -280,9 +280,9 @@ function showQuestion() {
 }
 
 
-// =====================================================
+// 
 // SUBMIT ANSWER
-// =====================================================
+// 
 
 async function submitAnswer() {
 
@@ -294,9 +294,9 @@ async function submitAnswer() {
         answerBox.value.trim();
 
 
-    // =================================================
+    // 
     // VALIDATE ANSWER
-    // =================================================
+    // 
 
     if (!answer) {
 
@@ -314,9 +314,9 @@ async function submitAnswer() {
     }
 
 
-    // =================================================
+    // 
     // GET CURRENT QUESTION
-    // =================================================
+    // 
 
     const question =
         questions[currentQuestion];
@@ -346,9 +346,9 @@ async function submitAnswer() {
 
     try {
 
-        // =================================================
+        // 
         // DISABLE SUBMIT BUTTON
-        // =================================================
+        // 
 
         submitButton.disabled =
             true;
@@ -358,9 +358,9 @@ async function submitAnswer() {
             "Submitting answer...";
 
 
-        // =================================================
+        // 
         // STEP 1 — SAVE ANSWER
-        // =================================================
+        // 
 
         const submitResponse =
             await fetch(
@@ -406,9 +406,9 @@ async function submitAnswer() {
         );
 
 
-        // =================================================
+        // 
         // CHECK SUBMISSION
-        // =================================================
+        // 
 
         if (!submitResponse.ok) {
 
@@ -423,9 +423,9 @@ async function submitAnswer() {
         }
 
 
-        // =================================================
+        // 
         // GET ANSWER ID
-        // =================================================
+        // 
 
         const answerId =
             submitData.answer_id;
@@ -443,9 +443,9 @@ async function submitAnswer() {
         }
 
 
-        // =================================================
+        // 
         // STEP 2 — AI EVALUATION
-        // =================================================
+        // 
 
         message.innerHTML =
             "🤖 AI evaluating answer...";
@@ -482,9 +482,9 @@ async function submitAnswer() {
         );
 
 
-        // =================================================
+        // 
         // CHECK EVALUATION
-        // =================================================
+        // 
 
         if (!evaluationResponse.ok) {
 
@@ -499,9 +499,9 @@ async function submitAnswer() {
         }
 
 
-        // =================================================
+        // 
         // GET EVALUATION
-        // =================================================
+        // 
 
         const evaluation =
             evaluationData.evaluation;
@@ -519,9 +519,9 @@ async function submitAnswer() {
         }
 
 
-        // =================================================
+        // 
         // STEP 3 — DISPLAY AI EVALUATION
-        // =================================================
+        // 
 
         let evaluationHTML = `
 
@@ -576,9 +576,9 @@ async function submitAnswer() {
         `;
 
 
-        // =================================================
+        // 
         // STEP 4 — CODING REFERENCE SOLUTION
-        // =================================================
+        // 
 
         if (
             category === "Coding" &&
@@ -615,9 +615,9 @@ async function submitAnswer() {
         }
 
 
-        // =================================================
+        // 
         // STEP 5 — NEXT QUESTION
-        // =================================================
+        // 
 
         evaluationHTML += `
 
@@ -636,17 +636,17 @@ async function submitAnswer() {
             evaluationHTML;
 
 
-        // =================================================
+        // 
         // HIDE ANSWER BOX
-        // =================================================
+        // 
 
         answerBox.style.display =
             "none";
 
 
-        // =================================================
+        // 
         // HIDE SUBMIT BUTTON
-        // =================================================
+        // 
 
         submitButton.style.display =
             "none";
@@ -672,9 +672,9 @@ async function submitAnswer() {
 }
 
 
-// =====================================================
+// 
 // ESCAPE HTML
-// =====================================================
+// 
 
 function escapeHTML(text) {
 
@@ -690,9 +690,9 @@ function escapeHTML(text) {
 }
 
 
-// =====================================================
+// 
 // NEXT QUESTION
-// =====================================================
+// 
 
 function nextQuestion() {
 
@@ -702,17 +702,17 @@ function nextQuestion() {
 }
 
 
-// =====================================================
+// 
 // GENERATE REPORT
-// =====================================================
+// 
 
 async function generateReport() {
 
     try {
 
-        // =================================================
+        // 
         // GENERATE REPORT
-        // =================================================
+        // 
 
         const response =
             await fetch(
@@ -745,9 +745,9 @@ async function generateReport() {
         );
 
 
-        // =================================================
+        // 
         // CHECK RESPONSE
-        // =================================================
+        // 
 
         if (!response.ok) {
 
@@ -759,9 +759,9 @@ async function generateReport() {
         }
 
 
-        // =================================================
+        // 
         // SAVE REPORT ID
-        // =================================================
+        // 
 
         localStorage.setItem(
 
@@ -772,9 +772,9 @@ async function generateReport() {
         );
 
 
-        // =================================================
+        // 
         // OPEN REPORT PAGE
-        // =================================================
+        // 
 
         window.location.href =
             "report.html";
@@ -796,8 +796,8 @@ async function generateReport() {
 }
 
 
-// =====================================================
+// 
 // START INTERVIEW
-// =====================================================
+// 
 
 loadQuestions();
