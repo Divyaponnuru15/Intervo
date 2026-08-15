@@ -1,11 +1,6 @@
-// 
+//
 // INTERVO - VOICE INTERVIEW
-// 
-
-
-// 
-// INTERVIEW SETTINGS
-// 
+//
 
 let questions = [];
 
@@ -17,10 +12,12 @@ let recognition = null;
 
 let isListening = false;
 
+let isReadingQuestion = false;
 
-// 
+
+// =========================================================
 // LOCAL STORAGE
-// 
+// =========================================================
 
 const token =
     localStorage.getItem("token");
@@ -32,9 +29,9 @@ const category =
     localStorage.getItem("interview_category");
 
 
-// 
+// =========================================================
 // GET ELEMENTS
-// 
+// =========================================================
 
 const questionText =
     document.getElementById("questionText");
@@ -60,6 +57,9 @@ const clearVoiceButton =
 const submitVoiceButton =
     document.getElementById("submitVoiceButton");
 
+const readAloudButton =
+    document.getElementById("readAloudButton");
+
 const voiceMessage =
     document.getElementById("voiceMessage");
 
@@ -73,9 +73,9 @@ const nextQuestionButton =
     document.getElementById("nextQuestionButton");
 
 
-// 
+// =========================================================
 // CHECK REQUIRED ELEMENTS
-// 
+// =========================================================
 
 if (
     !questionText ||
@@ -86,6 +86,7 @@ if (
     !stopVoiceButton ||
     !clearVoiceButton ||
     !submitVoiceButton ||
+    !readAloudButton ||
     !voiceMessage ||
     !evaluationSection ||
     !evaluationContent ||
@@ -99,9 +100,9 @@ if (
 }
 
 
-// 
+// =========================================================
 // CHECK LOGIN
-// 
+// =========================================================
 
 if (!token) {
 
@@ -111,9 +112,9 @@ if (!token) {
 }
 
 
-// 
+// =========================================================
 // CHECK SESSION
-// 
+// =========================================================
 
 if (!sessionId) {
 
@@ -123,9 +124,9 @@ if (!sessionId) {
 }
 
 
-// 
+// =========================================================
 // CHECK CATEGORY
-// 
+// =========================================================
 
 if (!category) {
 
@@ -140,17 +141,13 @@ if (!category) {
 }
 
 
-// 
+// =========================================================
 // LOAD QUESTIONS
-// 
+// =========================================================
 
 async function loadQuestions() {
 
     try {
-
-        // 
-        // BASIC VALIDATION
-        // 
 
         if (!token) {
             return;
@@ -168,10 +165,6 @@ async function loadQuestions() {
         voiceMessage.textContent =
             "Loading interview questions...";
 
-
-        // 
-        // REQUEST QUESTIONS
-        // 
 
         const response =
             await fetch(
@@ -204,10 +197,6 @@ async function loadQuestions() {
         );
 
 
-        // 
-        // CHECK RESPONSE
-        // 
-
         if (!response.ok) {
 
             voiceMessage.textContent =
@@ -218,10 +207,6 @@ async function loadQuestions() {
 
         }
 
-
-        // 
-        // VALIDATE QUESTIONS
-        // 
 
         if (
             !data.questions ||
@@ -236,10 +221,6 @@ async function loadQuestions() {
         }
 
 
-        // 
-        // STORE FIRST 5 QUESTIONS
-        // 
-
         questions =
             data.questions.slice(
                 0,
@@ -253,10 +234,6 @@ async function loadQuestions() {
         );
 
 
-        // 
-        // CHECK QUESTIONS
-        // 
-
         if (questions.length === 0) {
 
             voiceMessage.textContent =
@@ -266,10 +243,6 @@ async function loadQuestions() {
 
         }
 
-
-        // 
-        // START INTERVIEW
-        // 
 
         currentQuestion = 0;
 
@@ -294,15 +267,11 @@ async function loadQuestions() {
 }
 
 
-// 
+// =========================================================
 // SHOW QUESTION
-// 
+// =========================================================
 
 function showQuestion() {
-
-    // 
-    // CHECK INTERVIEW COMPLETION
-    // 
 
     if (
         currentQuestion >=
@@ -315,10 +284,6 @@ function showQuestion() {
 
     }
 
-
-    // 
-    // GET CURRENT QUESTION
-    // 
 
     const question =
         questions[currentQuestion];
@@ -335,9 +300,7 @@ function showQuestion() {
     }
 
 
-    // 
-    // STOP ANY PREVIOUS RECOGNITION
-    // 
+    // Stop speech recognition
 
     if (
         recognition &&
@@ -361,36 +324,33 @@ function showQuestion() {
     }
 
 
+    // Stop text-to-speech
+
+    stopReadingQuestion();
+
+
     isListening =
         false;
 
 
-    // 
-    // UPDATE PROGRESS
-    // 
+    // Update progress
 
     progress.textContent =
         `Question ${currentQuestion + 1} / ${questions.length}`;
 
 
-    // 
-    // DISPLAY QUESTION
-    // 
+    // Display question
 
     questionText.textContent =
         question.question;
 
 
-    // 
-    // CLEAR PREVIOUS ANSWER
-    // 
+    // Reset answer
 
     clearVoiceAnswer();
 
 
-    // 
-    // RESET EVALUATION
-    // 
+    // Reset evaluation
 
     evaluationSection.style.display =
         "none";
@@ -399,10 +359,7 @@ function showQuestion() {
         "";
 
 
-    // 
-    // SHOW VOICE CONTROLS
-    // IMPORTANT FOR EVERY QUESTION
-    // 
+    // Show controls
 
     startVoiceButton.style.display =
         "inline-block";
@@ -416,10 +373,11 @@ function showQuestion() {
     submitVoiceButton.style.display =
         "inline-block";
 
+    readAloudButton.style.display =
+        "inline-block";
 
-    // 
-    // RESET BUTTON STATES
-    // 
+
+    // Reset buttons
 
     startVoiceButton.disabled =
         false;
@@ -433,26 +391,20 @@ function showQuestion() {
     submitVoiceButton.disabled =
         true;
 
+    readAloudButton.disabled =
+        false;
 
-    // 
-    // RESET START BUTTON TEXT
-    // 
 
     startVoiceButton.textContent =
         "🎙️ Start Speaking";
 
+    readAloudButton.textContent =
+        "🔊 Read Aloud";
 
-    // 
-    // RESET MESSAGE
-    // 
 
     voiceMessage.textContent =
-        "Click Start Speaking to answer.";
+        "Click Read Aloud to hear the question or Start Speaking to answer.";
 
-
-    // 
-    // HIDE NEXT QUESTION
-    // 
 
     nextQuestionButton.style.display =
         "none";
@@ -460,18 +412,198 @@ function showQuestion() {
 }
 
 
-// 
+// =========================================================
+// READ QUESTION ALOUD
+// =========================================================
+
+function readQuestionAloud() {
+
+    if (
+        !("speechSynthesis" in window)
+    ) {
+
+        voiceMessage.textContent =
+            "Text-to-speech is not supported in this browser.";
+
+        return;
+
+    }
+
+
+    const question =
+        questions[currentQuestion];
+
+
+    if (!question) {
+
+        return;
+
+    }
+
+
+    // Stop existing speech
+
+    window.speechSynthesis.cancel();
+
+
+    const text =
+        question.question;
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+
+    speech.lang =
+        "en-US";
+
+    speech.rate =
+        0.9;
+
+    speech.pitch =
+        1;
+
+    speech.volume =
+        1;
+
+
+    isReadingQuestion =
+        true;
+
+
+    readAloudButton.disabled =
+        true;
+
+    readAloudButton.textContent =
+        "🔊 Reading...";
+
+
+    voiceMessage.textContent =
+        "🔊 Reading the interview question...";
+
+
+    speech.onend =
+        function () {
+
+            isReadingQuestion =
+                false;
+
+            readAloudButton.disabled =
+                false;
+
+            readAloudButton.textContent =
+                "🔊 Read Aloud";
+
+            voiceMessage.textContent =
+                "Question read aloud. Click Start Speaking to answer.";
+
+        };
+
+
+    speech.onerror =
+        function () {
+
+            isReadingQuestion =
+                false;
+
+            readAloudButton.disabled =
+                false;
+
+            readAloudButton.textContent =
+                "🔊 Read Aloud";
+
+            voiceMessage.textContent =
+                "Unable to read the question aloud.";
+
+        };
+
+
+    window.speechSynthesis.speak(
+        speech
+    );
+
+}
+
+
+// =========================================================
+// STOP READING QUESTION
+// =========================================================
+
+function stopReadingQuestion() {
+
+    if (
+        "speechSynthesis" in window
+    ) {
+
+        window.speechSynthesis.cancel();
+
+    }
+
+
+    isReadingQuestion =
+        false;
+
+
+    if (readAloudButton) {
+
+        readAloudButton.disabled =
+            false;
+
+        readAloudButton.textContent =
+            "🔊 Read Aloud";
+
+    }
+
+}
+
+
+// =========================================================
+// READ ALOUD BUTTON
+// =========================================================
+
+readAloudButton.addEventListener(
+    "click",
+    function () {
+
+        if (isReadingQuestion) {
+
+            stopReadingQuestion();
+
+            voiceMessage.textContent =
+                "Question reading stopped.";
+
+            return;
+
+        }
+
+
+        readQuestionAloud();
+
+    }
+);
+
+
+// =========================================================
 // SPEECH RECOGNITION
-// 
+// =========================================================
 
 const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
 
-// 
+// =========================================================
 // CHECK BROWSER SUPPORT
-// 
+// =========================================================
 
 if (!SpeechRecognition) {
 
@@ -484,21 +616,11 @@ if (!SpeechRecognition) {
     stopVoiceButton.disabled =
         true;
 
-
 } else {
-
-
-    // 
-    // CREATE RECOGNITION
-    // 
 
     recognition =
         new SpeechRecognition();
 
-
-    // 
-    // RECOGNITION SETTINGS
-    // 
 
     recognition.continuous =
         true;
@@ -510,9 +632,9 @@ if (!SpeechRecognition) {
         "en-US";
 
 
-    // 
-    // START EVENT
-    // 
+    // =====================================================
+    // RECOGNITION START
+    // =====================================================
 
     recognition.onstart =
         function () {
@@ -521,9 +643,10 @@ if (!SpeechRecognition) {
                 true;
 
 
-            // -----------------------------------------
-            // BUTTON STATES
-            // -----------------------------------------
+            // Stop question reading
+
+            stopReadingQuestion();
+
 
             startVoiceButton.disabled =
                 true;
@@ -538,17 +661,9 @@ if (!SpeechRecognition) {
                 true;
 
 
-            // -----------------------------------------
-            // BUTTON TEXT
-            // -----------------------------------------
-
             startVoiceButton.textContent =
                 "🎙️ Listening...";
 
-
-            // -----------------------------------------
-            // MESSAGE
-            // -----------------------------------------
 
             voiceMessage.textContent =
                 "🎙️ Listening... Speak your answer.";
@@ -556,9 +671,9 @@ if (!SpeechRecognition) {
         };
 
 
-    // 
-    // RESULT EVENT
-    // 
+    // =====================================================
+    // RECOGNITION RESULT
+    // =====================================================
 
     recognition.onresult =
         function (event) {
@@ -570,10 +685,6 @@ if (!SpeechRecognition) {
                 "";
 
 
-            // 
-            // PROCESS SPEECH RESULTS
-            // 
-
             for (
                 let i = event.resultIndex;
                 i < event.results.length;
@@ -584,10 +695,6 @@ if (!SpeechRecognition) {
                     event.results[i][0].transcript;
 
 
-                // -----------------------------------------
-                // FINAL SPEECH
-                // -----------------------------------------
-
                 if (
                     event.results[i].isFinal
                 ) {
@@ -595,14 +702,7 @@ if (!SpeechRecognition) {
                     finalTranscript +=
                         transcript + " ";
 
-                }
-
-
-                // -----------------------------------------
-                // LIVE / INTERIM SPEECH
-                // -----------------------------------------
-
-                else {
+                } else {
 
                     interimTranscript +=
                         transcript;
@@ -611,10 +711,6 @@ if (!SpeechRecognition) {
 
             }
 
-
-            // 
-            // SAVE FINAL TEXT
-            // 
 
             if (
                 finalTranscript.trim()
@@ -632,18 +728,10 @@ if (!SpeechRecognition) {
             }
 
 
-            // 
-            // GET SAVED TEXT
-            // 
-
             const savedText =
                 voiceAnswer.dataset.finalText ||
                 "";
 
-
-            // 
-            // DISPLAY TEXT
-            // 
 
             if (
                 savedText.trim() ||
@@ -662,10 +750,6 @@ if (!SpeechRecognition) {
             }
 
 
-            // 
-            // ENABLE SUBMIT
-            // 
-
             if (
                 savedText.trim() ||
                 interimTranscript.trim()
@@ -679,9 +763,9 @@ if (!SpeechRecognition) {
         };
 
 
-    // 
-    // END EVENT
-    // 
+    // =====================================================
+    // RECOGNITION END
+    // =====================================================
 
     recognition.onend =
         function () {
@@ -689,10 +773,6 @@ if (!SpeechRecognition) {
             isListening =
                 false;
 
-
-            // -----------------------------------------
-            // RESET BUTTON STATES
-            // -----------------------------------------
 
             startVoiceButton.disabled =
                 false;
@@ -704,17 +784,9 @@ if (!SpeechRecognition) {
                 false;
 
 
-            // -----------------------------------------
-            // RESET START BUTTON
-            // -----------------------------------------
-
             startVoiceButton.textContent =
                 "🎙️ Start Speaking";
 
-
-            // -----------------------------------------
-            // CHECK ANSWER
-            // -----------------------------------------
 
             const savedText =
                 (
@@ -746,9 +818,9 @@ if (!SpeechRecognition) {
         };
 
 
-    // 
-    // ERROR EVENT
-    // 
+    // =====================================================
+    // RECOGNITION ERROR
+    // =====================================================
 
     recognition.onerror =
         function (event) {
@@ -762,10 +834,6 @@ if (!SpeechRecognition) {
             isListening =
                 false;
 
-
-            // -----------------------------------------
-            // RESET BUTTONS
-            // -----------------------------------------
 
             startVoiceButton.disabled =
                 false;
@@ -781,10 +849,6 @@ if (!SpeechRecognition) {
                 "🎙️ Start Speaking";
 
 
-            // -----------------------------------------
-            // ERROR MESSAGES
-            // -----------------------------------------
-
             if (
                 event.error ===
                 "not-allowed"
@@ -794,7 +858,6 @@ if (!SpeechRecognition) {
                     "🎤 Microphone permission denied. Please allow microphone access.";
 
             }
-
 
             else if (
                 event.error ===
@@ -806,7 +869,6 @@ if (!SpeechRecognition) {
 
             }
 
-
             else if (
                 event.error ===
                 "audio-capture"
@@ -816,7 +878,6 @@ if (!SpeechRecognition) {
                     "Microphone could not be detected.";
 
             }
-
 
             else {
 
@@ -830,17 +891,13 @@ if (!SpeechRecognition) {
 }
 
 
-// 
+// =========================================================
 // START VOICE BUTTON
-// 
+// =========================================================
 
 startVoiceButton.addEventListener(
     "click",
     function () {
-
-        // -----------------------------------------
-        // CHECK RECOGNITION
-        // -----------------------------------------
 
         if (!recognition) {
 
@@ -852,10 +909,6 @@ startVoiceButton.addEventListener(
         }
 
 
-        // -----------------------------------------
-        // PREVENT DUPLICATE START
-        // -----------------------------------------
-
         if (isListening) {
 
             return;
@@ -863,11 +916,12 @@ startVoiceButton.addEventListener(
         }
 
 
-        try {
+        // Stop question reading
 
-            // -----------------------------------------
-            // CLEAR INTERIM STATE
-            // -----------------------------------------
+        stopReadingQuestion();
+
+
+        try {
 
             const existingText =
                 voiceAnswer.dataset.finalText ||
@@ -881,10 +935,6 @@ startVoiceButton.addEventListener(
 
             }
 
-
-            // -----------------------------------------
-            // START
-            // -----------------------------------------
 
             recognition.start();
 
@@ -904,9 +954,9 @@ startVoiceButton.addEventListener(
 );
 
 
-// 
+// =========================================================
 // STOP VOICE BUTTON
-// 
+// =========================================================
 
 stopVoiceButton.addEventListener(
     "click",
@@ -945,17 +995,13 @@ stopVoiceButton.addEventListener(
 );
 
 
-// 
+// =========================================================
 // CLEAR TEXT BUTTON
-// 
+// =========================================================
 
 clearVoiceButton.addEventListener(
     "click",
     function () {
-
-        // -----------------------------------------
-        // STOP LISTENING
-        // -----------------------------------------
 
         if (
             recognition &&
@@ -979,16 +1025,8 @@ clearVoiceButton.addEventListener(
         }
 
 
-        // -----------------------------------------
-        // CLEAR ANSWER
-        // -----------------------------------------
-
         clearVoiceAnswer();
 
-
-        // -----------------------------------------
-        // MESSAGE
-        // -----------------------------------------
 
         voiceMessage.textContent =
             "Answer cleared.";
@@ -997,39 +1035,23 @@ clearVoiceButton.addEventListener(
 );
 
 
-// 
+// =========================================================
 // CLEAR VOICE ANSWER
-// 
+// =========================================================
 
 function clearVoiceAnswer() {
-
-    // -----------------------------------------
-    // RESET TEXT
-    // -----------------------------------------
 
     voiceAnswer.textContent =
         "Your spoken answer will appear here...";
 
 
-    // -----------------------------------------
-    // CLEAR SAVED TEXT
-    // -----------------------------------------
-
     voiceAnswer.dataset.finalText =
         "";
 
 
-    // -----------------------------------------
-    // DISABLE SUBMIT
-    // -----------------------------------------
-
     submitVoiceButton.disabled =
         true;
 
-
-    // -----------------------------------------
-    // RESET LISTENING STATE
-    // -----------------------------------------
 
     isListening =
         false;
@@ -1037,9 +1059,9 @@ function clearVoiceAnswer() {
 }
 
 
-// 
+// =========================================================
 // SUBMIT BUTTON
-// 
+// =========================================================
 
 submitVoiceButton.addEventListener(
     "click",
@@ -1047,15 +1069,11 @@ submitVoiceButton.addEventListener(
 );
 
 
-// 
+// =========================================================
 // SUBMIT VOICE ANSWER
-// 
+// =========================================================
 
 async function submitVoiceAnswer() {
-
-    // 
-    // GET FINAL ANSWER
-    // 
 
     const answer =
         (
@@ -1063,10 +1081,6 @@ async function submitVoiceAnswer() {
             ""
         ).trim();
 
-
-    // 
-    // VALIDATE ANSWER
-    // 
 
     if (!answer) {
 
@@ -1078,10 +1092,6 @@ async function submitVoiceAnswer() {
 
     }
 
-
-    // 
-    // CURRENT QUESTION
-    // 
 
     const question =
         questions[currentQuestion];
@@ -1104,10 +1114,6 @@ async function submitVoiceAnswer() {
 
     try {
 
-        // 
-        // DISABLE CONTROLS
-        // 
-
         submitVoiceButton.disabled =
             true;
 
@@ -1120,14 +1126,17 @@ async function submitVoiceAnswer() {
         clearVoiceButton.disabled =
             true;
 
+        readAloudButton.disabled =
+            true;
+
 
         voiceMessage.textContent =
             "Submitting your answer...";
 
 
-        // 
-        // STEP 1 — SAVE ANSWER
-        // 
+        // =================================================
+        // SAVE ANSWER
+        // =================================================
 
         const submitResponse =
             await fetch(
@@ -1173,10 +1182,6 @@ async function submitVoiceAnswer() {
         );
 
 
-        // 
-        // CHECK SUBMISSION
-        // 
-
         if (!submitResponse.ok) {
 
             voiceMessage.textContent =
@@ -1187,19 +1192,16 @@ async function submitVoiceAnswer() {
             submitVoiceButton.disabled =
                 false;
 
-
             clearVoiceButton.disabled =
                 false;
 
+            readAloudButton.disabled =
+                false;
 
             return;
 
         }
 
-
-        // 
-        // GET ANSWER ID
-        // 
 
         const answerId =
             submitData.answer_id;
@@ -1214,19 +1216,20 @@ async function submitVoiceAnswer() {
             submitVoiceButton.disabled =
                 false;
 
-
             clearVoiceButton.disabled =
                 false;
 
+            readAloudButton.disabled =
+                false;
 
             return;
 
         }
 
 
-        // 
-        // STEP 2 — AI EVALUATION
-        // 
+        // =================================================
+        // AI EVALUATION
+        // =================================================
 
         voiceMessage.textContent =
             "🤖 AI evaluating your spoken answer...";
@@ -1263,10 +1266,6 @@ async function submitVoiceAnswer() {
         );
 
 
-        // 
-        // CHECK EVALUATION
-        // 
-
         if (!evaluationResponse.ok) {
 
             voiceMessage.textContent =
@@ -1277,19 +1276,16 @@ async function submitVoiceAnswer() {
             submitVoiceButton.disabled =
                 false;
 
-
             clearVoiceButton.disabled =
                 false;
 
+            readAloudButton.disabled =
+                false;
 
             return;
 
         }
 
-
-        // 
-        // GET EVALUATION
-        // 
 
         const evaluation =
             evaluationData.evaluation;
@@ -1304,29 +1300,22 @@ async function submitVoiceAnswer() {
             submitVoiceButton.disabled =
                 false;
 
-
             clearVoiceButton.disabled =
                 false;
 
+            readAloudButton.disabled =
+                false;
 
             return;
 
         }
 
 
-        // 
-        // DISPLAY EVALUATION
-        // 
-
         displayEvaluation(
             evaluation,
             question
         );
 
-
-        // 
-        // HIDE VOICE CONTROLS
-        // 
 
         startVoiceButton.style.display =
             "none";
@@ -1340,10 +1329,9 @@ async function submitVoiceAnswer() {
         submitVoiceButton.style.display =
             "none";
 
+        readAloudButton.style.display =
+            "none";
 
-        // 
-        // SUCCESS MESSAGE
-        // 
 
         voiceMessage.textContent =
             "✅ Answer evaluated successfully.";
@@ -1366,8 +1354,10 @@ async function submitVoiceAnswer() {
         submitVoiceButton.disabled =
             false;
 
-
         clearVoiceButton.disabled =
+            false;
+
+        readAloudButton.disabled =
             false;
 
     }
@@ -1375,18 +1365,14 @@ async function submitVoiceAnswer() {
 }
 
 
-// 
+// =========================================================
 // DISPLAY AI EVALUATION
-// 
+// =========================================================
 
 function displayEvaluation(
     evaluation,
     question
 ) {
-
-    // 
-    // BUILD EVALUATION HTML
-    // 
 
     let evaluationHTML = `
 
@@ -1452,10 +1438,6 @@ function displayEvaluation(
     `;
 
 
-    // 
-    // CODING REFERENCE SOLUTION
-    // 
-
     if (
         category === "Coding" &&
         question.solution
@@ -1480,10 +1462,6 @@ function displayEvaluation(
     }
 
 
-    // 
-    // DISPLAY EVALUATION
-    // 
-
     evaluationContent.innerHTML =
         evaluationHTML;
 
@@ -1491,10 +1469,6 @@ function displayEvaluation(
     evaluationSection.style.display =
         "block";
 
-
-    // 
-    // NEXT QUESTION BUTTON
-    // 
 
     if (
         currentQuestion <
@@ -1518,13 +1492,15 @@ function displayEvaluation(
 }
 
 
-// 
-// NEXT QUESTION BUTTON
-// 
+// =========================================================
+// NEXT QUESTION
+// =========================================================
 
 nextQuestionButton.addEventListener(
     "click",
     function () {
+
+        stopReadingQuestion();
 
         currentQuestion++;
 
@@ -1534,39 +1510,26 @@ nextQuestionButton.addEventListener(
 );
 
 
-// 
+// =========================================================
 // COMPLETE INTERVIEW
-// 
+// =========================================================
 
 function completeInterview() {
 
-    // 
-    // UPDATE PROGRESS
-    // 
+    stopReadingQuestion();
+
 
     progress.textContent =
         "Interview Completed";
 
 
-    // 
-    // UPDATE QUESTION
-    // 
-
     questionText.textContent =
         "🎉 Congratulations! Interview completed.";
 
 
-    // 
-    // HIDE ANSWER
-    // 
-
     voiceAnswer.style.display =
         "none";
 
-
-    // 
-    // HIDE CONTROLS
-    // 
 
     startVoiceButton.style.display =
         "none";
@@ -1580,43 +1543,30 @@ function completeInterview() {
     submitVoiceButton.style.display =
         "none";
 
+    readAloudButton.style.display =
+        "none";
 
-    // 
-    // HIDE EVALUATION
-    // 
 
     evaluationSection.style.display =
         "none";
 
 
-    // 
-    // MESSAGE
-    // 
-
     voiceMessage.textContent =
         "Generating your interview report...";
 
-
-    // 
-    // GENERATE REPORT
-    // 
 
     generateReport();
 
 }
 
 
-// 
+// =========================================================
 // GENERATE REPORT
-// 
+// =========================================================
 
 async function generateReport() {
 
     try {
-
-        // 
-        // REQUEST REPORT
-        // 
 
         const response =
             await fetch(
@@ -1649,10 +1599,6 @@ async function generateReport() {
         );
 
 
-        // 
-        // CHECK RESPONSE
-        // 
-
         if (!response.ok) {
 
             voiceMessage.textContent =
@@ -1664,19 +1610,11 @@ async function generateReport() {
         }
 
 
-        // 
-        // SAVE REPORT ID
-        // 
-
         localStorage.setItem(
             "report_id",
             data.report_id
         );
 
-
-        // 
-        // OPEN REPORT
-        // 
 
         window.location.href =
             "report.html";
@@ -1700,9 +1638,9 @@ async function generateReport() {
 }
 
 
-// 
+// =========================================================
 // ESCAPE HTML
-// 
+// =========================================================
 
 function escapeHTML(text) {
 
@@ -1719,8 +1657,8 @@ function escapeHTML(text) {
 }
 
 
-// 
+// =========================================================
 // START INTERVIEW
-// 
+// =========================================================
 
 loadQuestions();

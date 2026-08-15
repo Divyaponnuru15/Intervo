@@ -76,9 +76,7 @@
 
 
 
-    <!-- 
-         QUESTION
-     -->
+    <!-- QUESTION -->
 
     <section class="voice-card">
 
@@ -106,13 +104,22 @@
         </h3>
 
 
+        <!-- READ ALOUD -->
+
+        <button
+        id="readAloudButton"
+        class="read-aloud-button"
+        type="button"
+        >
+        🔊 Read Aloud
+        </button>
+
+
     </section>
 
 
 
-    <!-- 
-         VOICE ANSWER
-     -->
+    <!-- VOICE ANSWER -->
 
     <section class="voice-card">
 
@@ -151,10 +158,10 @@
 
 
             <button
-             id="clearVoiceButton"
-            type="button"
+                id="clearVoiceButton"
+                type="button"
             >
-           Clear Text
+                Clear Text
             </button>
 
 
@@ -170,16 +177,17 @@
         </button>
 
 
-        <p id="voiceMessage"></p>
+        <p
+            id="voiceMessage"
+            aria-live="polite"
+        ></p>
 
 
     </section>
 
 
 
-    <!-- 
-         AI EVALUATION
-     -->
+    <!-- AI EVALUATION -->
 
     <section
         id="evaluationSection"
@@ -192,9 +200,7 @@
         </h2>
 
 
-        <div id="evaluationContent">
-
-        </div>
+        <div id="evaluationContent"></div>
 
 
         <button
