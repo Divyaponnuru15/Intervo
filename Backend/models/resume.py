@@ -31,6 +31,22 @@ class Resume(db.Model):
     )
 
 
+    # =====================================================
+    # ATS ANALYSIS
+    # =====================================================
+
+    ats_score = db.Column(
+        db.Integer,
+        nullable=True
+    )
+
+
+    ats_analysis = db.Column(
+        db.JSON,
+        nullable=True
+    )
+
+
     uploaded_at = db.Column(
         db.DateTime,
         default=datetime.utcnow

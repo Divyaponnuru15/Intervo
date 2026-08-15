@@ -239,8 +239,6 @@
                     </label>
 
 
-                    <!-- Selected filename -->
-
                     <span
                         id="selectedFileName"
                         class="selected-file-name"
@@ -271,12 +269,161 @@
 
 
         <!-- =================================================
+             ATS SCORE
+        ================================================== -->
+
+        <article class="dashboard-card ats-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    ATS SCORE
+                </span>
+
+                <h2>
+                    Check your resume score
+                </h2>
+
+                <p>
+                    Analyze your resume for ATS compatibility,
+                    keywords, skills, projects, and structure.
+                </p>
+
+
+                <div class="ats-score-display">
+
+                    <div class="ats-score">
+
+                        <span id="atsScore">
+                            --
+                        </span>
+
+                        <small>
+                            / 100
+                        </small>
+
+                    </div>
+
+
+                    <span
+                        class="ats-status"
+                        id="atsStatus"
+                    >
+                        Upload your resume to analyze
+                    </span>
+
+                </div>
+
+
+                <div class="ats-details">
+
+                    <div class="ats-item">
+
+                        <span>
+                            Keywords
+                        </span>
+
+                        <strong id="atsKeywords">
+                            --%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ats-item">
+
+                        <span>
+                            Skills
+                        </span>
+
+                        <strong id="atsSkills">
+                            --%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ats-item">
+
+                        <span>
+                            Projects
+                        </span>
+
+                        <strong id="atsProjects">
+                            --%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ats-item">
+
+                        <span>
+                            Structure
+                        </span>
+
+                        <strong id="atsStructure">
+                            --%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ANALYZE BUTTON
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="dashboard-primary-button"
+                    id="analyzeResumeButton"
+                    onclick="analyzeResume()"
+                    disabled
+                >
+                    Analyze Resume
+                </button>
+
+
+
+                <!-- =================================================
+                     VIEW DETAILS BUTTON
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="dashboard-secondary-button"
+                    id="viewATSDetailsButton"
+                    onclick="viewATSDetails()"
+                    style="display: none;"
+                >
+                    View Detailed Analysis
+                </button>
+
+
+
+                <p
+                    id="atsMessage"
+                    class="dashboard-message"
+                    aria-live="polite"
+                ></p>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
              INTERVIEW
         ================================================== -->
 
         <article
             class="dashboard-card interview-card"
             id="categorySection"
+            style="display: none;"
         >
 
             <div class="card-content">
@@ -452,7 +599,6 @@
     <span>
         © 2026 Intervo
     </span>
-
 </footer>
 
 
@@ -469,3 +615,4 @@
 </body>
 
 </html>
+

@@ -15,9 +15,8 @@ answer = Blueprint(
 )
 
 
-# =====================================================
+
 # SUBMIT INTERVIEW ANSWER
-# =====================================================
 
 @answer.route(
     "/submit-answer",
@@ -45,21 +44,15 @@ def submit_answer():
         "answer"
     )
 
-
-    # =================================================
     # VALIDATE ANSWER
-    # =================================================
-
+   
     if not user_answer:
 
         return jsonify({
             "message": "Answer cannot be empty"
         }), 400
 
-
-    # =================================================
-    # CHECK QUESTION
-    # =================================================
+# CHECK QUESTION
 
     question = InterviewQuestion.query.filter_by(
 
@@ -77,9 +70,7 @@ def submit_answer():
         }), 404
 
 
-    # =================================================
-    # SAVE ANSWER
-    # =================================================
+        # SAVE ANSWER
 
     new_answer = InterviewAnswer(
 
@@ -110,9 +101,7 @@ def submit_answer():
     }), 201
 
 
-# =====================================================
 # EVALUATE ANSWER USING AI
-# =====================================================
 
 @answer.route(
     "/evaluate/<int:answer_id>",
@@ -124,10 +113,9 @@ def evaluate(answer_id):
     user_id = get_jwt_identity()
 
 
-    # =================================================
+    
     # FIND SUBMITTED ANSWER
-    # =================================================
-
+   
     answer_record = InterviewAnswer.query.filter_by(
 
         id=answer_id,
@@ -143,11 +131,8 @@ def evaluate(answer_id):
             "message": "Answer not found"
         }), 404
 
-
-    # =================================================
     # CHECK EXISTING EVALUATION
-    # =================================================
-
+    
     existing_evaluation = AnswerEvaluation.query.filter_by(
 
         answer_id=answer_id
@@ -164,10 +149,8 @@ def evaluate(answer_id):
 
         }), 400
 
-
-    # =================================================
     # GET RELATED QUESTION
-    # =================================================
+   
 
     question = InterviewQuestion.query.filter_by(
 
@@ -188,10 +171,9 @@ def evaluate(answer_id):
         }), 404
 
 
-    # =================================================
+    
     # AI EVALUATION
-    # =================================================
-
+    
     try:
 
         result = evaluate_answer(
@@ -229,11 +211,8 @@ def evaluate(answer_id):
 
         }), 500
 
-
-    # =================================================
     # SAVE EVALUATION
-    # =================================================
-
+   
     try:
 
         evaluation = AnswerEvaluation(
@@ -276,11 +255,8 @@ def evaluate(answer_id):
 
         }), 500
 
-
-    # =================================================
     # RETURN EVALUATION
-    # =================================================
-
+    
     return jsonify({
 
         "message":
@@ -292,9 +268,8 @@ def evaluate(answer_id):
     }), 200
 
 
-# =====================================================
+
 # GET ANSWER EVALUATION
-# =====================================================
 
 @answer.route(
     "/evaluation/<int:answer_id>",
@@ -306,10 +281,8 @@ def get_evaluation(answer_id):
     user_id = get_jwt_identity()
 
 
-    # =================================================
     # VERIFY ANSWER
-    # =================================================
-
+    
     answer_record = InterviewAnswer.query.filter_by(
 
         id=answer_id,
@@ -329,10 +302,8 @@ def get_evaluation(answer_id):
         }), 404
 
 
-    # =================================================
     # GET EVALUATION
-    # =================================================
-
+   
     evaluation = AnswerEvaluation.query.filter_by(
 
         answer_id=answer_id
@@ -350,9 +321,9 @@ def get_evaluation(answer_id):
         }), 404
 
 
-    # =================================================
+  
     # RETURN EVALUATION
-    # =================================================
+
 
     return jsonify({
 
