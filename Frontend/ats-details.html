@@ -10,16 +10,18 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        ATS Analysis | Intervo
-    </title>
+    <title>ATS Analysis | Intervo</title>
 
     <link
         rel="stylesheet"
         href="css/style.css"
     >
-    <link rel="icon" type="image/png" href="images/intervo-favicon.png">
 
+    <link
+        rel="icon"
+        type="image/png"
+        href="images/intervo-favicon.png"
+    >
 
 </head>
 
@@ -27,400 +29,449 @@
 <body class="dashboard-body">
 
 
-<!--NAVBAR-->
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
 
-<header class="dashboard-navbar">
+    <header class="dashboard-navbar">
 
-    <div class="dashboard-nav-container">
-
-        <a
-            href="./dashboard.html"
-            class="dashboard-logo"
-        >
-
-            <span class="dashboard-logo-icon">
-                AI
-            </span>
-
-            <span>
-                Intervo
-            </span>
-
-        </a>
+        <div class="dashboard-nav-container">
 
 
-        <button
-            type="button"
-            class="dashboard-logout"
-            onclick="logout()"
-        >
-            Dashboard
-        </button>
+            <!-- LOGO -->
 
-    </div>
+            <a
+                href="dashboard.html"
+                class="dashboard-logo"
+            >
 
-</header>
-
-
-
-<!-- MAIN -->
-
-<main class="dashboard-main">
-
-
-    <!--PAGE HEADER -->
-
-    <section class="dashboard-header">
-
-        <div>
-
-            <span class="dashboard-label">
-                AI ATS ANALYSIS
-            </span>
-
-            <h1>
-                Resume Analysis Result
-            </h1>
-
-            <p>
-                Review the detailed AI analysis of your resume
-                and identify areas where you can improve.
-            </p>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ATS SCORE -->
-    <section class="ats-details-card">
-
-        <div class="ats-details-score">
-
-            <span class="card-label">
-                ATS SCORE
-            </span>
-
-            <div class="large-ats-score">
-
-                <span id="detailATSScore">
-                    --
+                <span class="dashboard-logo-icon">
+                    AI
                 </span>
 
-                <small>
-                    / 100
-                </small>
+                <span>
+                    Intervo
+                </span>
 
-            </div>
+            </a>
 
-            <p id="detailATSStatus">
-                Resume analysis result
-            </p>
+
+            <!-- DASHBOARD -->
+
+            <a
+                href="dashboard.html"
+                class="dashboard-logout"
+            >
+                Dashboard
+            </a>
+
 
         </div>
 
-    </section>
-
-
-
-    <!-- SUMMARY -->
-
-    <section class="ats-details-card">
-
-        <span class="card-label">
-            SUMMARY
-        </span>
-
-        <h2>
-            Resume Summary
-        </h2>
-
-        <p
-            id="analysisSummary"
-            class="analysis-text"
-        >
-            Loading analysis...
-        </p>
-
-    </section>
-
-
-
-    <!--SKILLS + KEYWORDS -->
-
-    <section class="ats-details-grid">
-
-
-        <article class="ats-details-card">
-
-            <span class="card-label">
-                SKILLS
-            </span>
-
-            <h2>
-                Detected Skills
-            </h2>
-
-            <ul
-                id="skillsList"
-                class="analysis-list"
-            ></ul>
-
-        </article>
-
-
-
-        <!-- KEYWORDS -->
-
-        <article class="ats-details-card">
-
-            <span class="card-label">
-                KEYWORDS
-            </span>
-
-            <h2>
-                Detected Keywords
-            </h2>
-
-            <ul
-                id="keywordsList"
-                class="analysis-list"
-            ></ul>
-
-        </article>
-
-
-    </section>
-
-
-
-    <!--  MISSING KEYWORDS -->
-
-    <section class="ats-details-card">
-
-        <span class="card-label">
-            MISSING KEYWORDS
-        </span>
-
-        <h2>
-            Keywords You Could Add
-        </h2>
-
-        <ul
-            id="missingKeywordsList"
-            class="analysis-list"
-        ></ul>
-
-    </section>
-
-
-
-    <!-- STRENGTHS -->
-
-    <section class="ats-details-card">
-
-        <span class="card-label">
-            STRENGTHS
-        </span>
-
-        <h2>
-            Resume Strengths
-        </h2>
-
-        <ul
-            id="strengthsList"
-            class="analysis-list"
-        ></ul>
-
-    </section>
-
-
-
-    <!-- 
-         WEAKNESSES -->
-
-    <section class="ats-details-card">
-
-        <span class="card-label">
-            WEAKNESSES
-        </span>
-
-        <h2>
-            Areas to Improve
-        </h2>
-
-        <ul
-            id="weaknessesList"
-            class="analysis-list"
-        ></ul>
-
-    </section>
+    </header>
 
 
 
     <!-- =====================================================
-         IMPROVEMENTS
+         MAIN CONTENT
     ====================================================== -->
 
-    <section class="ats-details-card">
-
-        <span class="card-label">
-            IMPROVEMENTS
-        </span>
-
-        <h2>
-            Recommended Improvements
-        </h2>
-
-        <ul
-            id="improvementsList"
-            class="analysis-list"
-        ></ul>
-
-    </section>
+    <main class="dashboard-main">
 
 
+        <!-- =================================================
+             PAGE HEADER
+        ================================================== -->
 
-    <!-- SECTION SCORES -->
+        <section class="dashboard-header">
 
-    <section class="ats-details-card">
+            <div>
 
-        <span class="card-label">
-            SECTION ANALYSIS
-        </span>
-
-        <h2>
-            Resume Section Scores
-        </h2>
-
-
-        <div class="section-score-grid">
-
-
-            <div class="section-score-item">
-
-                <span>
-                    Contact
+                <span class="dashboard-label">
+                    AI ATS ANALYSIS
                 </span>
 
-                <strong id="contactScore">
-                    --
-                </strong>
+                <h1>
+                    Resume Analysis Result
+                </h1>
+
+                <p>
+                    Review the detailed AI analysis of your resume
+                    and identify areas where you can improve.
+                </p>
 
             </div>
 
+        </section>
 
-            <div class="section-score-item">
 
-                <span>
-                    Summary
+
+        <!-- =================================================
+             ATS SCORE
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <div class="ats-details-score">
+
+                <span class="card-label">
+                    ATS SCORE
                 </span>
 
-                <strong id="summaryScore">
-                    --
-                </strong>
+
+                <div class="large-ats-score">
+
+                    <span id="detailATSScore">
+                        --
+                    </span>
+
+                    <small>
+                        / 100
+                    </small>
+
+                </div>
+
+
+                <p id="detailATSStatus">
+                    Resume analysis result
+                </p>
 
             </div>
 
+        </section>
 
-            <div class="section-score-item">
 
-                <span>
-                    Education
+
+        <!-- =================================================
+             SUMMARY
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <span class="card-label">
+                SUMMARY
+            </span>
+
+            <h2>
+                Resume Summary
+            </h2>
+
+            <p
+                id="analysisSummary"
+                class="analysis-text"
+            >
+                Loading analysis...
+            </p>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SKILLS + KEYWORDS
+        ================================================== -->
+
+        <section class="ats-details-grid">
+
+
+            <!-- DETECTED SKILLS -->
+
+            <article class="ats-details-card">
+
+                <span class="card-label">
+                    SKILLS
                 </span>
 
-                <strong id="educationScore">
-                    --
-                </strong>
+                <h2>
+                    Detected Skills
+                </h2>
+
+                <ul
+                    id="skillsList"
+                    class="analysis-list"
+                ></ul>
+
+            </article>
+
+
+
+            <!-- DETECTED KEYWORDS -->
+
+            <article class="ats-details-card">
+
+                <span class="card-label">
+                    KEYWORDS
+                </span>
+
+                <h2>
+                    Detected Keywords
+                </h2>
+
+                <ul
+                    id="keywordsList"
+                    class="analysis-list"
+                ></ul>
+
+            </article>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             MISSING KEYWORDS
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <span class="card-label">
+                MISSING KEYWORDS
+            </span>
+
+            <h2>
+                Keywords You Could Add
+            </h2>
+
+            <ul
+                id="missingKeywordsList"
+                class="analysis-list"
+            ></ul>
+
+        </section>
+
+
+
+        <!-- =================================================
+             STRENGTHS
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <span class="card-label">
+                STRENGTHS
+            </span>
+
+            <h2>
+                Resume Strengths
+            </h2>
+
+            <ul
+                id="strengthsList"
+                class="analysis-list"
+            ></ul>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WEAKNESSES
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <span class="card-label">
+                WEAKNESSES
+            </span>
+
+            <h2>
+                Areas to Improve
+            </h2>
+
+            <ul
+                id="weaknessesList"
+                class="analysis-list"
+            ></ul>
+
+        </section>
+
+
+
+        <!-- =================================================
+             IMPROVEMENTS
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <span class="card-label">
+                IMPROVEMENTS
+            </span>
+
+            <h2>
+                Recommended Improvements
+            </h2>
+
+            <ul
+                id="improvementsList"
+                class="analysis-list"
+            ></ul>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SECTION SCORES
+        ================================================== -->
+
+        <section class="ats-details-card">
+
+            <span class="card-label">
+                SECTION ANALYSIS
+            </span>
+
+            <h2>
+                Resume Section Scores
+            </h2>
+
+
+            <div class="section-score-grid">
+
+
+                <!-- CONTACT -->
+
+                <div class="section-score-item">
+
+                    <span>
+                        Contact
+                    </span>
+
+                    <strong id="contactScore">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <!-- SUMMARY -->
+
+                <div class="section-score-item">
+
+                    <span>
+                        Summary
+                    </span>
+
+                    <strong id="summaryScore">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <!-- EDUCATION -->
+
+                <div class="section-score-item">
+
+                    <span>
+                        Education
+                    </span>
+
+                    <strong id="educationScore">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <!-- SKILLS -->
+
+                <div class="section-score-item">
+
+                    <span>
+                        Skills
+                    </span>
+
+                    <strong id="skillsSectionScore">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <!-- EXPERIENCE -->
+
+                <div class="section-score-item">
+
+                    <span>
+                        Experience
+                    </span>
+
+                    <strong id="experienceScore">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <!-- PROJECTS -->
+
+                <div class="section-score-item">
+
+                    <span>
+                        Projects
+                    </span>
+
+                    <strong id="projectsScore">
+                        --
+                    </strong>
+
+                </div>
+
 
             </div>
 
-
-            <div class="section-score-item">
-
-                <span>
-                    Skills
-                </span>
-
-                <strong id="skillsSectionScore">
-                    --
-                </strong>
-
-            </div>
+        </section>
 
 
-            <div class="section-score-item">
 
-                <span>
-                    Experience
-                </span>
+        <!-- =================================================
+             ACTION BUTTONS
+        ================================================== -->
 
-                <strong id="experienceScore">
-                    --
-                </strong>
+        <div class="ats-details-actions">
 
-            </div>
-
-
-            <div class="section-score-item">
-
-                <span>
-                    Projects
-                </span>
-
-                <strong id="projectsScore">
-                    --
-                </strong>
-
-            </div>
-
+            <button
+                type="button"
+                class="dashboard-primary-button"
+                onclick="downloadATSReport()"
+            >
+                Download ATS Report
+            </button>
 
         </div>
 
-    </section>
+
+    </main>
 
 
 
-    <!--
-         ACTION BUTTONS -->
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
-    <div class="ats-details-actions">
+    <footer class="dashboard-footer">
 
-        <button
-            type="button"
-            class="dashboard-primary-button"
-            onclick="downloadATSReport()"
-        >
-            Download ATS Report
-        </button>
+        <span>
+            © 2026 Intervo
+        </span>
 
-    </div>
-
-
-</main>
+    </footer>
 
 
 
-<!-- FOOTER-->
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
 
-<footer class="dashboard-footer">
+    <script src="js/dashboard.js"></script>
 
-    <span>
-        © 2026 Intervo
-    </span>
-
-</footer>
-
-
-
-<!-- 
-     JAVASCRIPT
- -->
-
-<script src="js/dashboard.js"></script>
-
-<script src="js/ats-details.js"></script>
+    <script src="js/ats-details.js"></script>
 
 
 </body>
