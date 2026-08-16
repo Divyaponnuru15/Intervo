@@ -541,9 +541,9 @@ Rules:
     ).strip()
 
 
-    # =====
+    # 
     # SUCCESS
-    # =====
+    # 
 
     print()
     print(
