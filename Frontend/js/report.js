@@ -29,7 +29,7 @@ async function loadReport() {
     try {
 
         const response = await fetch(
-            `http://127.0.0.1:5000/api/report/${reportId}`,
+            `https://intervo-backend-okao.onrender.com/api/report/${reportId}`,
             {
                 method: "GET",
 
@@ -143,7 +143,7 @@ async function downloadReport() {
 
         const response = await fetch(
 
-            `http://127.0.0.1:5000/api/pdf/report/${currentReportId}`,
+            `https://intervo-backend-okao.onrender.com/api/pdf/report/${currentReportId}`,
 
             {
                 method: "GET",

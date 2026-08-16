@@ -447,8 +447,8 @@ async function downloadATSReport() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:5000/api/pdf/ats-report/" +
-                resumeId,
+                "https://intervo-backend-okao.onrender.com/api/pdf/ats-report/" +
+                 resumeId,
                 {
 
                     method: "GET",

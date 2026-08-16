@@ -63,7 +63,7 @@ async function loadQuestions() {
 
         const response =
             await fetch(
-                `http://127.0.0.1:5000/questions/${sessionId}`,
+                `https://intervo-backend-okao.onrender.com/questions/${sessionId}`,
                 {
                     method: "GET",
 
@@ -365,7 +365,7 @@ async function submitAnswer() {
         const submitResponse =
             await fetch(
 
-                "http://127.0.0.1:5000/api/answer/submit-answer",
+                "https://intervo-backend-okao.onrender.com/api/answer/submit-answer",
 
                 {
 
@@ -454,7 +454,7 @@ async function submitAnswer() {
         const evaluationResponse =
             await fetch(
 
-                `http://127.0.0.1:5000/api/answer/evaluate/${answerId}`,
+                `https://intervo-backend-okao.onrender.com/api/answer/evaluate/${answerId}`,
 
                 {
 
@@ -717,8 +717,7 @@ async function generateReport() {
         const response =
             await fetch(
 
-                `http://127.0.0.1:5000/api/report/generate/${sessionId}`,
-
+                `https://intervo-backend-okao.onrender.com/api/report/generate/${sessionId}`,
                 {
 
                     method: "POST",

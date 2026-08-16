@@ -303,7 +303,7 @@ async function uploadResume() {
 
         const uploadResponse =
             await fetch(
-                "http://127.0.0.1:5000/upload-resume",
+                "https://intervo-backend-okao.onrender.com/upload-resume",
                 {
 
                     method: "POST",
@@ -605,7 +605,7 @@ async function analyzeResume() {
         const response =
             await fetch(
 
-                `http://127.0.0.1:5000/analyze-resume/${resumeId}`,
+                `https://intervo-backend-okao.onrender.com/analyze-resume/${resumeId}`,
 
                 {
 

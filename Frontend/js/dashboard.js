@@ -205,7 +205,7 @@ async function startInterview(
 
         const sessionResponse =
             await fetch(
-                "http://127.0.0.1:5000/api/session/start",
+                "https://intervo-backend-okao.onrender.com/api/session/start",
                 {
 
                     method: "POST",
@@ -328,7 +328,7 @@ async function startInterview(
 
         const questionResponse =
             await fetch(
-                "http://127.0.0.1:5000/generate-questions",
+                "https://intervo-backend-okao.onrender.com/generate-questions",
                 {
 
                     method: "POST",
