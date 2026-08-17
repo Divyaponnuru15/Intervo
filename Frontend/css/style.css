@@ -4997,3 +4997,262 @@ body {
     box-shadow: none;
 }
 
+/* =========================================================
+   AI EVALUATION
+   ========================================================= */
+
+.evaluation-section {
+    width: 100%;
+    max-width: 900px;
+    margin: 35px auto 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.evaluation-content {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   EVALUATION HEADER
+   ========================================================= */
+
+.evaluation-content::before {
+    content: "🤖  AI Evaluation";
+    display: block;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #087f5b;
+    margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   SCORE
+   ========================================================= */
+
+.evaluation-score {
+    background: linear-gradient(
+        135deg,
+        #ecfdf5,
+        #f0fdf4
+    );
+
+    border: 1px solid #bbf7d0;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    text-align: center;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: #047857;
+
+    margin-bottom: 25px;
+}
+
+.evaluation-score strong {
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   EVALUATION ITEMS
+   ========================================================= */
+
+.evaluation-item {
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 16px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.evaluation-item:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+.evaluation-item h3 {
+    margin: 0 0 10px;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: #0f766e;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.evaluation-item p {
+    margin: 0;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+
+    color: #374151;
+}
+
+
+/* =========================================================
+   CODING SOLUTION
+   ========================================================= */
+
+.evaluation-item pre {
+    margin-top: 12px;
+
+    padding: 18px;
+
+    background: #111827;
+
+    color: #e5e7eb;
+
+    border-radius: 10px;
+
+    overflow-x: auto;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    text-align: left;
+
+    white-space: pre-wrap;
+}
+
+
+/* =========================================================
+   NEXT QUESTION BUTTON
+   ========================================================= */
+
+#nextQuestionButton {
+    display: block;
+
+    margin: 25px auto 0;
+
+    padding: 12px 24px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #087f5b;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+#nextQuestionButton:hover {
+    background: #066b4d;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 6px 15px rgba(8, 127, 91, 0.25);
+}
+
+#nextQuestionButton:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .evaluation-section {
+        padding: 0 12px;
+
+        margin-top: 25px;
+    }
+
+    .evaluation-content {
+        padding: 18px;
+
+        border-radius: 14px;
+    }
+
+    .evaluation-content::before {
+        font-size: 18px;
+
+        margin-bottom: 20px;
+    }
+
+    .evaluation-score {
+        padding: 15px;
+
+        font-size: 20px;
+    }
+
+    .evaluation-item {
+        padding: 16px;
+
+        border-radius: 12px;
+    }
+
+    .evaluation-item h3 {
+        font-size: 15px;
+    }
+
+    .evaluation-item p {
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+    .evaluation-item pre {
+        font-size: 12px;
+
+        padding: 14px;
+    }
+
+    #nextQuestionButton {
+        width: 100%;
+
+        padding: 13px 18px;
+
+        font-size: 15px;
+    }
+}
