@@ -5256,3 +5256,32 @@ body {
         font-size: 15px;
     }
 }
+
+
+
+#viewATSDetailsButton {
+    margin-top: 10px;
+    width: 100%;
+    padding: 12px 18px;
+
+    background: #0a9f87;
+    color: #ffffff;
+
+    border: 1px solid #0a9f87;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#viewATSDetailsButton:hover {
+    background: #078f79;
+    border-color: #078f79;
+}
+
+#viewATSDetailsButton:active {
+    transform: scale(0.98);
+}
