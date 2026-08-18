@@ -26,8 +26,9 @@ client = genai.Client(
 # SETTINGS
 # =====================================================
 
-TOTAL_QUESTIONS = 30
+TOTAL_QUESTIONS = 10
 BATCH_SIZE = 5
+TOTAL_BATCHES = TOTAL_QUESTIONS // BATCH_SIZE
 
 
 # =====================================================
@@ -37,7 +38,7 @@ BATCH_SIZE = 5
 def generate_batch(resume_text, category, batch_number):
 
     print(
-        f"Generating batch {batch_number} "
+        f"Generating batch {batch_number}/{TOTAL_BATCHES} "
         f"for category: {category}"
     )
 
@@ -52,7 +53,7 @@ def generate_batch(resume_text, category, batch_number):
 You are an expert programming interviewer.
 
 Analyze the candidate's resume and generate
-EXACTLY 5 coding interview questions.
+EXACTLY {BATCH_SIZE} coding interview questions.
 
 Candidate Resume:
 {resume_text}
@@ -60,12 +61,12 @@ Candidate Resume:
 Category:
 Coding
 
-This is batch {batch_number} of a 30-question
-coding interview.
+This is batch {batch_number} of a
+{TOTAL_QUESTIONS}-question coding interview.
 
 IMPORTANT RULES:
 
-1. Generate EXACTLY 5 questions.
+1. Generate EXACTLY {BATCH_SIZE} questions.
 
 2. Every question MUST be a coding question.
 
@@ -73,7 +74,7 @@ IMPORTANT RULES:
    algorithms, data structures, debugging,
    or problem solving.
 
-4. Use Python for coding questions.
+4. Use Python for all coding questions.
 
 5. Every question MUST have a correct
    reference solution.
@@ -82,17 +83,23 @@ IMPORTANT RULES:
 
 7. Do not put the solution inside the question.
 
-8. Generate a mixture of:
+8. Use a mixture of:
 
    - Easy
    - Medium
    - Hard
 
-9. Avoid repeating common questions whenever
-   possible.
+9. Questions should be relevant to
+   the candidate's skills and resume.
 
-10. The reference solution will be shown to
-    the candidate after AI evaluation.
+10. Avoid repeating common questions
+    whenever possible.
+
+11. Keep the questions practical and
+    suitable for an interview.
+
+12. The reference solution will be shown
+    to the candidate after AI evaluation.
 
 Return ONLY valid JSON.
 
@@ -111,7 +118,7 @@ Use exactly this format:
     }}
 ]
 
-Generate exactly 5 objects.
+Generate exactly {BATCH_SIZE} objects.
 """
 
 
@@ -125,7 +132,7 @@ Generate exactly 5 objects.
 You are an expert interviewer.
 
 Analyze the candidate's resume and generate
-EXACTLY 5 personalized interview questions.
+EXACTLY {BATCH_SIZE} personalized interview questions.
 
 Candidate Resume:
 {resume_text}
@@ -134,11 +141,11 @@ Selected Category:
 {category}
 
 This is batch {batch_number} of a
-30-question interview.
+{TOTAL_QUESTIONS}-question interview.
 
 IMPORTANT RULES:
 
-1. Generate EXACTLY 5 questions.
+1. Generate EXACTLY {BATCH_SIZE} questions.
 
 2. Every question MUST belong to:
 
@@ -152,10 +159,13 @@ IMPORTANT RULES:
 - Medium
 - Hard
 
-5. Questions should be relevant to the
-candidate's resume.
+5. Questions should be relevant to
+   the candidate's resume.
 
 6. Avoid repeating questions whenever possible.
+
+7. Questions should be practical and
+   suitable for an interview.
 
 Category guidelines:
 
@@ -191,7 +201,7 @@ Use exactly this format:
     }}
 ]
 
-Generate exactly 5 objects.
+Generate exactly {BATCH_SIZE} objects.
 """
 
 
@@ -213,16 +223,17 @@ Generate exactly 5 objects.
 
 
     # =================================================
-    # PRINT RESPONSE
+    # GET RESPONSE TEXT
     # =================================================
+
+    response_text = response.text.strip()
+
 
     print(
         "========== GEMINI RESPONSE =========="
     )
 
-    print(
-        response.text
-    )
+    print(response_text)
 
     print(
         "====================================="
@@ -236,7 +247,7 @@ Generate exactly 5 objects.
     try:
 
         questions = json.loads(
-            response.text
+            response_text
         )
 
     except json.JSONDecodeError as error:
@@ -293,12 +304,27 @@ Generate exactly 5 objects.
             )
 
 
+        # ---------------------------------------------
+        # QUESTION
+        # ---------------------------------------------
+
         if "question" not in question:
 
             raise ValueError(
                 "Question field is missing."
             )
 
+
+        if not question["question"]:
+
+            raise ValueError(
+                "Question cannot be empty."
+            )
+
+
+        # ---------------------------------------------
+        # CATEGORY
+        # ---------------------------------------------
 
         if "category" not in question:
 
@@ -307,6 +333,10 @@ Generate exactly 5 objects.
             )
 
 
+        # ---------------------------------------------
+        # DIFFICULTY
+        # ---------------------------------------------
+
         if "difficulty" not in question:
 
             raise ValueError(
@@ -314,7 +344,9 @@ Generate exactly 5 objects.
             )
 
 
-        # Coding requires solution
+        # ---------------------------------------------
+        # CODING SOLUTION
+        # ---------------------------------------------
 
         if category == "Coding":
 
@@ -328,7 +360,9 @@ Generate exactly 5 objects.
                 )
 
 
-        # Other categories
+        # ---------------------------------------------
+        # OTHER CATEGORIES
+        # ---------------------------------------------
 
         else:
 
@@ -339,39 +373,52 @@ Generate exactly 5 objects.
 
 
 # =====================================================
-# GENERATE 30 QUESTIONS
+# GENERATE QUESTIONS
 # =====================================================
 
 def generate_questions(resume_text, category):
     """
-    Generate 30 interview questions.
+    Generate interview questions in small batches.
 
-    Questions are generated in batches of 5
-    to reduce Gemini API failures.
+    Total:
+        10 questions
+
+    Batch size:
+        5 questions
+
+    Number of API requests:
+        2
     """
 
     all_questions = []
 
 
     # =================================================
-    # GENERATE 6 BATCHES
+    # GENERATE BATCHES
     # =================================================
 
-    for batch_number in range(1, 7):
+    for batch_number in range(
+        1,
+        TOTAL_BATCHES + 1
+    ):
 
         print(
-            f"\n===================================="
+            "\n===================================="
         )
 
         print(
             f"Generating batch "
-            f"{batch_number}/6"
+            f"{batch_number}/{TOTAL_BATCHES}"
         )
 
         print(
-            f"===================================="
+            "===================================="
         )
 
+
+        # ---------------------------------------------
+        # GENERATE BATCH
+        # ---------------------------------------------
 
         questions = generate_batch(
             resume_text,
@@ -380,15 +427,20 @@ def generate_questions(resume_text, category):
         )
 
 
+        # ---------------------------------------------
+        # ADD QUESTIONS
+        # ---------------------------------------------
+
         all_questions.extend(
             questions
         )
 
 
-        # Small delay between API requests
-        # to reduce rate-limit problems.
+        # ---------------------------------------------
+        # DELAY BETWEEN REQUESTS
+        # ---------------------------------------------
 
-        if batch_number < 6:
+        if batch_number < TOTAL_BATCHES:
 
             time.sleep(2)
 
@@ -404,6 +456,10 @@ def generate_questions(resume_text, category):
             f"but generated {len(all_questions)}."
         )
 
+
+    # =================================================
+    # SUCCESS
+    # =================================================
 
     print(
         f"\nSuccessfully generated "
