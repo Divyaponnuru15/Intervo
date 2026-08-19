@@ -5493,3 +5493,43 @@ body {
         font-size: 12px;
     }
 }
+
+/* ============================================
+   CODING TIMER
+============================================ */
+
+.coding-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin: 15px 0 20px 0;
+    padding: 10px 16px;
+
+    background: #f4f7ff;
+    border: 1px solid #dbe4ff;
+    border-radius: 10px;
+
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+
+/* Timer icon */
+
+.coding-timer .timer-icon {
+    font-size: 18px;
+}
+
+
+/* Time value */
+
+#timerDisplay {
+    font-size: 16px;
+    font-weight: 700;
+    color: #4f46e5;
+
+    min-width: 52px;
+    text-align: center;
+}

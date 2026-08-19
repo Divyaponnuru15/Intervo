@@ -5,9 +5,20 @@ let currentQuestion = 0;
 const MAX_QUESTIONS = 5;
 
 
-// 
+// ============================================
+// QUESTION TIMER
+// ============================================
+
+let questionTimerInterval = null;
+
+let questionStartTime = null;
+
+let questionElapsedSeconds = 0;
+
+
+// ============================================
 // GET LOCAL STORAGE DATA
-// 
+// ============================================
 
 const token =
     localStorage.getItem("token");
@@ -19,9 +30,205 @@ const category =
     localStorage.getItem("interview_category");
 
 
-// 
+// ============================================
+// QUESTION TIMER FUNCTIONS
+// ============================================
+
+function startQuestionTimer() {
+
+    // Clear previous timer
+    clearInterval(questionTimerInterval);
+
+    questionTimerInterval = null;
+
+
+    // Reset elapsed time for new question
+    questionElapsedSeconds = 0;
+
+    questionStartTime =
+        Date.now();
+
+
+    const timer =
+        document.getElementById("codingTimer");
+
+    const timerDisplay =
+        document.getElementById("timerDisplay");
+
+
+    if (!timer || !timerDisplay) {
+        return;
+    }
+
+
+    // Show timer
+    timer.style.display =
+        "inline-flex";
+
+
+    // Reset display
+    timerDisplay.textContent =
+        "00:00";
+
+
+    // Start counting
+    questionTimerInterval =
+        setInterval(() => {
+
+            questionElapsedSeconds =
+                Math.floor(
+                    (Date.now() - questionStartTime) / 1000
+                );
+
+
+            updateTimerDisplay();
+
+        }, 1000);
+
+}
+
+
+// ============================================
+// RESUME QUESTION TIMER
+// ============================================
+
+function resumeQuestionTimer() {
+
+    // Don't create duplicate intervals
+    if (questionTimerInterval) {
+        return;
+    }
+
+
+    questionStartTime =
+        Date.now() -
+        (questionElapsedSeconds * 1000);
+
+
+    questionTimerInterval =
+        setInterval(() => {
+
+            questionElapsedSeconds =
+                Math.floor(
+                    (Date.now() - questionStartTime) / 1000
+                );
+
+
+            updateTimerDisplay();
+
+        }, 1000);
+
+}
+
+
+// ============================================
+// UPDATE TIMER DISPLAY
+// ============================================
+
+function updateTimerDisplay() {
+
+    const timerDisplay =
+        document.getElementById("timerDisplay");
+
+
+    if (!timerDisplay) {
+        return;
+    }
+
+
+    const minutes =
+        Math.floor(
+            questionElapsedSeconds / 60
+        );
+
+
+    const seconds =
+        questionElapsedSeconds % 60;
+
+
+    timerDisplay.textContent =
+
+        String(minutes).padStart(2, "0")
+        +
+        ":"
+        +
+        String(seconds).padStart(2, "0");
+
+}
+
+
+// ============================================
+// STOP QUESTION TIMER
+// ============================================
+
+function stopQuestionTimer() {
+
+    clearInterval(
+        questionTimerInterval
+    );
+
+    questionTimerInterval =
+        null;
+
+}
+
+
+// ============================================
+// HIDE QUESTION TIMER
+// ============================================
+
+function hideQuestionTimer() {
+
+    stopQuestionTimer();
+
+
+    const timer =
+        document.getElementById("codingTimer");
+
+
+    if (!timer) {
+        return;
+    }
+
+
+    timer.style.display =
+        "none";
+
+}
+
+
+// ============================================
+// FORMAT TIME
+// ============================================
+
+function formatTime(totalSeconds) {
+
+    const minutes =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    return (
+
+        String(minutes).padStart(2, "0")
+        +
+        ":"
+        +
+        String(seconds).padStart(2, "0")
+
+    );
+
+}
+
+
+// ============================================
 // LOAD QUESTIONS
-// 
+// ============================================
 
 async function loadQuestions() {
 
@@ -57,21 +264,26 @@ async function loadQuestions() {
         }
 
 
-        // 
+        // ============================================
         // REQUEST QUESTIONS
-        // 
+        // ============================================
 
         const response =
             await fetch(
+
                 `https://intervo-backend-okao.onrender.com/questions/${sessionId}`,
+
                 {
                     method: "GET",
 
                     headers: {
+
                         "Authorization":
                             "Bearer " + token
+
                     }
                 }
+
             );
 
 
@@ -85,9 +297,9 @@ async function loadQuestions() {
         );
 
 
-        // 
+        // ============================================
         // CHECK RESPONSE
-        // 
+        // ============================================
 
         if (!response.ok) {
 
@@ -99,9 +311,9 @@ async function loadQuestions() {
         }
 
 
-        // 
-        // STORE ONLY FIRST 5 QUESTIONS
-        // 
+        // ============================================
+        // CHECK QUESTIONS FORMAT
+        // ============================================
 
         if (
             !data.questions ||
@@ -114,6 +326,10 @@ async function loadQuestions() {
             return;
         }
 
+
+        // ============================================
+        // STORE ONLY FIRST 5 QUESTIONS
+        // ============================================
 
         questions =
             data.questions.slice(
@@ -128,9 +344,9 @@ async function loadQuestions() {
         );
 
 
-        // 
+        // ============================================
         // CHECK QUESTIONS
-        // 
+        // ============================================
 
         if (questions.length === 0) {
 
@@ -141,11 +357,12 @@ async function loadQuestions() {
         }
 
 
-        // 
+        // ============================================
         // START INTERVIEW
-        // 
+        // ============================================
 
-        currentQuestion = 0;
+        currentQuestion =
+            0;
 
         showQuestion();
 
@@ -162,29 +379,33 @@ async function loadQuestions() {
 
         document.getElementById("message").innerHTML =
             "Failed to connect to server.";
+
     }
+
 }
 
 
-// 
+// ============================================
 // DISPLAY CURRENT QUESTION
-// 
+// ============================================
 
 function showQuestion() {
 
     const answerBox =
         document.getElementById("answer");
 
+
     const submitButton =
         document.getElementById("submitButton");
+
 
     const message =
         document.getElementById("message");
 
 
-    // 
+    // ============================================
     // QUESTIONS REMAINING
-    // 
+    // ============================================
 
     if (
         currentQuestion <
@@ -195,50 +416,61 @@ function showQuestion() {
             questions[currentQuestion];
 
 
-        // 
+        // ============================================
         // PROGRESS
-        // 
+        // ============================================
 
         document.getElementById("progress").innerHTML =
 
-            `${category} Question ${
+            `${escapeHTML(category)} Question ${
                 currentQuestion + 1
             } / ${questions.length}`;
 
 
-        // 
+        // ============================================
+        // START TIMER
+        // ============================================
+
+        startQuestionTimer();
+
+
+        // ============================================
         // DISPLAY QUESTION
-        // 
+        // ============================================
 
         document.getElementById("questionText").innerHTML =
-            question.question;
+            escapeHTML(
+                question.question
+            );
 
 
-        // 
+        // ============================================
         // CLEAR PREVIOUS ANSWER
-        // 
+        // ============================================
 
-        answerBox.value = "";
+        answerBox.value =
+            "";
 
 
-        // 
+        // ============================================
         // CLEAR MESSAGE
-        // 
+        // ============================================
 
-        message.innerHTML = "";
+        message.innerHTML =
+            "";
 
 
-        // 
+        // ============================================
         // SHOW ANSWER BOX
-        // 
+        // ============================================
 
         answerBox.style.display =
             "block";
 
 
-        // 
+        // ============================================
         // SHOW SUBMIT BUTTON
-        // 
+        // ============================================
 
         submitButton.style.display =
             "inline-block";
@@ -252,9 +484,12 @@ function showQuestion() {
     }
 
 
-    // 
+    // ============================================
     // INTERVIEW COMPLETED
-    // 
+    // ============================================
+
+    hideQuestionTimer();
+
 
     document.getElementById("progress").innerHTML =
         "Interview Completed";
@@ -277,12 +512,13 @@ function showQuestion() {
 
 
     generateReport();
+
 }
 
 
-// 
+// ============================================
 // SUBMIT ANSWER
-// 
+// ============================================
 
 async function submitAnswer() {
 
@@ -294,9 +530,9 @@ async function submitAnswer() {
         answerBox.value.trim();
 
 
-    // 
+    // ============================================
     // VALIDATE ANSWER
-    // 
+    // ============================================
 
     if (!answer) {
 
@@ -314,9 +550,9 @@ async function submitAnswer() {
     }
 
 
-    // 
+    // ============================================
     // GET CURRENT QUESTION
-    // 
+    // ============================================
 
     const question =
         questions[currentQuestion];
@@ -330,6 +566,25 @@ async function submitAnswer() {
 
         return;
     }
+
+
+    // ============================================
+    // STOP TIMER
+    // ============================================
+
+    stopQuestionTimer();
+
+
+    // ============================================
+    // SAVE TIME USED
+    // ============================================
+
+    const timeUsed =
+        questionElapsedSeconds;
+
+
+    const formattedTime =
+        formatTime(timeUsed);
 
 
     const questionId =
@@ -346,9 +601,9 @@ async function submitAnswer() {
 
     try {
 
-        // 
+        // ============================================
         // DISABLE SUBMIT BUTTON
-        // 
+        // ============================================
 
         submitButton.disabled =
             true;
@@ -358,9 +613,9 @@ async function submitAnswer() {
             "Submitting answer...";
 
 
-        // 
+        // ============================================
         // STEP 1 — SAVE ANSWER
-        // 
+        // ============================================
 
         const submitResponse =
             await fetch(
@@ -406,9 +661,9 @@ async function submitAnswer() {
         );
 
 
-        // 
+        // ============================================
         // CHECK SUBMISSION
-        // 
+        // ============================================
 
         if (!submitResponse.ok) {
 
@@ -416,16 +671,22 @@ async function submitAnswer() {
                 submitData.message ||
                 "Answer submission failed.";
 
+
             submitButton.disabled =
                 false;
+
+
+            // Resume timer if submission failed
+            resumeQuestionTimer();
+
 
             return;
         }
 
 
-        // 
+        // ============================================
         // GET ANSWER ID
-        // 
+        // ============================================
 
         const answerId =
             submitData.answer_id;
@@ -436,16 +697,21 @@ async function submitAnswer() {
             message.innerHTML =
                 "Answer saved, but answer ID was not returned.";
 
+
             submitButton.disabled =
                 false;
+
+
+            resumeQuestionTimer();
+
 
             return;
         }
 
 
-        // 
+        // ============================================
         // STEP 2 — AI EVALUATION
-        // 
+        // ============================================
 
         message.innerHTML =
             "🤖 AI evaluating answer...";
@@ -482,9 +748,9 @@ async function submitAnswer() {
         );
 
 
-        // 
+        // ============================================
         // CHECK EVALUATION
-        // 
+        // ============================================
 
         if (!evaluationResponse.ok) {
 
@@ -492,16 +758,21 @@ async function submitAnswer() {
                 evaluationData.message ||
                 "Evaluation failed.";
 
+
             submitButton.disabled =
                 false;
+
+
+            resumeQuestionTimer();
+
 
             return;
         }
 
 
-        // 
+        // ============================================
         // GET EVALUATION
-        // 
+        // ============================================
 
         const evaluation =
             evaluationData.evaluation;
@@ -512,16 +783,21 @@ async function submitAnswer() {
             message.innerHTML =
                 "AI evaluation was not returned.";
 
+
             submitButton.disabled =
                 false;
+
+
+            resumeQuestionTimer();
+
 
             return;
         }
 
 
-        // 
+        // ============================================
         // STEP 3 — DISPLAY AI EVALUATION
-        // 
+        // ============================================
 
         let evaluationHTML = `
 
@@ -535,7 +811,11 @@ async function submitAnswer() {
                 Score:
             </strong>
 
-            ${evaluation.score}/10
+            ${escapeHTML(
+                String(
+                    evaluation.score ?? "0"
+                )
+            )}/10
 
             <br><br>
 
@@ -573,12 +853,24 @@ async function submitAnswer() {
                 evaluation.improvements || ""
             )}
 
+            <br><br>
+
+            <div class="question-time-result">
+
+                <strong>
+                    ⏱️ Time Used:
+                </strong>
+
+                ${formattedTime}
+
+            </div>
+
         `;
 
 
-        // 
+        // ============================================
         // STEP 4 — CODING REFERENCE SOLUTION
-        // 
+        // ============================================
 
         if (
             category === "Coding" &&
@@ -612,12 +904,13 @@ async function submitAnswer() {
                 )}</pre>
 
             `;
+
         }
 
 
-        // 
+        // ============================================
         // STEP 5 — NEXT QUESTION
-        // 
+        // ============================================
 
         evaluationHTML += `
 
@@ -636,17 +929,17 @@ async function submitAnswer() {
             evaluationHTML;
 
 
-        // 
+        // ============================================
         // HIDE ANSWER BOX
-        // 
+        // ============================================
 
         answerBox.style.display =
             "none";
 
 
-        // 
+        // ============================================
         // HIDE SUBMIT BUTTON
-        // 
+        // ============================================
 
         submitButton.style.display =
             "none";
@@ -668,13 +961,19 @@ async function submitAnswer() {
 
         submitButton.disabled =
             false;
+
+
+        // Resume timer after temporary error
+        resumeQuestionTimer();
+
     }
+
 }
 
 
-// 
+// ============================================
 // ESCAPE HTML
-// 
+// ============================================
 
 function escapeHTML(text) {
 
@@ -687,37 +986,44 @@ function escapeHTML(text) {
 
 
     return div.innerHTML;
+
 }
 
 
-// 
+// ============================================
 // NEXT QUESTION
-// 
+// ============================================
 
 function nextQuestion() {
 
     currentQuestion++;
 
     showQuestion();
+
 }
 
 
-// 
+// ============================================
 // GENERATE REPORT
-// 
+// ============================================
 
 async function generateReport() {
 
     try {
 
-        // 
+        // Stop timer
+        hideQuestionTimer();
+
+
+        // ============================================
         // GENERATE REPORT
-        // 
+        // ============================================
 
         const response =
             await fetch(
 
                 `https://intervo-backend-okao.onrender.com/api/report/generate/${sessionId}`,
+
                 {
 
                     method: "POST",
@@ -744,9 +1050,9 @@ async function generateReport() {
         );
 
 
-        // 
+        // ============================================
         // CHECK RESPONSE
-        // 
+        // ============================================
 
         if (!response.ok) {
 
@@ -758,22 +1064,19 @@ async function generateReport() {
         }
 
 
-        // 
+        // ============================================
         // SAVE REPORT ID
-        // 
+        // ============================================
 
         localStorage.setItem(
-
             "report_id",
-
             data.report_id
-
         );
 
 
-        // 
+        // ============================================
         // OPEN REPORT PAGE
-        // 
+        // ============================================
 
         window.location.href =
             "report.html";
@@ -791,12 +1094,14 @@ async function generateReport() {
 
         document.getElementById("message").innerHTML =
             "Unable to generate report.";
+
     }
+
 }
 
 
-// 
+// ============================================
 // START INTERVIEW
-// 
+// ============================================
 
 loadQuestions();

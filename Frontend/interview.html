@@ -5,26 +5,46 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>AI Interview</title>
+    <title>AI Interview | Intervo</title>
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" type="image/png" href="images/intervo-favicon.png?v=2">
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="images/intervo-favicon.png?v=2"
+    >
 
 </head>
 
 
 <body>
 
+
+<!-- ============================================
+     NAVBAR
+============================================ -->
+
 <header class="dashboard-navbar">
 
     <div class="dashboard-nav-container">
+
+
+        <!-- LOGO -->
 
         <a
             href="dashboard.html"
             class="dashboard-logo"
         >
+
             <span class="dashboard-logo-icon">
                 AI
             </span>
@@ -32,7 +52,11 @@
             <span>
                 Intervo
             </span>
+
         </a>
+
+
+        <!-- BACK TO DASHBOARD -->
 
         <a
             href="dashboard.html"
@@ -41,36 +65,99 @@
             ← Back to Dashboard
         </a>
 
+
     </div>
 
 </header>
 
 
+
+<!-- ============================================
+     INTERVIEW CONTAINER
+============================================ -->
+
 <div class="container">
 
 
     <h1>
-         Interview Preparation Platform 🚀
+        Interview Preparation Platform 🚀
     </h1>
 
 
+
+    <!-- ============================================
+         INTERVIEW CARD
+    ============================================= -->
+
     <div class="card">
 
+
+        <!-- QUESTION TITLE -->
 
         <h2>
             Interview Question
         </h2>
 
 
-        <p id="progress">
+        <!-- PROGRESS -->
+
+        <p
+            id="progress"
+            class="interview-progress"
+        >
             Question 1 / 5
         </p>
 
 
-        <h3 id="questionText">
+
+        <!-- ========================================
+             CODING TIMER
+             Visible only during Coding interviews
+        ========================================= -->
+
+        <div
+            id="codingTimer"
+            class="coding-timer"
+            style="display: none;"
+        >
+
+            <span class="timer-icon">
+                ⏱️
+            </span>
+
+
+            <span class="timer-label">
+                Time spent
+            </span>
+
+
+            <strong
+                id="timerDisplay"
+                class="timer-display"
+            >
+                00:00
+            </strong>
+
+        </div>
+
+
+
+        <!-- ========================================
+             QUESTION
+        ========================================= -->
+
+        <h3
+            id="questionText"
+            class="interview-question"
+        >
             Loading question...
         </h3>
 
+
+
+        <!-- ========================================
+             ANSWER
+        ========================================= -->
 
         <textarea
             id="answer"
@@ -79,8 +166,15 @@
         ></textarea>
 
 
-        <br><br>
 
+        <br>
+        <br>
+
+
+
+        <!-- ========================================
+             SUBMIT
+        ========================================= -->
 
         <button
             id="submitButton"
@@ -90,7 +184,15 @@
         </button>
 
 
-        <p id="message"></p>
+
+        <!-- ========================================
+             MESSAGE / AI EVALUATION
+        ========================================= -->
+
+        <p
+            id="message"
+            class="interview-message"
+        ></p>
 
 
     </div>
@@ -99,10 +201,14 @@
 </div>
 
 
+
+<!-- ============================================
+     JAVASCRIPT
+============================================ -->
+
 <script src="js/interview.js"></script>
 
 
 </body>
 
 </html>
-
