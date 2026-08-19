@@ -1,3 +1,7 @@
+// ============================================================
+// INTERVO - INTERVIEW
+// ============================================================
+
 let questions = [];
 
 let currentQuestion = 0;
@@ -5,9 +9,29 @@ let currentQuestion = 0;
 const MAX_QUESTIONS = 5;
 
 
-// ============================================
+// ============================================================
+// FOLLOW-UP STATE
+// ============================================================
+
+// Whether the currently displayed question is a follow-up
+let isFollowUpQuestion = false;
+
+// Main/original question text
+let mainQuestionText = "";
+
+// Current follow-up question text
+let followUpQuestionText = "";
+
+// Only one follow-up per main question
+let followUpUsed = false;
+
+// Follow-up waiting to be displayed
+let pendingFollowUp = null;
+
+
+// ============================================================
 // QUESTION TIMER
-// ============================================
+// ============================================================
 
 let questionTimerInterval = null;
 
@@ -16,9 +40,9 @@ let questionStartTime = null;
 let questionElapsedSeconds = 0;
 
 
-// ============================================
-// GET LOCAL STORAGE DATA
-// ============================================
+// ============================================================
+// LOCAL STORAGE
+// ============================================================
 
 const token =
     localStorage.getItem("token");
@@ -30,23 +54,19 @@ const category =
     localStorage.getItem("interview_category");
 
 
-// ============================================
-// QUESTION TIMER FUNCTIONS
-// ============================================
+// ============================================================
+// QUESTION TIMER
+// ============================================================
 
 function startQuestionTimer() {
 
-    // Clear previous timer
     clearInterval(questionTimerInterval);
 
     questionTimerInterval = null;
 
-
-    // Reset elapsed time for new question
     questionElapsedSeconds = 0;
 
-    questionStartTime =
-        Date.now();
+    questionStartTime = Date.now();
 
 
     const timer =
@@ -61,40 +81,34 @@ function startQuestionTimer() {
     }
 
 
-    // Show timer
-    timer.style.display =
-        "inline-flex";
+    timer.style.display = "inline-flex";
+
+    timerDisplay.textContent = "00:00";
 
 
-    // Reset display
-    timerDisplay.textContent =
-        "00:00";
-
-
-    // Start counting
     questionTimerInterval =
         setInterval(() => {
 
             questionElapsedSeconds =
                 Math.floor(
-                    (Date.now() - questionStartTime) / 1000
+                    (
+                        Date.now() -
+                        questionStartTime
+                    ) / 1000
                 );
-
 
             updateTimerDisplay();
 
         }, 1000);
-
 }
 
 
-// ============================================
-// RESUME QUESTION TIMER
-// ============================================
+// ============================================================
+// RESUME TIMER
+// ============================================================
 
 function resumeQuestionTimer() {
 
-    // Don't create duplicate intervals
     if (questionTimerInterval) {
         return;
     }
@@ -102,7 +116,9 @@ function resumeQuestionTimer() {
 
     questionStartTime =
         Date.now() -
-        (questionElapsedSeconds * 1000);
+        (
+            questionElapsedSeconds * 1000
+        );
 
 
     questionTimerInterval =
@@ -110,20 +126,21 @@ function resumeQuestionTimer() {
 
             questionElapsedSeconds =
                 Math.floor(
-                    (Date.now() - questionStartTime) / 1000
+                    (
+                        Date.now() -
+                        questionStartTime
+                    ) / 1000
                 );
-
 
             updateTimerDisplay();
 
         }, 1000);
-
 }
 
 
-// ============================================
-// UPDATE TIMER DISPLAY
-// ============================================
+// ============================================================
+// UPDATE TIMER
+// ============================================================
 
 function updateTimerDisplay() {
 
@@ -147,19 +164,17 @@ function updateTimerDisplay() {
 
 
     timerDisplay.textContent =
-
         String(minutes).padStart(2, "0")
         +
         ":"
         +
         String(seconds).padStart(2, "0");
-
 }
 
 
-// ============================================
-// STOP QUESTION TIMER
-// ============================================
+// ============================================================
+// STOP TIMER
+// ============================================================
 
 function stopQuestionTimer() {
 
@@ -167,15 +182,13 @@ function stopQuestionTimer() {
         questionTimerInterval
     );
 
-    questionTimerInterval =
-        null;
-
+    questionTimerInterval = null;
 }
 
 
-// ============================================
-// HIDE QUESTION TIMER
-// ============================================
+// ============================================================
+// HIDE TIMER
+// ============================================================
 
 function hideQuestionTimer() {
 
@@ -191,15 +204,13 @@ function hideQuestionTimer() {
     }
 
 
-    timer.style.display =
-        "none";
-
+    timer.style.display = "none";
 }
 
 
-// ============================================
+// ============================================================
 // FORMAT TIME
-// ============================================
+// ============================================================
 
 function formatTime(totalSeconds) {
 
@@ -214,27 +225,27 @@ function formatTime(totalSeconds) {
 
 
     return (
-
         String(minutes).padStart(2, "0")
         +
         ":"
         +
         String(seconds).padStart(2, "0")
-
     );
-
 }
 
 
-// ============================================
+// ============================================================
 // LOAD QUESTIONS
-// ============================================
+// ============================================================
 
 async function loadQuestions() {
 
     try {
 
-        // Check login
+        // ====================================================
+        // LOGIN CHECK
+        // ====================================================
+
         if (!token) {
 
             window.location.href =
@@ -244,7 +255,10 @@ async function loadQuestions() {
         }
 
 
-        // Check session
+        // ====================================================
+        // SESSION CHECK
+        // ====================================================
+
         if (!sessionId) {
 
             document.getElementById("message").innerHTML =
@@ -254,7 +268,10 @@ async function loadQuestions() {
         }
 
 
-        // Check category
+        // ====================================================
+        // CATEGORY CHECK
+        // ====================================================
+
         if (!category) {
 
             document.getElementById("message").innerHTML =
@@ -264,26 +281,21 @@ async function loadQuestions() {
         }
 
 
-        // ============================================
-        // REQUEST QUESTIONS
-        // ============================================
+        // ====================================================
+        // GET QUESTIONS
+        // ====================================================
 
         const response =
             await fetch(
-
                 `https://intervo-backend-okao.onrender.com/questions/${sessionId}`,
-
                 {
                     method: "GET",
 
                     headers: {
-
                         "Authorization":
                             "Bearer " + token
-
                     }
                 }
-
             );
 
 
@@ -297,9 +309,9 @@ async function loadQuestions() {
         );
 
 
-        // ============================================
+        // ====================================================
         // CHECK RESPONSE
-        // ============================================
+        // ====================================================
 
         if (!response.ok) {
 
@@ -311,9 +323,9 @@ async function loadQuestions() {
         }
 
 
-        // ============================================
-        // CHECK QUESTIONS FORMAT
-        // ============================================
+        // ====================================================
+        // CHECK QUESTION FORMAT
+        // ====================================================
 
         if (
             !data.questions ||
@@ -327,9 +339,9 @@ async function loadQuestions() {
         }
 
 
-        // ============================================
-        // STORE ONLY FIRST 5 QUESTIONS
-        // ============================================
+        // ====================================================
+        // FIRST 5 QUESTIONS
+        // ====================================================
 
         questions =
             data.questions.slice(
@@ -339,14 +351,10 @@ async function loadQuestions() {
 
 
         console.log(
-            "Questions used for interview:",
+            "Questions used:",
             questions
         );
 
-
-        // ============================================
-        // CHECK QUESTIONS
-        // ============================================
 
         if (questions.length === 0) {
 
@@ -357,17 +365,24 @@ async function loadQuestions() {
         }
 
 
-        // ============================================
-        // START INTERVIEW
-        // ============================================
+        // ====================================================
+        // INITIALIZE INTERVIEW
+        // ====================================================
 
-        currentQuestion =
-            0;
+        currentQuestion = 0;
+
+        isFollowUpQuestion = false;
+
+        followUpUsed = false;
+
+        followUpQuestionText = "";
+
+        pendingFollowUp = null;
+
 
         showQuestion();
 
     }
-
 
     catch (error) {
 
@@ -379,33 +394,29 @@ async function loadQuestions() {
 
         document.getElementById("message").innerHTML =
             "Failed to connect to server.";
-
     }
-
 }
 
 
-// ============================================
-// DISPLAY CURRENT QUESTION
-// ============================================
+// ============================================================
+// SHOW MAIN QUESTION
+// ============================================================
 
 function showQuestion() {
 
     const answerBox =
         document.getElementById("answer");
 
-
     const submitButton =
         document.getElementById("submitButton");
-
 
     const message =
         document.getElementById("message");
 
 
-    // ============================================
-    // QUESTIONS REMAINING
-    // ============================================
+    // ========================================================
+    // QUESTIONS REMAIN
+    // ========================================================
 
     if (
         currentQuestion <
@@ -416,27 +427,43 @@ function showQuestion() {
             questions[currentQuestion];
 
 
-        // ============================================
+        // ====================================================
+        // RESET FOLLOW-UP STATE
+        // ====================================================
+
+        isFollowUpQuestion = false;
+
+        followUpUsed = false;
+
+        followUpQuestionText = "";
+
+        pendingFollowUp = null;
+
+
+        mainQuestionText =
+            question.question;
+
+
+        // ====================================================
         // PROGRESS
-        // ============================================
+        // ====================================================
 
         document.getElementById("progress").innerHTML =
-
             `${escapeHTML(category)} Question ${
                 currentQuestion + 1
             } / ${questions.length}`;
 
 
-        // ============================================
+        // ====================================================
         // START TIMER
-        // ============================================
+        // ====================================================
 
         startQuestionTimer();
 
 
-        // ============================================
+        // ====================================================
         // DISPLAY QUESTION
-        // ============================================
+        // ====================================================
 
         document.getElementById("questionText").innerHTML =
             escapeHTML(
@@ -444,37 +471,34 @@ function showQuestion() {
             );
 
 
-        // ============================================
-        // CLEAR PREVIOUS ANSWER
-        // ============================================
+        // ====================================================
+        // CLEAR ANSWER
+        // ====================================================
 
-        answerBox.value =
-            "";
+        answerBox.value = "";
 
 
-        // ============================================
+        // ====================================================
         // CLEAR MESSAGE
-        // ============================================
+        // ====================================================
 
-        message.innerHTML =
-            "";
+        message.innerHTML = "";
 
 
-        // ============================================
+        // ====================================================
         // SHOW ANSWER BOX
-        // ============================================
+        // ====================================================
 
         answerBox.style.display =
             "block";
 
 
-        // ============================================
-        // SHOW SUBMIT BUTTON
-        // ============================================
+        // ====================================================
+        // SHOW SUBMIT
+        // ====================================================
 
         submitButton.style.display =
             "inline-block";
-
 
         submitButton.disabled =
             false;
@@ -484,9 +508,9 @@ function showQuestion() {
     }
 
 
-    // ============================================
+    // ========================================================
     // INTERVIEW COMPLETED
-    // ============================================
+    // ========================================================
 
     hideQuestionTimer();
 
@@ -512,47 +536,142 @@ function showQuestion() {
 
 
     generateReport();
-
 }
 
 
-// ============================================
+// ============================================================
+// SHOW FOLLOW-UP QUESTION
+// ============================================================
+
+function showFollowUpQuestion(
+    followUpQuestion
+) {
+
+    const answerBox =
+        document.getElementById("answer");
+
+    const submitButton =
+        document.getElementById("submitButton");
+
+    const message =
+        document.getElementById("message");
+
+
+    // ========================================================
+    // UPDATE FOLLOW-UP STATE
+    // ========================================================
+
+    isFollowUpQuestion = true;
+
+    followUpUsed = true;
+
+    followUpQuestionText =
+        followUpQuestion;
+
+
+    // ========================================================
+    // START TIMER
+    // ========================================================
+
+    startQuestionTimer();
+
+
+    // ========================================================
+    // PROGRESS
+    // ========================================================
+
+    document.getElementById("progress").innerHTML =
+        `${escapeHTML(category)} • AI Follow-up`;
+
+
+    // ========================================================
+    // DISPLAY FOLLOW-UP
+    // ========================================================
+
+    document.getElementById("questionText").innerHTML = `
+
+        <span class="follow-up-label">
+            🤖 AI Follow-up Question
+        </span>
+
+        <br><br>
+
+        ${escapeHTML(
+            followUpQuestion
+        )}
+
+    `;
+
+
+    // ========================================================
+    // CLEAR ANSWER
+    // ========================================================
+
+    answerBox.value = "";
+
+
+    // ========================================================
+    // CLEAR MESSAGE
+    // ========================================================
+
+    message.innerHTML = "";
+
+
+    // ========================================================
+    // SHOW ANSWER
+    // ========================================================
+
+    answerBox.style.display =
+        "block";
+
+
+    submitButton.style.display =
+        "inline-block";
+
+    submitButton.disabled =
+        false;
+}
+
+
+// ============================================================
 // SUBMIT ANSWER
-// ============================================
+// ============================================================
 
 async function submitAnswer() {
 
     const answerBox =
         document.getElementById("answer");
 
+    const submitButton =
+        document.getElementById("submitButton");
+
+    const message =
+        document.getElementById("message");
+
 
     const answer =
         answerBox.value.trim();
 
 
-    // ============================================
+    // ========================================================
     // VALIDATE ANSWER
-    // ============================================
+    // ========================================================
 
     if (!answer) {
 
         alert(
-
             category === "Coding"
-
                 ? "Please write your code."
-
                 : "Please write an answer."
-
         );
 
         return;
     }
 
 
-    // ============================================
-    // GET CURRENT QUESTION
-    // ============================================
+    // ========================================================
+    // GET MAIN QUESTION
+    // ========================================================
 
     const question =
         questions[currentQuestion];
@@ -568,16 +687,12 @@ async function submitAnswer() {
     }
 
 
-    // ============================================
+    // ========================================================
     // STOP TIMER
-    // ============================================
+    // ========================================================
 
     stopQuestionTimer();
 
-
-    // ============================================
-    // SAVE TIME USED
-    // ============================================
 
     const timeUsed =
         questionElapsedSeconds;
@@ -587,23 +702,19 @@ async function submitAnswer() {
         formatTime(timeUsed);
 
 
+    // ========================================================
+    // QUESTION ID
+    // ========================================================
+
     const questionId =
         question.id;
 
 
-    const submitButton =
-        document.getElementById("submitButton");
-
-
-    const message =
-        document.getElementById("message");
-
-
     try {
 
-        // ============================================
-        // DISABLE SUBMIT BUTTON
-        // ============================================
+        // ====================================================
+        // DISABLE SUBMIT
+        // ====================================================
 
         submitButton.disabled =
             true;
@@ -613,27 +724,22 @@ async function submitAnswer() {
             "Submitting answer...";
 
 
-        // ============================================
+        // ====================================================
         // STEP 1 — SAVE ANSWER
-        // ============================================
+        // ====================================================
 
         const submitResponse =
             await fetch(
-
                 "https://intervo-backend-okao.onrender.com/api/answer/submit-answer",
-
                 {
-
                     method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json",
 
                         "Authorization":
                             "Bearer " + token
-
                     },
 
                     body: JSON.stringify({
@@ -645,9 +751,7 @@ async function submitAnswer() {
                             answer
 
                     })
-
                 }
-
             );
 
 
@@ -661,9 +765,9 @@ async function submitAnswer() {
         );
 
 
-        // ============================================
+        // ====================================================
         // CHECK SUBMISSION
-        // ============================================
+        // ====================================================
 
         if (!submitResponse.ok) {
 
@@ -671,22 +775,14 @@ async function submitAnswer() {
                 submitData.message ||
                 "Answer submission failed.";
 
-
             submitButton.disabled =
                 false;
 
-
-            // Resume timer if submission failed
             resumeQuestionTimer();
-
 
             return;
         }
 
-
-        // ============================================
-        // GET ANSWER ID
-        // ============================================
 
         const answerId =
             submitData.answer_id;
@@ -697,44 +793,34 @@ async function submitAnswer() {
             message.innerHTML =
                 "Answer saved, but answer ID was not returned.";
 
-
             submitButton.disabled =
                 false;
 
-
             resumeQuestionTimer();
-
 
             return;
         }
 
 
-        // ============================================
+        // ====================================================
         // STEP 2 — AI EVALUATION
-        // ============================================
+        // ====================================================
 
         message.innerHTML =
-            "🤖 AI evaluating answer...";
+            "🤖 AI evaluating your answer...";
 
 
         const evaluationResponse =
             await fetch(
-
                 `https://intervo-backend-okao.onrender.com/api/answer/evaluate/${answerId}`,
-
                 {
-
                     method: "POST",
 
                     headers: {
-
                         "Authorization":
                             "Bearer " + token
-
                     }
-
                 }
-
             );
 
 
@@ -743,36 +829,29 @@ async function submitAnswer() {
 
 
         console.log(
-            "Evaluation:",
+            "Evaluation Response:",
             evaluationData
         );
 
 
-        // ============================================
+        // ====================================================
         // CHECK EVALUATION
-        // ============================================
+        // ====================================================
 
         if (!evaluationResponse.ok) {
 
             message.innerHTML =
                 evaluationData.message ||
-                "Evaluation failed.";
-
+                "AI evaluation failed.";
 
             submitButton.disabled =
                 false;
 
-
             resumeQuestionTimer();
-
 
             return;
         }
 
-
-        // ============================================
-        // GET EVALUATION
-        // ============================================
 
         const evaluation =
             evaluationData.evaluation;
@@ -783,103 +862,105 @@ async function submitAnswer() {
             message.innerHTML =
                 "AI evaluation was not returned.";
 
-
             submitButton.disabled =
                 false;
 
-
             resumeQuestionTimer();
-
 
             return;
         }
 
 
-        // ============================================
-        // STEP 3 — DISPLAY AI EVALUATION
-        // ============================================
+        // ====================================================
+        // BUILD EVALUATION UI
+        // ====================================================
 
         let evaluationHTML = `
 
-            <strong>
-                🤖 AI Evaluation
-            </strong>
-
-            <br><br>
-
-            <strong>
-                Score:
-            </strong>
-
-            ${escapeHTML(
-                String(
-                    evaluation.score ?? "0"
-                )
-            )}/10
-
-            <br><br>
-
-            <strong>
-                Feedback:
-            </strong>
-
-            <br>
-
-            ${escapeHTML(
-                evaluation.feedback || ""
-            )}
-
-            <br><br>
-
-            <strong>
-                Strengths:
-            </strong>
-
-            <br>
-
-            ${escapeHTML(
-                evaluation.strengths || ""
-            )}
-
-            <br><br>
-
-            <strong>
-                Improvements:
-            </strong>
-
-            <br>
-
-            ${escapeHTML(
-                evaluation.improvements || ""
-            )}
-
-            <br><br>
-
-            <div class="question-time-result">
+            <div class="ai-evaluation">
 
                 <strong>
-                    ⏱️ Time Used:
+                    🤖 AI Evaluation
                 </strong>
 
-                ${formattedTime}
+                <br><br>
+
+                <strong>
+                    Score:
+                </strong>
+
+                ${escapeHTML(
+                    String(
+                        evaluation.score ?? "0"
+                    )
+                )}/10
+
+                <br><br>
+
+                <strong>
+                    Feedback:
+                </strong>
+
+                <br>
+
+                ${escapeHTML(
+                    evaluation.feedback || ""
+                )}
+
+                <br><br>
+
+                <strong>
+                    Strengths:
+                </strong>
+
+                <br>
+
+                ${escapeHTML(
+                    evaluation.strengths || ""
+                )}
+
+                <br><br>
+
+                <strong>
+                    Improvements:
+                </strong>
+
+                <br>
+
+                ${escapeHTML(
+                    evaluation.improvements || ""
+                )}
+
+                <br><br>
+
+                <div class="question-time-result">
+
+                    <strong>
+                        ⏱️ Time Used:
+                    </strong>
+
+                    ${formattedTime}
+
+                </div>
 
             </div>
 
         `;
 
 
-        // ============================================
-        // STEP 4 — CODING REFERENCE SOLUTION
-        // ============================================
+        // ====================================================
+        // CODING REFERENCE SOLUTION
+        // ====================================================
 
         if (
             category === "Coding" &&
+            !isFollowUpQuestion &&
             question.solution
         ) {
 
             evaluationHTML += `
 
-                <br><br>
+                <br>
 
                 <hr>
 
@@ -891,61 +972,216 @@ async function submitAnswer() {
 
                 <br><br>
 
-                <pre
-                    style="
-                        text-align:left;
-                        background:#f4f4f4;
-                        padding:15px;
-                        border-radius:8px;
-                        overflow-x:auto;
-                    "
-                >${escapeHTML(
+                <pre class="reference-solution">${escapeHTML(
                     question.solution
                 )}</pre>
 
             `;
+        }
+
+
+        // ====================================================
+        // STEP 3 — FOLLOW-UP
+        // ====================================================
+
+        if (
+            category !== "Coding" &&
+            !isFollowUpQuestion &&
+            !followUpUsed
+        ) {
+
+            message.innerHTML =
+                evaluationHTML +
+                `
+
+                    <br><br>
+
+                    <div class="follow-up-loading">
+
+                        🤖 Checking whether the interviewer
+                        wants to ask a follow-up...
+
+                    </div>
+
+                `;
+
+
+            // ==================================================
+            // REQUEST FOLLOW-UP
+            // ==================================================
+
+            const followUpResponse =
+                await fetch(
+                    `https://intervo-backend-okao.onrender.com/api/answer/follow-up/${answerId}`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Authorization":
+                                "Bearer " + token
+                        }
+                    }
+                );
+
+
+            const followUpData =
+                await followUpResponse.json();
+
+
+            console.log(
+                "Follow-up Response:",
+                followUpData
+            );
+
+
+            // ==================================================
+            // FOLLOW-UP ERROR
+            // ==================================================
+
+            if (!followUpResponse.ok) {
+
+                console.error(
+                    "Follow-up Error:",
+                    followUpData
+                );
+
+
+                evaluationHTML += `
+
+                    <br><br>
+
+                    <button
+                        class="next-question-button"
+                        onclick="nextQuestion()"
+                    >
+                        Next Question →
+                    </button>
+
+                `;
+
+
+                message.innerHTML =
+                    evaluationHTML;
+
+            }
+
+
+            // ==================================================
+            // FOLLOW-UP AVAILABLE
+            // ==================================================
+
+            else if (
+                followUpData.follow_up === true &&
+                followUpData.question
+            ) {
+
+                pendingFollowUp =
+                    followUpData.question;
+
+
+                evaluationHTML += `
+
+                    <br><br>
+
+                    <div class="follow-up-notice">
+
+                        🤖 <strong>
+                            AI wants to know more
+                        </strong>
+
+                        <br><br>
+
+                        The interviewer has a follow-up
+                        question based on your answer.
+
+                    </div>
+
+                    <br>
+
+                    <button
+                        class="follow-up-button"
+                        onclick="continueWithFollowUp()"
+                    >
+                        Continue with Follow-up →
+                    </button>
+
+                `;
+
+
+                message.innerHTML =
+                    evaluationHTML;
+
+            }
+
+
+            // ==================================================
+            // NO FOLLOW-UP
+            // ==================================================
+
+            else {
+
+                evaluationHTML += `
+
+                    <br><br>
+
+                    <button
+                        class="next-question-button"
+                        onclick="nextQuestion()"
+                    >
+                        Next Question →
+                    </button>
+
+                `;
+
+
+                message.innerHTML =
+                    evaluationHTML;
+            }
 
         }
 
 
-        // ============================================
-        // STEP 5 — NEXT QUESTION
-        // ============================================
+        // ====================================================
+        // FOLLOW-UP ANSWER
+        // ====================================================
 
-        evaluationHTML += `
+        else {
 
-            <br><br>
+            evaluationHTML += `
 
-            <button
-                onclick="nextQuestion()"
-            >
-                Next Question →
-            </button>
+                <br><br>
 
-        `;
+                <button
+                    class="next-question-button"
+                    onclick="nextQuestion()"
+                >
+                    Next Question →
+                </button>
+
+            `;
 
 
-        message.innerHTML =
-            evaluationHTML;
+            message.innerHTML =
+                evaluationHTML;
+        }
 
 
-        // ============================================
+        // ====================================================
         // HIDE ANSWER BOX
-        // ============================================
+        // ====================================================
 
         answerBox.style.display =
             "none";
 
 
-        // ============================================
-        // HIDE SUBMIT BUTTON
-        // ============================================
+        // ====================================================
+        // HIDE SUBMIT
+        // ====================================================
 
         submitButton.style.display =
             "none";
 
     }
-
 
     catch (error) {
 
@@ -958,22 +1194,74 @@ async function submitAnswer() {
         message.innerHTML =
             "Something went wrong. Please try again.";
 
-
         submitButton.disabled =
             false;
 
-
-        // Resume timer after temporary error
         resumeQuestionTimer();
-
     }
-
 }
 
 
-// ============================================
+// ============================================================
+// CONTINUE WITH FOLLOW-UP
+// ============================================================
+
+function continueWithFollowUp() {
+
+    if (!pendingFollowUp) {
+
+        console.error(
+            "Follow-up question not found."
+        );
+
+        nextQuestion();
+
+        return;
+    }
+
+
+    const followUp =
+        pendingFollowUp;
+
+
+    pendingFollowUp =
+        null;
+
+
+    showFollowUpQuestion(
+        followUp
+    );
+}
+
+
+// ============================================================
+// NEXT QUESTION
+// ============================================================
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    isFollowUpQuestion =
+        false;
+
+    followUpUsed =
+        false;
+
+    followUpQuestionText =
+        "";
+
+    pendingFollowUp =
+        null;
+
+
+    showQuestion();
+}
+
+
+// ============================================================
 // ESCAPE HTML
-// ============================================
+// ============================================================
 
 function escapeHTML(text) {
 
@@ -986,57 +1274,31 @@ function escapeHTML(text) {
 
 
     return div.innerHTML;
-
 }
 
 
-// ============================================
-// NEXT QUESTION
-// ============================================
-
-function nextQuestion() {
-
-    currentQuestion++;
-
-    showQuestion();
-
-}
-
-
-// ============================================
+// ============================================================
 // GENERATE REPORT
-// ============================================
+// ============================================================
 
 async function generateReport() {
 
     try {
 
-        // Stop timer
         hideQuestionTimer();
 
 
-        // ============================================
-        // GENERATE REPORT
-        // ============================================
-
         const response =
             await fetch(
-
                 `https://intervo-backend-okao.onrender.com/api/report/generate/${sessionId}`,
-
                 {
-
                     method: "POST",
 
                     headers: {
-
                         "Authorization":
                             "Bearer " + token
-
                     }
-
                 }
-
             );
 
 
@@ -1050,10 +1312,6 @@ async function generateReport() {
         );
 
 
-        // ============================================
-        // CHECK RESPONSE
-        // ============================================
-
         if (!response.ok) {
 
             document.getElementById("message").innerHTML =
@@ -1064,25 +1322,27 @@ async function generateReport() {
         }
 
 
-        // ============================================
+        // ====================================================
         // SAVE REPORT ID
-        // ============================================
+        // ====================================================
 
-        localStorage.setItem(
-            "report_id",
-            data.report_id
-        );
+        if (data.report_id) {
+
+            localStorage.setItem(
+                "report_id",
+                data.report_id
+            );
+        }
 
 
-        // ============================================
-        // OPEN REPORT PAGE
-        // ============================================
+        // ====================================================
+        // OPEN REPORT
+        // ====================================================
 
         window.location.href =
             "report.html";
 
     }
-
 
     catch (error) {
 
@@ -1094,14 +1354,12 @@ async function generateReport() {
 
         document.getElementById("message").innerHTML =
             "Unable to generate report.";
-
     }
-
 }
 
 
-// ============================================
+// ============================================================
 // START INTERVIEW
-// ============================================
+// ============================================================
 
 loadQuestions();
