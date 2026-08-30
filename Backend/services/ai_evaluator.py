@@ -51,7 +51,6 @@ def _generate_gemini_response(prompt):
 
     response = None
 
-
     for attempt in range(
         1,
         max_attempts + 1
@@ -66,7 +65,6 @@ def _generate_gemini_response(prompt):
                 f"ATTEMPT {attempt}/{max_attempts} =========="
             )
 
-
             response = client.models.generate_content(
 
                 model=MODEL_NAME,
@@ -80,20 +78,17 @@ def _generate_gemini_response(prompt):
 
             )
 
-
             print(
                 "Gemini request completed successfully."
             )
 
             break
 
-
         except Exception as e:
 
             error_message = str(e)
 
             error_lower = error_message.lower()
-
 
             print()
 
@@ -109,7 +104,6 @@ def _generate_gemini_response(prompt):
                 "=================================="
             )
 
-
             # ==================================================
             # TEMPORARY ERRORS
             # ==================================================
@@ -117,19 +111,13 @@ def _generate_gemini_response(prompt):
             temporary_error = (
 
                 "503" in error_lower
-
                 or "unavailable" in error_lower
-
                 or "429" in error_lower
-
                 or "rate limit" in error_lower
-
                 or "resource exhausted" in error_lower
-
                 or "overloaded" in error_lower
 
             )
-
 
             if temporary_error:
 
@@ -148,12 +136,10 @@ def _generate_gemini_response(prompt):
 
                     continue
 
-
                 raise RuntimeError(
                     "Gemini AI service is temporarily "
                     "unavailable after multiple attempts."
                 )
-
 
             # ==================================================
             # AUTHENTICATION ERROR
@@ -162,11 +148,8 @@ def _generate_gemini_response(prompt):
             if (
 
                 "api key" in error_lower
-
                 or "unauthenticated" in error_lower
-
                 or "authentication" in error_lower
-
                 or "permission denied" in error_lower
 
             ):
@@ -176,7 +159,6 @@ def _generate_gemini_response(prompt):
                     "Please check GEMINI_API_KEY."
                 )
 
-
             # ==================================================
             # MODEL ERROR
             # ==================================================
@@ -184,7 +166,6 @@ def _generate_gemini_response(prompt):
             if (
 
                 "not found" in error_lower
-
                 or "model" in error_lower
 
             ):
@@ -195,7 +176,6 @@ def _generate_gemini_response(prompt):
                     f"Original error: {error_message}"
                 )
 
-
             # ==================================================
             # OTHER ERROR
             # ==================================================
@@ -204,7 +184,6 @@ def _generate_gemini_response(prompt):
                 f"Gemini AI request failed: "
                 f"{error_message}"
             )
-
 
     # =========================================================
     # CHECK RESPONSE
@@ -216,13 +195,11 @@ def _generate_gemini_response(prompt):
             "Gemini did not return a response."
         )
 
-
     # =========================================================
     # GET RESPONSE TEXT
     # =========================================================
 
     result = response.text
-
 
     print()
 
@@ -238,7 +215,6 @@ def _generate_gemini_response(prompt):
         "======================================"
     )
 
-
     # =========================================================
     # EMPTY RESPONSE
     # =========================================================
@@ -248,7 +224,6 @@ def _generate_gemini_response(prompt):
         raise RuntimeError(
             "Gemini returned an empty response."
         )
-
 
     # =========================================================
     # PARSE JSON
@@ -260,25 +235,20 @@ def _generate_gemini_response(prompt):
             result
         )
 
-
     except json.JSONDecodeError:
 
         cleaned_result = (
-
             result
             .replace("```json", "")
             .replace("```", "")
             .strip()
-
         )
-
 
         try:
 
             parsed_result = json.loads(
                 cleaned_result
             )
-
 
         except json.JSONDecodeError:
 
@@ -296,11 +266,9 @@ def _generate_gemini_response(prompt):
                 "=========================================="
             )
 
-
             raise RuntimeError(
                 "Gemini returned invalid JSON data."
             )
-
 
     # =========================================================
     # VALIDATE RESPONSE TYPE
@@ -314,7 +282,6 @@ def _generate_gemini_response(prompt):
         raise RuntimeError(
             "Gemini returned an invalid response format."
         )
-
 
     return parsed_result
 
@@ -339,13 +306,11 @@ def evaluate_answer(
             "Interview question is missing."
         )
 
-
     if not answer or not answer.strip():
 
         raise RuntimeError(
             "Candidate answer is empty."
         )
-
 
     # ========================================================
     # CODING QUESTION
@@ -406,7 +371,6 @@ Rules:
 - Do not use code fences
 - Do not add text outside JSON
 """
-
 
     # ========================================================
     # HR / TECHNICAL / PROJECT QUESTION
@@ -483,29 +447,24 @@ Rules:
 - Do not add text outside JSON
 """
 
-
     # ========================================================
-    # SEND REQUEST TO GEMINI
+    # SEND REQUEST
     # ========================================================
 
     evaluation = _generate_gemini_response(
         prompt
     )
 
-
     # ========================================================
     # REQUIRED FIELDS
     # ========================================================
 
     required_fields = [
-
         "score",
         "feedback",
         "strengths",
         "improvements"
-
     ]
-
 
     for field in required_fields:
 
@@ -514,7 +473,6 @@ Rules:
             raise RuntimeError(
                 f"Gemini evaluation missing field: {field}"
             )
-
 
     # ========================================================
     # VALIDATE SCORE
@@ -535,14 +493,12 @@ Rules:
             "Gemini returned an invalid score."
         )
 
-
     if score < 1 or score > 10:
 
         raise RuntimeError(
             "Gemini returned an invalid score. "
             "Score must be between 1 and 10."
         )
-
 
     # ========================================================
     # NORMALIZE RESULT
@@ -562,7 +518,6 @@ Rules:
         evaluation["improvements"]
     ).strip()
 
-
     # ========================================================
     # SUCCESS
     # ========================================================
@@ -581,7 +536,6 @@ Rules:
         "========================================"
     )
 
-
     return evaluation
 
 
@@ -596,16 +550,11 @@ def generate_follow_up(
     category=None
 ):
 
-    # ========================================================
-    # VALIDATE INPUT
-    # ========================================================
-
     if not question:
 
         raise RuntimeError(
             "Interview question is missing."
         )
-
 
     if not answer or not answer.strip():
 
@@ -613,13 +562,11 @@ def generate_follow_up(
             "Candidate answer is empty."
         )
 
-
     if not evaluation:
 
         raise RuntimeError(
             "Answer evaluation is missing."
         )
-
 
     # ========================================================
     # NEVER GENERATE FOLLOW-UP FOR CODING
@@ -628,15 +575,9 @@ def generate_follow_up(
     if category and category.lower() == "coding":
 
         return {
-
-            "follow_up":
-                False,
-
-            "question":
-                ""
-
+            "follow_up": False,
+            "question": ""
         }
-
 
     # ========================================================
     # FOLLOW-UP PROMPT
@@ -671,7 +612,6 @@ Strengths:
 
 Improvements:
 {evaluation.get("improvements")}
-
 
 FOLLOW-UP RULES:
 
@@ -749,7 +689,6 @@ Rules:
 - Do not add text outside JSON
 """
 
-
     # ========================================================
     # SEND REQUEST
     # ========================================================
@@ -757,7 +696,6 @@ Rules:
     result = _generate_gemini_response(
         prompt
     )
-
 
     # ========================================================
     # VALIDATE RESULT
@@ -769,11 +707,9 @@ Rules:
             "Gemini follow-up response is missing 'follow_up'."
         )
 
-
     follow_up = result.get(
         "follow_up"
     )
-
 
     if not isinstance(
         follow_up,
@@ -784,7 +720,6 @@ Rules:
             "Gemini returned an invalid follow-up value."
         )
 
-
     # ========================================================
     # NO FOLLOW-UP
     # ========================================================
@@ -792,15 +727,9 @@ Rules:
     if not follow_up:
 
         return {
-
-            "follow_up":
-                False,
-
-            "question":
-                ""
-
+            "follow_up": False,
+            "question": ""
         }
-
 
     # ========================================================
     # GET FOLLOW-UP QUESTION
@@ -813,19 +742,12 @@ Rules:
         )
     ).strip()
 
-
     if not follow_up_question:
 
         return {
-
-            "follow_up":
-                False,
-
-            "question":
-                ""
-
+            "follow_up": False,
+            "question": ""
         }
-
 
     # ========================================================
     # SUCCESS
@@ -845,13 +767,221 @@ Rules:
         "==================================================="
     )
 
+    return {
+        "follow_up": True,
+        "question": follow_up_question
+    }
+
+
+# ============================================================
+# GENERATE AI ANSWER TIPS
+# ============================================================
+
+def generate_answer_tips(
+    question,
+    category=None
+):
+
+    # ========================================================
+    # VALIDATE QUESTION
+    # ========================================================
+
+    if not question or not question.strip():
+
+        raise RuntimeError(
+            "Interview question is missing."
+        )
+
+    question = question.strip()
+
+    # ========================================================
+    # AI ANSWER TIPS PROMPT
+    # ========================================================
+
+    prompt = f"""
+You are an expert interview coach.
+
+Generate question-specific answer tips for a candidate
+preparing for a professional interview.
+
+INTERVIEW CATEGORY:
+{category or "General"}
+
+INTERVIEW QUESTION:
+{question}
+
+Your task is to analyze the exact interview question and
+generate practical guidance that helps the candidate
+construct their OWN answer.
+
+IMPORTANT:
+
+- Do NOT write the complete answer.
+- Do NOT provide a sample answer.
+- Do NOT tell the candidate exactly what to say.
+- Do NOT use predefined or generic tips.
+- Every tip must be specifically connected to the exact
+  interview question.
+- Avoid generic advice such as "be confident" or
+  "answer clearly" unless it is directly relevant to the
+  question.
+- Encourage the candidate to use their own experience.
+- Give 3 to 5 concise tips.
+- Each tip must provide useful guidance for this exact
+  question.
+
+CATEGORY GUIDANCE:
+
+For HR questions:
+- Focus on the experience being asked about.
+- Encourage a specific real-life example.
+- Help the candidate explain their role, actions, and result.
+- Consider what the interviewer is trying to understand.
+
+For Technical questions:
+- Focus on the exact technical concept.
+- Encourage explanation in the candidate's own words.
+- Include practical examples, implementation details,
+  use cases, or trade-offs when relevant.
+
+For Project questions:
+- Focus on the specific project aspect being asked about.
+- Consider technologies, contribution, decisions,
+  challenges, implementation, and results when relevant.
+
+For Coding questions:
+- Focus on understanding the exact problem.
+- Consider the algorithm or data structure.
+- Consider edge cases.
+- Consider time and space complexity.
+- Encourage explaining the approach before coding.
+
+QUALITY RULE:
+
+The tips must be different when the interview question
+changes.
+
+For example, do NOT return the same generic HR tips for
+every HR question.
+
+Return ONLY valid JSON.
+
+Use exactly this format:
+
+{{
+    "tips": [
+        "Question-specific tip 1.",
+        "Question-specific tip 2.",
+        "Question-specific tip 3."
+    ]
+}}
+
+Rules:
+
+- Return 3 to 5 tips.
+- Each tip must be a complete sentence.
+- Each tip must be relevant to the exact question.
+- Do not write a complete answer.
+- Do not provide a sample answer.
+- Do not use Markdown.
+- Do not use code fences.
+- Do not add text outside JSON.
+"""
+
+    # ========================================================
+    # SEND REQUEST TO GEMINI
+    # ========================================================
+
+    result = _generate_gemini_response(
+        prompt
+    )
+
+    # ========================================================
+    # VALIDATE RESPONSE
+    # ========================================================
+
+    if "tips" not in result:
+
+        raise RuntimeError(
+            "Gemini answer tips response is missing 'tips'."
+        )
+
+    tips = result.get(
+        "tips"
+    )
+
+    if not isinstance(
+        tips,
+        list
+    ):
+
+        raise RuntimeError(
+            "Gemini returned an invalid tips format."
+        )
+
+    # ========================================================
+    # CLEAN TIPS
+    # ========================================================
+
+    cleaned_tips = []
+
+    for tip in tips:
+
+        if not isinstance(
+            tip,
+            str
+        ):
+
+            continue
+
+        tip = tip.strip()
+
+        if tip:
+
+            cleaned_tips.append(
+                tip
+            )
+
+    # ========================================================
+    # VALIDATE TIP COUNT
+    # ========================================================
+
+    if not cleaned_tips:
+
+        raise RuntimeError(
+            "Gemini returned no answer tips."
+        )
+
+    # ========================================================
+    # KEEP MAXIMUM 5 TIPS
+    # ========================================================
+
+    cleaned_tips = cleaned_tips[:5]
+
+    # ========================================================
+    # SUCCESS
+    # ========================================================
+
+    print()
+
+    print(
+        "========== AI ANSWER TIPS GENERATED =========="
+    )
+
+    for index, tip in enumerate(
+        cleaned_tips,
+        start=1
+    ):
+
+        print(
+            f"{index}. {tip}"
+        )
+
+    print(
+        "==============================================="
+    )
 
     return {
-
-        "follow_up":
-            True,
-
-        "question":
-            follow_up_question
-
+        "tips": cleaned_tips
     }
+

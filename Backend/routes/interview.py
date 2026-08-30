@@ -1,3 +1,4 @@
+
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -10,6 +11,14 @@ from services.ai_question_generator import (
     generate_questions as ai_generate_questions
 )
 
+from services.ai_answer_tips import (
+    generate_answer_tips
+)
+
+
+# ============================================================
+# INTERVIEW BLUEPRINT
+# ============================================================
 
 interview = Blueprint(
     "interview",
@@ -17,9 +26,21 @@ interview = Blueprint(
 )
 
 
-# ==================================================
-# GENERATE QUESTIONS
-# ==================================================
+# ============================================================
+# ALLOWED INTERVIEW CATEGORIES
+# ============================================================
+
+ALLOWED_CATEGORIES = [
+    "HR",
+    "Technical",
+    "Coding",
+    "Project"
+]
+
+
+# ============================================================
+# GENERATE INTERVIEW QUESTIONS
+# ============================================================
 
 @interview.route(
     "/generate-questions",
@@ -32,7 +53,13 @@ def generate_questions():
 
     data = request.get_json()
 
+
+    # ========================================================
+    # CHECK REQUEST BODY
+    # ========================================================
+
     if not data:
+
         return jsonify({
             "message": "Request body is required"
         }), 400
@@ -43,9 +70,9 @@ def generate_questions():
     category = data.get("category")
 
 
-    # ==================================================
+    # ========================================================
     # CHECK REQUIRED FIELDS
-    # ==================================================
+    # ========================================================
 
     if not resume_id or not session_id or not category:
 
@@ -55,19 +82,11 @@ def generate_questions():
         }), 400
 
 
-    # ==================================================
-    # ALLOWED CATEGORIES
-    # ==================================================
+    # ========================================================
+    # VALIDATE CATEGORY
+    # ========================================================
 
-    allowed_categories = [
-        "HR",
-        "Technical",
-        "Coding",
-        "Project"
-    ]
-
-
-    if category not in allowed_categories:
+    if category not in ALLOWED_CATEGORIES:
 
         return jsonify({
 
@@ -75,14 +94,14 @@ def generate_questions():
             "Invalid category",
 
             "allowed_categories":
-            allowed_categories
+            ALLOWED_CATEGORIES
 
         }), 400
 
 
-    # ==================================================
+    # ========================================================
     # CHECK RESUME
-    # ==================================================
+    # ========================================================
 
     resume = Resume.query.filter_by(
 
@@ -99,9 +118,9 @@ def generate_questions():
         }), 404
 
 
-    # ==================================================
+    # ========================================================
     # CHECK INTERVIEW SESSION
-    # ==================================================
+    # ========================================================
 
     session = InterviewSession.query.filter_by(
 
@@ -119,9 +138,9 @@ def generate_questions():
         }), 404
 
 
-    # ==================================================
+    # ========================================================
     # GENERATE QUESTIONS
-    # ==================================================
+    # ========================================================
 
     try:
 
@@ -133,9 +152,9 @@ def generate_questions():
         )
 
 
-        # ==================================================
+        # ====================================================
         # DELETE OLD QUESTIONS
-        # ==================================================
+        # ====================================================
 
         InterviewQuestion.query.filter_by(
 
@@ -148,9 +167,9 @@ def generate_questions():
         db.session.commit()
 
 
-        # ==================================================
+        # ====================================================
         # SAVE NEW QUESTIONS
-        # ==================================================
+        # ====================================================
 
         for item in questions:
 
@@ -175,16 +194,16 @@ def generate_questions():
             db.session.add(new_question)
 
 
-        # ==================================================
+        # ====================================================
         # SAVE TO DATABASE
-        # ==================================================
+        # ====================================================
 
         db.session.commit()
 
 
-        # ==================================================
+        # ====================================================
         # SUCCESS RESPONSE
-        # ==================================================
+        # ====================================================
 
         return jsonify({
 
@@ -203,17 +222,17 @@ def generate_questions():
         }), 201
 
 
-    # ==================================================
+    # ========================================================
     # ERROR
-    # ==================================================
+    # ========================================================
 
-    except Exception as e:
+    except Exception as error:
 
         db.session.rollback()
 
         print(
             "Question Generation Error:",
-            e
+            error
         )
 
         return jsonify({
@@ -222,14 +241,14 @@ def generate_questions():
             "Failed to generate questions",
 
             "error":
-            str(e)
+            str(error)
 
         }), 500
 
 
-# ==================================================
-# GET QUESTIONS
-# ==================================================
+# ============================================================
+# GET INTERVIEW QUESTIONS
+# ============================================================
 
 @interview.route(
     "/questions/<int:session_id>",
@@ -241,9 +260,9 @@ def get_questions(session_id):
     user_id = get_jwt_identity()
 
 
-    # ==================================================
+    # ========================================================
     # GET QUESTIONS
-    # ==================================================
+    # ========================================================
 
     questions = InterviewQuestion.query.filter_by(
 
@@ -253,9 +272,9 @@ def get_questions(session_id):
     ).all()
 
 
-    # ==================================================
+    # ========================================================
     # CHECK QUESTIONS
-    # ==================================================
+    # ========================================================
 
     if not questions:
 
@@ -270,36 +289,38 @@ def get_questions(session_id):
     result = []
 
 
-    # ==================================================
+    # ========================================================
     # FORMAT QUESTIONS
-    # ==================================================
+    # ========================================================
 
-    for q in questions:
+    for question in questions:
 
         question_data = {
 
             "id":
-            q.id,
+            question.id,
 
             "question":
-            q.question,
+            question.question,
 
             "category":
-            q.category,
+            question.category,
 
             "difficulty":
-            q.difficulty
+            question.difficulty
 
         }
 
 
-        # ==================================================
+        # ====================================================
         # CODING QUESTION
-        # ==================================================
+        # ====================================================
 
-        if q.category == "Coding":
+        if question.category == "Coding":
 
-            question_data["solution"] = q.solution
+            question_data["solution"] = (
+                question.solution
+            )
 
 
         result.append(
@@ -307,9 +328,9 @@ def get_questions(session_id):
         )
 
 
-    # ==================================================
+    # ========================================================
     # RETURN QUESTIONS
-    # ==================================================
+    # ========================================================
 
     return jsonify({
 
@@ -320,3 +341,154 @@ def get_questions(session_id):
         result
 
     }), 200
+
+
+# ============================================================
+# GENERATE AI ANSWER TIPS
+# ============================================================
+
+@interview.route(
+    "/answer-tips",
+    methods=["POST"]
+)
+@jwt_required()
+def answer_tips():
+
+    try:
+
+        data = request.get_json()
+
+
+        # ====================================================
+        # CHECK REQUEST BODY
+        # ====================================================
+
+        if not data:
+
+            return jsonify({
+
+                "message":
+                "Request body is required"
+
+            }), 400
+
+
+        question = data.get("question")
+        category = data.get("category")
+
+
+        # ====================================================
+        # CHECK REQUIRED FIELDS
+        # ====================================================
+
+        if not question or not category:
+
+            return jsonify({
+
+                "message":
+                "question and category are required"
+
+            }), 400
+
+
+        # ====================================================
+        # VALIDATE CATEGORY
+        # ====================================================
+
+        if category not in ALLOWED_CATEGORIES:
+
+            return jsonify({
+
+                "message":
+                "Invalid category",
+
+                "allowed_categories":
+                ALLOWED_CATEGORIES
+
+            }), 400
+
+
+        # ====================================================
+        # GENERATE AI TIPS
+        # ====================================================
+
+        tips = generate_answer_tips(
+
+            question,
+            category
+
+        )
+
+
+        # ====================================================
+        # VALIDATE AI RESPONSE
+        # ====================================================
+
+        if not isinstance(tips, list):
+
+            return jsonify({
+
+                "message":
+                "AI returned an invalid tips format",
+
+                "tips":
+                []
+
+            }), 500
+
+
+        if not tips:
+
+            return jsonify({
+
+                "message":
+                "No answer tips were generated",
+
+                "tips":
+                []
+
+            }), 200
+
+
+        # ====================================================
+        # SUCCESS RESPONSE
+        # ====================================================
+
+        return jsonify({
+
+            "message":
+            "Answer tips generated successfully",
+
+            "category":
+            category,
+
+            "question":
+            question,
+
+            "tips":
+            tips[:5]
+
+        }), 200
+
+
+    # ========================================================
+    # ERROR
+    # ========================================================
+
+    except Exception as error:
+
+        print(
+            "Answer Tips Error:",
+            error
+        )
+
+        return jsonify({
+
+            "message":
+            "Unable to generate answer tips",
+
+            "error":
+            str(error)
+
+        }), 500
+

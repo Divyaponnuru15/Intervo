@@ -8,7 +8,8 @@ from models.evaluation import AnswerEvaluation
 
 from services.ai_evaluator import (
     evaluate_answer,
-    generate_follow_up
+    generate_follow_up,
+    generate_answer_tips
 )
 
 
@@ -35,7 +36,9 @@ def submit_answer():
 
     user_id = get_jwt_identity()
 
-    data = request.get_json(silent=True)
+    data = request.get_json(
+        silent=True
+    )
 
 
     # ========================================================
@@ -164,6 +167,264 @@ def submit_answer():
             new_answer.id
 
     }), 201
+
+
+# ============================================================
+# GENERATE AI ANSWER TIPS
+#
+# Tips are generated specifically for the current question.
+#
+# Frontend should call this endpoint when the question is
+# displayed, BEFORE the candidate submits an answer.
+# ============================================================
+
+@answer.route(
+    "/answer-tips/<int:question_id>",
+    methods=["GET"]
+)
+@jwt_required()
+def get_answer_tips(question_id):
+
+    user_id = get_jwt_identity()
+
+
+    # ========================================================
+    # FIND QUESTION
+    # ========================================================
+
+    question = InterviewQuestion.query.filter_by(
+
+        id=question_id,
+
+        user_id=user_id
+
+    ).first()
+
+
+    if not question:
+
+        return jsonify({
+
+            "message":
+                "Question not found."
+
+        }), 404
+
+
+    # ========================================================
+    # GET QUESTION TEXT
+    # ========================================================
+
+    question_text = str(
+        question.question or ""
+    ).strip()
+
+
+    if not question_text:
+
+        return jsonify({
+
+            "message":
+                "Interview question is empty."
+
+        }), 400
+
+
+    # ========================================================
+    # DETERMINE CATEGORY
+    #
+    # If the question model has a category field, use it.
+    # Otherwise determine coding questions using solution.
+    # ========================================================
+
+    category = getattr(
+        question,
+        "category",
+        None
+    )
+
+
+    if not category:
+
+        if question.solution:
+
+            category = "Coding"
+
+        else:
+
+            category = "General"
+
+
+    # ========================================================
+    # GENERATE AI TIPS
+    # ========================================================
+
+    try:
+
+        result = generate_answer_tips(
+
+            question=question_text,
+
+            category=category
+
+        )
+
+
+    except RuntimeError as e:
+
+        print(
+            "AI Answer Tips Error:",
+            str(e)
+        )
+
+        return jsonify({
+
+            "message":
+                str(e)
+
+        }), 503
+
+
+    except Exception as e:
+
+        print(
+            "Unexpected AI Answer Tips Error:",
+            str(e)
+        )
+
+        return jsonify({
+
+            "message":
+                "Unable to generate answer tips. "
+                "Please try again later."
+
+        }), 500
+
+
+    # ========================================================
+    # VALIDATE AI RESULT
+    # ========================================================
+
+    if not result:
+
+        return jsonify({
+
+            "message":
+                "AI did not generate answer tips."
+
+        }), 500
+
+
+    tips = result.get(
+        "tips",
+        []
+    )
+
+
+    if not isinstance(
+        tips,
+        list
+    ):
+
+        return jsonify({
+
+            "message":
+                "AI returned an invalid tips format."
+
+        }), 500
+
+
+    # ========================================================
+    # CLEAN TIPS
+    # ========================================================
+
+    cleaned_tips = []
+
+    for tip in tips:
+
+        if tip is None:
+
+            continue
+
+
+        tip = str(
+            tip
+        ).strip()
+
+
+        if tip:
+
+            cleaned_tips.append(
+                tip
+            )
+
+
+    # ========================================================
+    # VALIDATE TIPS
+    # ========================================================
+
+    if not cleaned_tips:
+
+        return jsonify({
+
+            "message":
+                "No answer tips were generated."
+
+        }), 500
+
+
+    # Maximum 5 tips
+
+    cleaned_tips = cleaned_tips[:5]
+
+
+    # ========================================================
+    # LOG
+    # ========================================================
+
+    print()
+    print(
+        "========== AI ANSWER TIPS =========="
+    )
+
+    print(
+        f"Question ID: {question_id}"
+    )
+
+    print(
+        f"Category: {category}"
+    )
+
+    for index, tip in enumerate(
+        cleaned_tips,
+        start=1
+    ):
+
+        print(
+            f"{index}. {tip}"
+        )
+
+    print(
+        "===================================="
+    )
+
+
+    # ========================================================
+    # RETURN TIPS
+    # ========================================================
+
+    return jsonify({
+
+        "question_id":
+            question_id,
+
+        "category":
+            category,
+
+        "tips":
+            cleaned_tips
+
+    }), 200
 
 
 # ============================================================
@@ -497,7 +758,13 @@ def evaluate(answer_id):
 
                 answer=answer_record.answer,
 
-                evaluation=evaluation_data
+                evaluation=evaluation_data,
+
+                category=getattr(
+                    question,
+                    "category",
+                    None
+                )
 
             )
 
@@ -537,7 +804,7 @@ def evaluate(answer_id):
                 str(e)
             )
 
-            # Do not fail the completed evaluation
+            # Do not fail completed evaluation
             # if follow-up generation fails.
 
             follow_up_question = None
@@ -561,9 +828,11 @@ def evaluate(answer_id):
     print(
         "========== AI EVALUATION =========="
     )
+
     print(
         f"Score: {result['score']}/10"
     )
+
 
     if follow_up_question:
 
@@ -577,6 +846,7 @@ def evaluate(answer_id):
         print(
             "Follow-up: None"
         )
+
 
     print(
         "===================================="
@@ -619,7 +889,7 @@ def evaluate(answer_id):
 #
 # This endpoint is kept for compatibility.
 #
-# Your new frontend does NOT need to call this endpoint because
+# Your frontend does NOT need to call this endpoint because
 # /evaluate/<answer_id> already generates the follow-up.
 # ============================================================
 
@@ -755,7 +1025,13 @@ def follow_up_question(answer_id):
 
             answer=answer_record.answer,
 
-            evaluation=evaluation_data
+            evaluation=evaluation_data,
+
+            category=getattr(
+                question,
+                "category",
+                None
+            )
 
         )
 
@@ -868,9 +1144,11 @@ def follow_up_question(answer_id):
     print(
         "========== FOLLOW-UP QUESTION =========="
     )
+
     print(
         follow_up_question_text
     )
+
     print(
         "========================================="
     )

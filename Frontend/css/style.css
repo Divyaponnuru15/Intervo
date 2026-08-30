@@ -5533,3 +5533,158 @@ body {
     min-width: 52px;
     text-align: center;
 }
+
+
+/* ============================================================
+   ANSWER TIPS BUTTON
+   ============================================================ */
+
+.answer-tips-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    padding: 9px 16px;
+
+    border: 1px solid #d6dce5;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Hover */
+
+.answer-tips-button:hover {
+    background: #f8fafc;
+    border-color: #9ca3af;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Active / Click */
+
+.answer-tips-button:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   ANSWER TIPS CONTAINER
+   ============================================================ */
+
+.answer-tips {
+    margin-top: 4px;
+    margin-bottom: 18px;
+
+    padding: 16px 18px;
+
+    border: 1px solid #dbe3ec;
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.06);
+
+    animation:
+        answerTipsAppear 0.2s ease;
+}
+
+
+/* ============================================================
+   ANSWER TIPS HEADER
+   ============================================================ */
+
+.answer-tips-header {
+    margin-bottom: 10px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    color: #1f2937;
+}
+
+
+/* ============================================================
+   ANSWER TIPS LIST
+   ============================================================ */
+
+.answer-tips ul {
+    margin: 0;
+    padding-left: 22px;
+}
+
+
+.answer-tips li {
+    margin-bottom: 7px;
+
+    color: #4b5563;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+.answer-tips li:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   TIPS ANIMATION
+   ============================================================ */
+
+@keyframes answerTipsAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .answer-tips-button {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .answer-tips {
+        padding: 14px;
+    }
+
+    .answer-tips li {
+        font-size: 13px;
+    }
+}
+
