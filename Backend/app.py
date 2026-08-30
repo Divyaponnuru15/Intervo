@@ -44,6 +44,7 @@ app.config.from_object(Config)
 jwt = JWTManager(app)
 
 
+
 # ============================================================
 # CORS CONFIGURATION
 # ============================================================
@@ -51,10 +52,11 @@ jwt = JWTManager(app)
 CORS(
     app,
     resources={
-        r"/api/*": {
+        r"/*": {
             "origins": [
                 "http://127.0.0.1:5500",
-                "http://localhost:5500"
+                "http://localhost:5500",
+                "https://intervo-ma97.onrender.com"
             ],
             "methods": [
                 "GET",
@@ -85,6 +87,7 @@ CORS(
 def handle_options(path):
 
     return "", 200
+
 
 
 # ============================================================
