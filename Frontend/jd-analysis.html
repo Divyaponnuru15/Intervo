@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>JD Analysis | Intervo</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="icon"
+        type="image/png"
+        href="images/intervo-favicon.png?v=2"
+    >
+
+</head>
+
+
+<body class="dashboard-body">
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-nav-container">
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <span class="dashboard-logo-icon">
+                AI
+            </span>
+
+            <span>
+                Intervo
+            </span>
+
+        </a>
+
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logout"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="dashboard-main">
+
+
+    <!-- =====================================================
+         PAGE HEADER
+    ===================================================== -->
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <span class="dashboard-label">
+                JOB PREPARATION
+            </span>
+
+            <h1>
+                Job Description Analysis
+            </h1>
+
+            <p>
+                See how closely your resume matches the
+                job description and discover what to improve.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ANALYSIS CARD
+    ===================================================== -->
+
+    <section class="jd-analysis-page">
+
+
+        <!-- =================================================
+             MATCH SCORE
+        ================================================= -->
+
+        <article class="dashboard-card jd-analysis-score-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    JOB MATCH
+                </span>
+
+                <h2>
+                    Your Resume Match Score
+                </h2>
+
+
+                <div class="jd-score-display">
+
+                    <strong
+                        id="matchScore"
+                        class="jd-large-score"
+                    >
+                        --%
+                    </strong>
+
+                    <span
+                        id="matchScoreLabel"
+                        class="jd-score-label"
+                    >
+                        Analyzing...
+                    </span>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             OVERALL ASSESSMENT
+        ================================================= -->
+
+        <article class="dashboard-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    OVERALL ASSESSMENT
+                </span>
+
+                <h2>
+                    AI Assessment
+                </h2>
+
+                <p
+                    id="overallAssessment"
+                    class="jd-assessment-text"
+                >
+                    Loading analysis...
+                </p>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             MATCHING SKILLS
+        ================================================= -->
+
+        <article class="dashboard-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    STRENGTHS
+                </span>
+
+                <h2>
+                    ✅ Matching Skills
+                </h2>
+
+                <p>
+                    Skills from your resume that match
+                    the job description.
+                </p>
+
+
+                <div
+                    id="matchingSkills"
+                    class="jd-skill-list jd-large-skill-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             PARTIAL SKILLS
+        ================================================= -->
+
+        <article class="dashboard-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    PARTIAL MATCH
+                </span>
+
+                <h2>
+                    🟡 Skills to Strengthen
+                </h2>
+
+                <p>
+                    Skills that are related to the role
+                    but are not strongly demonstrated.
+                </p>
+
+
+                <div
+                    id="partialSkills"
+                    class="jd-skill-list jd-large-skill-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             MISSING SKILLS
+        ================================================= -->
+
+        <article class="dashboard-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    SKILL GAPS
+                </span>
+
+                <h2>
+                    ❌ Skills Not Found
+                </h2>
+
+                <p>
+                    Important requirements from the JD that
+                    were not found in your resume.
+                </p>
+
+
+                <div
+                    id="missingSkills"
+                    class="jd-skill-list jd-large-skill-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             PRIORITY SKILLS
+        ================================================= -->
+
+        <article class="dashboard-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    PRIORITY
+                </span>
+
+                <h2>
+                    🎯 Skills to Focus On
+                </h2>
+
+                <p>
+                    The most important areas to prepare
+                    for this particular job.
+                </p>
+
+
+                <div
+                    id="prioritySkills"
+                    class="jd-skill-list jd-large-skill-list"
+                >
+                    Loading...
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             RESUME SUGGESTIONS
+        ================================================= -->
+
+        <article class="dashboard-card jd-suggestions-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    RESUME IMPROVEMENT
+                </span>
+
+                <h2>
+                    📝 Resume Suggestions
+                </h2>
+
+                <p>
+                    Suggestions based specifically on this
+                    job description and your current resume.
+                </p>
+
+
+                <div
+                    id="resumeSuggestions"
+                    class="jd-suggestions-list"
+                >
+                    Loading suggestions...
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             JOB DESCRIPTION
+        ================================================= -->
+
+        <article class="dashboard-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    JOB DESCRIPTION
+                </span>
+
+                <h2>
+                    📄 Analyzed Job Description
+                </h2>
+
+
+                <div
+                    id="jobDescription"
+                    class="jd-original-text"
+                >
+                    Loading job description...
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================= -->
+
+        <article class="dashboard-card jd-actions-card">
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    NEXT STEP
+                </span>
+
+                <h2>
+                    Continue Preparing
+                </h2>
+
+                <p>
+                    Use this analysis to improve your resume
+                    and prepare for the role.
+                </p>
+
+
+                <div class="jd-actions">
+
+                    <button
+                        type="button"
+                        class="dashboard-primary-button"
+                        onclick="goToDashboard()"
+                    >
+                        ← Back to Dashboard
+                    </button>
+
+
+                </div>
+
+
+                <p
+                    id="jdActionMessage"
+                    class="dashboard-message"
+                    aria-live="polite"
+                ></p>
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 Intervo
+    </span>
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="js/jd-analysis.js"></script>
+
+
+</body>
+
+</html>

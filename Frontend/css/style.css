@@ -5688,3 +5688,407 @@ body {
     }
 }
 
+/* ============================================================
+   INTERVO - JOB DESCRIPTION ANALYZER
+   ============================================================ */
+
+
+/* ============================================================
+   JD CARD
+   ============================================================ */
+
+.jd-card {
+    position: relative;
+}
+
+
+.jd-card .card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ============================================================
+   JD INPUT AREA
+   ============================================================ */
+
+.jd-input-area {
+    margin-top: 20px;
+}
+
+
+.jd-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.jd-textarea {
+    width: 100%;
+    min-height: 220px;
+    padding: 14px 16px;
+
+    border: 1px solid #d9dce3;
+    border-radius: 12px;
+
+    background: #ffffff;
+    color: #1f2937;
+
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+
+    resize: vertical;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.jd-textarea:focus {
+    outline: none;
+
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+
+.jd-textarea::placeholder {
+    color: #9ca3af;
+}
+
+
+/* ============================================================
+   JD CHARACTER COUNT
+   ============================================================ */
+
+.jd-character-count {
+    margin-top: 7px;
+
+    text-align: right;
+
+    font-size: 12px;
+    color: #8a8f9b;
+}
+
+
+/* ============================================================
+   JD RESULT PREVIEW
+   ============================================================ */
+
+.jd-result-preview {
+    margin-top: 24px;
+
+    padding: 20px;
+
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+
+    background: #fafbff;
+}
+
+
+.jd-match-preview {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding-bottom: 18px;
+
+    margin-bottom: 18px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.jd-match-preview span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.jd-match-preview strong {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   JD PREVIEW SECTION
+   ============================================================ */
+
+.jd-preview-section {
+    margin-top: 18px;
+}
+
+
+.jd-preview-section > strong {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   JD SKILL LIST
+   ============================================================ */
+
+.jd-skill-list {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+.jd-skill-tag {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 7px 11px;
+
+    border-radius: 999px;
+
+    background: #eef2ff;
+    color: #3730a3;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.jd-empty-skill {
+    font-size: 13px;
+    color: #8a8f9b;
+}
+
+
+/* ============================================================
+   JD FULL ANALYSIS PAGE
+   ============================================================ */
+
+.jd-analysis-page {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+
+    width: 100%;
+}
+
+
+.jd-analysis-page .dashboard-card {
+    min-width: 0;
+}
+
+
+.jd-analysis-score-card {
+    text-align: center;
+}
+
+
+/* ============================================================
+   JD SCORE
+   ============================================================ */
+
+.jd-score-display {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 20px;
+
+    padding: 24px;
+}
+
+
+.jd-large-score {
+    font-size: 56px;
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+
+.jd-score-label {
+    margin-top: 10px;
+
+    font-size: 14px;
+    color: #737987;
+}
+
+
+/* ============================================================
+   JD ASSESSMENT
+   ============================================================ */
+
+.jd-assessment-text {
+    line-height: 1.7;
+
+    color: #555b67;
+}
+
+
+/* ============================================================
+   LARGE SKILL LIST
+   ============================================================ */
+
+.jd-large-skill-list {
+    min-height: 40px;
+}
+
+
+/* ============================================================
+   JD SUGGESTIONS
+   ============================================================ */
+
+.jd-suggestions-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 15px;
+}
+
+
+.jd-suggestion-item {
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    background: #f7f8fc;
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   ORIGINAL JOB DESCRIPTION
+   ============================================================ */
+
+.jd-original-text {
+    margin-top: 15px;
+
+    max-height: 400px;
+
+    overflow-y: auto;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #f7f8fc;
+
+    white-space: pre-wrap;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+
+    color: #4b5563;
+}
+
+
+/* ============================================================
+   JD ACTIONS
+   ============================================================ */
+
+.jd-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+
+.jd-actions button {
+    margin: 0;
+}
+
+
+/* ============================================================
+   JD ACTIONS CARD
+   ============================================================ */
+
+.jd-actions-card {
+    grid-column: 1 / -1;
+}
+
+
+/* ============================================================
+   RESPONSIVE - TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .jd-analysis-page {
+        grid-template-columns: 1fr;
+    }
+
+    .jd-actions-card {
+        grid-column: auto;
+    }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE - MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .jd-textarea {
+        min-height: 180px;
+    }
+
+
+    .jd-result-preview {
+        padding: 15px;
+    }
+
+
+    .jd-match-preview strong {
+        font-size: 26px;
+    }
+
+
+    .jd-large-score {
+        font-size: 46px;
+    }
+
+
+    .jd-actions {
+        flex-direction: column;
+    }
+
+
+    .jd-actions button {
+        width: 100%;
+    }
+
+}

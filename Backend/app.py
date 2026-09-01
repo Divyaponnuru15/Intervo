@@ -21,6 +21,7 @@ from routes.answer import answer
 from routes.report import report
 from routes.session import session
 from routes.pdf_report import pdf_report
+from routes.job_analysis import job_analysis
 
 
 # ============================================================
@@ -140,6 +141,10 @@ app.register_blueprint(
     url_prefix="/api/pdf"
 )
 
+app.register_blueprint(
+    job_analysis,
+    url_prefix="/api/job-analysis"
+)
 
 # ============================================================
 # HOME ROUTE

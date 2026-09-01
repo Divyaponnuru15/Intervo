@@ -29,9 +29,9 @@
 <body class="dashboard-body">
 
 
-<!--
+<!-- =========================================================
      NAVBAR
-======== -->
+========================================================= -->
 
 <header class="dashboard-navbar">
 
@@ -67,16 +67,16 @@
 
 
 
-<!--
+<!-- =========================================================
      MAIN
-======== -->
+========================================================= -->
 
 <main class="dashboard-main">
 
 
-    <!-- ====
+    <!-- =====================================================
          PAGE HEADER
-    ===== -->
+    ===================================================== -->
 
     <section class="dashboard-header">
 
@@ -101,9 +101,9 @@
 
 
 
-    <!-- ====
+    <!-- =====================================================
          PROGRESS
-    ===== -->
+    ===================================================== -->
 
     <section class="progress-card">
 
@@ -189,16 +189,16 @@
 
 
 
-    <!-- ====
+    <!-- =====================================================
          DASHBOARD GRID
-    ===== -->
+    ===================================================== -->
 
     <section class="dashboard-grid">
 
 
-        <!-- 
+        <!-- =================================================
              RESUME
-        = -->
+        ================================================= -->
 
         <article class="dashboard-card resume-card">
 
@@ -274,9 +274,9 @@
 
 
 
-        <!-- 
+        <!-- =================================================
              ATS SCORE
-        = -->
+        ================================================= -->
 
         <article class="dashboard-card ats-card">
 
@@ -411,9 +411,9 @@
 
 
 
-        <!-- 
+        <!-- =================================================
              INTERVIEW
-        = -->
+        ================================================= -->
 
         <article
             class="dashboard-card interview-card"
@@ -437,14 +437,10 @@
                 </p>
 
 
-                <!-- 
-                     INTERVIEW TYPES
-                 -->
-
                 <div class="interview-options">
 
 
-                    <!--========= HR========= -->
+                    <!-- HR -->
 
                     <button
                         type="button"
@@ -475,8 +471,7 @@
                     </button>
 
 
-
-                    <!--====== TECHNICAL====== -->
+                    <!-- TECHNICAL -->
 
                     <button
                         type="button"
@@ -507,8 +502,7 @@
                     </button>
 
 
-
-                    <!--========= CODING========= -->
+                    <!-- CODING -->
 
                     <button
                         type="button"
@@ -539,8 +533,7 @@
                     </button>
 
 
-
-                    <!--========= PROJECT========= -->
+                    <!-- PROJECT -->
 
                     <button
                         type="button"
@@ -573,10 +566,7 @@
                 </div>
 
 
-
-                <!-- 
-                     CATEGORY MESSAGE
-                = -->
+                <!-- CATEGORY MESSAGE -->
 
                 <p
                     id="categoryMessage"
@@ -585,10 +575,7 @@
                 ></p>
 
 
-
-                <!-- 
-                     HR MODE
-                = -->
+                <!-- HR MODE -->
 
                 <div
                     id="mode-HR"
@@ -678,10 +665,7 @@
                 </div>
 
 
-
-                <!-- 
-                     TECHNICAL MODE
-                = -->
+                <!-- TECHNICAL MODE -->
 
                 <div
                     id="mode-Technical"
@@ -771,10 +755,7 @@
                 </div>
 
 
-
-                <!-- 
-                     CODING MODE
-                 -->
+                <!-- CODING MODE -->
 
                 <div
                     id="mode-Coding"
@@ -864,10 +845,7 @@
                 </div>
 
 
-
-                <!-- 
-                     PROJECT MODE
-                 -->
+                <!-- PROJECT MODE -->
 
                 <div
                     id="mode-Project"
@@ -960,15 +938,161 @@
 
         </article>
 
+
+
+        <!-- =================================================
+             JOB DESCRIPTION ANALYZER
+        ================================================= -->
+
+        <article
+            class="dashboard-card jd-card"
+            id="jdSection"
+            style="display: none;"
+        >
+
+            <div class="card-content">
+
+                <span class="card-label">
+                    JOB PREPARATION
+                </span>
+
+                <h2>
+                    💼 Job Description Analyzer
+                </h2>
+
+                <p>
+                    Paste a job description and compare it
+                    with your uploaded resume.
+                </p>
+
+
+                <!-- JD INPUT -->
+
+                <div class="jd-input-area">
+
+                    <label
+                        for="jobDescription"
+                        class="jd-label"
+                    >
+                        Job Description
+                    </label>
+
+
+                    <textarea
+                        id="jobDescription"
+                        class="jd-textarea"
+                        rows="10"
+                        maxlength="20000"
+                        placeholder="Paste the job description here..."
+                    ></textarea>
+
+
+                    <div class="jd-character-count">
+                        <span id="jdCharacterCount">
+                            0
+                        </span>
+                        / 20000 characters
+                    </div>
+
+                </div>
+
+
+                <!-- ANALYZE BUTTON -->
+
+                <button
+                    type="button"
+                    class="dashboard-primary-button"
+                    id="analyzeJDButton"
+                    onclick="analyzeJobDescription()"
+                    disabled
+                >
+                    🔍 Analyze Job Description
+                </button>
+
+
+                <!-- JD MESSAGE -->
+
+                <p
+                    id="jdMessage"
+                    class="dashboard-message"
+                    aria-live="polite"
+                ></p>
+
+
+                <!-- JD RESULT PREVIEW -->
+
+                <div
+                    id="jdResultPreview"
+                    class="jd-result-preview"
+                    style="display: none;"
+                >
+
+                    <div class="jd-match-preview">
+
+                        <span>
+                            Job Match Score
+                        </span>
+
+                        <strong id="jdMatchScore">
+                            --%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="jd-preview-section">
+
+                        <strong>
+                            ✅ Matching Skills
+                        </strong>
+
+                        <div
+                            id="jdMatchingSkills"
+                            class="jd-skill-list"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="jd-preview-section">
+
+                        <strong>
+                            ⚠️ Skills to Improve
+                        </strong>
+
+                        <div
+                            id="jdMissingSkills"
+                            class="jd-skill-list"
+                        ></div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="dashboard-secondary-button"
+                        id="viewJDAnalysisButton"
+                        onclick="viewJDAnalysis()"
+                    >
+                        View Full Analysis
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
     </section>
 
 </main>
 
 
 
-<!--
+<!-- =========================================================
      FOOTER
-======== -->
+========================================================= -->
 
 <footer class="dashboard-footer">
 
@@ -980,13 +1104,15 @@
 
 
 
-<!--
+<!-- =========================================================
      JAVASCRIPT
- -->
+========================================================= -->
 
 <script src="js/dashboard.js"></script>
 
 <script src="js/resume.js"></script>
+
+<script src="js/job_analysis.js"></script>
 
 
 </body>

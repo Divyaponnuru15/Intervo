@@ -1,7 +1,19 @@
+// ============================================================
+// INTERVO - RESUME
+// ============================================================
 
-// ====
+
+// ============================================================
+// API CONFIGURATION
+// ============================================================
+
+const RESUME_API_BASE_URL =
+    "https://intervo-backend-okao.onrender.com";
+
+
+// ============================================================
 // RESUME FILE SELECTION
-// ====
+// ============================================================
 
 const resumeFile =
     document.getElementById("resumeFile");
@@ -23,7 +35,8 @@ if (resumeFile) {
 
             } else {
 
-                selectedFileName.textContent = "";
+                selectedFileName.textContent =
+                    "";
 
             }
 
@@ -33,9 +46,9 @@ if (resumeFile) {
 }
 
 
-// ====
+// ============================================================
 // UPDATE ATS RESULT
-// ====
+// ============================================================
 
 function updateATSResult(
     atsScore,
@@ -49,12 +62,13 @@ function updateATSResult(
     );
 
 
-    // 
+    // ========================================================
     // ATS SCORE
-    // 
+    // ========================================================
 
     const atsScoreElement =
         document.getElementById("atsScore");
+
 
     if (atsScoreElement) {
 
@@ -64,17 +78,19 @@ function updateATSResult(
     }
 
 
-    // 
+    // ========================================================
     // KEYWORDS
-    // 
+    // ========================================================
 
     const keywordsElement =
         document.getElementById("atsKeywords");
+
 
     if (keywordsElement) {
 
         const keywords =
             atsAnalysis.keywords || [];
+
 
         keywordsElement.textContent =
             keywords.length > 0
@@ -87,17 +103,19 @@ function updateATSResult(
     }
 
 
-    // 
+    // ========================================================
     // SKILLS
-    // 
+    // ========================================================
 
     const skillsElement =
         document.getElementById("atsSkills");
+
 
     if (skillsElement) {
 
         const skills =
             atsAnalysis.skills || [];
+
 
         skillsElement.textContent =
             skills.length > 0
@@ -110,12 +128,13 @@ function updateATSResult(
     }
 
 
-    // 
+    // ========================================================
     // PROJECTS
-    // 
+    // ========================================================
 
     const projectsElement =
         document.getElementById("atsProjects");
+
 
     if (projectsElement) {
 
@@ -125,36 +144,34 @@ function updateATSResult(
                 ? atsAnalysis.sections.projects
                 : 0;
 
+
         projectsElement.textContent =
             projectScore + "%";
 
     }
 
 
-    // 
+    // ========================================================
     // STRUCTURE
-    // 
+    // ========================================================
 
     const structureElement =
         document.getElementById("atsStructure");
+
 
     if (structureElement) {
 
         const sections =
             atsAnalysis.sections || {};
 
+
         const sectionScores = [
 
             sections.contact || 0,
-
             sections.summary || 0,
-
             sections.education || 0,
-
             sections.skills || 0,
-
             sections.experience || 0,
-
             sections.projects || 0
 
         ];
@@ -183,34 +200,176 @@ function updateATSResult(
 }
 
 
-// ====
+// ============================================================
+// RESET ATS UI
+// ============================================================
+
+function resetATSUI() {
+
+    const atsScore =
+        document.getElementById(
+            "atsScore"
+        );
+
+
+    const atsKeywords =
+        document.getElementById(
+            "atsKeywords"
+        );
+
+
+    const atsSkills =
+        document.getElementById(
+            "atsSkills"
+        );
+
+
+    const atsProjects =
+        document.getElementById(
+            "atsProjects"
+        );
+
+
+    const atsStructure =
+        document.getElementById(
+            "atsStructure"
+        );
+
+
+    if (atsScore) {
+
+        atsScore.textContent =
+            "--";
+
+    }
+
+
+    if (atsKeywords) {
+
+        atsKeywords.textContent =
+            "--%";
+
+    }
+
+
+    if (atsSkills) {
+
+        atsSkills.textContent =
+            "--%";
+
+    }
+
+
+    if (atsProjects) {
+
+        atsProjects.textContent =
+            "--%";
+
+    }
+
+
+    if (atsStructure) {
+
+        atsStructure.textContent =
+            "--%";
+
+    }
+
+}
+
+
+// ============================================================
+// SHOW INTERVIEW SECTION
+// ============================================================
+
+function showInterviewSection() {
+
+    const categorySection =
+        document.getElementById(
+            "categorySection"
+        );
+
+
+    if (categorySection) {
+
+        categorySection.style.display =
+            "block";
+
+    }
+
+}
+
+
+// ============================================================
+// SHOW JOB DESCRIPTION ANALYZER
+// ============================================================
+
+function showJDAnalyzer() {
+
+    const jdSection =
+        document.getElementById(
+            "jdSection"
+        );
+
+
+    if (jdSection) {
+
+        jdSection.style.display =
+            "block";
+
+    }
+
+
+    // Tell job_analysis.js that the
+    // resume is now available.
+
+    if (
+        typeof updateAnalyzeButton ===
+        "function"
+    ) {
+
+        updateAnalyzeButton();
+
+    }
+
+}
+
+
+// ============================================================
 // UPLOAD RESUME
-// ====
-//
-// IMPORTANT:
-// This function ONLY uploads the resume.
-//
-// It does NOT call Gemini.
-//
-// Gemini is called by analyzeResume() below.
-//
-// ====
+// ============================================================
 
 async function uploadResume() {
 
     const fileInput =
-        document.getElementById("resumeFile");
+        document.getElementById(
+            "resumeFile"
+        );
+
 
     const uploadMessage =
-        document.getElementById("uploadMessage");
+        document.getElementById(
+            "uploadMessage"
+        );
+
+
+    if (!fileInput || !uploadMessage) {
+
+        console.error(
+            "Resume upload elements not found."
+        );
+
+        return;
+    }
+
 
     const file =
         fileInput.files[0];
 
 
-    // 
+    // ========================================================
     // CHECK FILE
-    // 
+    // ========================================================
 
     if (!file) {
 
@@ -221,9 +380,9 @@ async function uploadResume() {
     }
 
 
-    // 
+    // ========================================================
     // CHECK FILE TYPE
-    // 
+    // ========================================================
 
     const allowedTypes = [
 
@@ -243,9 +402,9 @@ async function uploadResume() {
     }
 
 
-    // 
+    // ========================================================
     // CHECK FILE SIZE
-    // 
+    // ========================================================
 
     const maxSize =
         10 * 1024 * 1024;
@@ -260,12 +419,14 @@ async function uploadResume() {
     }
 
 
-    // 
+    // ========================================================
     // GET TOKEN
-    // 
+    // ========================================================
 
     const token =
-        localStorage.getItem("token");
+        localStorage.getItem(
+            "token"
+        );
 
 
     if (!token) {
@@ -277,9 +438,9 @@ async function uploadResume() {
     }
 
 
-    // 
+    // ========================================================
     // PREPARE FORM DATA
-    // 
+    // ========================================================
 
     const formData =
         new FormData();
@@ -293,9 +454,9 @@ async function uploadResume() {
 
     try {
 
-        // =================================================
+        // ====================================================
         // UPLOADING
-        // =================================================
+        // ====================================================
 
         uploadMessage.textContent =
             "Uploading resume...";
@@ -303,9 +464,8 @@ async function uploadResume() {
 
         const uploadResponse =
             await fetch(
-                "https://intervo-backend-okao.onrender.com/upload-resume",
+                `${RESUME_API_BASE_URL}/upload-resume`,
                 {
-
                     method: "POST",
 
                     headers: {
@@ -315,14 +475,51 @@ async function uploadResume() {
 
                     },
 
-                    body: formData
-
+                    body:
+                        formData
                 }
             );
 
 
-        const uploadData =
-            await uploadResponse.json();
+        // ====================================================
+        // READ RESPONSE SAFELY
+        // ====================================================
+
+        const contentType =
+            uploadResponse.headers.get(
+                "content-type"
+            ) || "";
+
+
+        let uploadData;
+
+
+        if (
+            contentType.includes(
+                "application/json"
+            )
+        ) {
+
+            uploadData =
+                await uploadResponse.json();
+
+        }
+
+        else {
+
+            const text =
+                await uploadResponse.text();
+
+
+            uploadData = {
+
+                message:
+                    text ||
+                    "Unexpected server response."
+
+            };
+
+        }
 
 
         console.log(
@@ -331,9 +528,9 @@ async function uploadResume() {
         );
 
 
-        // =================================================
+        // ====================================================
         // CHECK RESPONSE
-        // =================================================
+        // ====================================================
 
         if (!uploadResponse.ok) {
 
@@ -345,13 +542,26 @@ async function uploadResume() {
         }
 
 
-        // =================================================
-        // SAVE RESUME ID
-        // =================================================
+        // ====================================================
+        // GET RESUME ID
+        // ====================================================
 
         const resumeId =
             uploadData.resume_id;
 
+
+        if (!resumeId) {
+
+            uploadMessage.textContent =
+                "Resume uploaded, but resume ID was not returned.";
+
+            return;
+        }
+
+
+        // ====================================================
+        // SAVE RESUME ID
+        // ====================================================
 
         localStorage.setItem(
             "resume_id",
@@ -359,92 +569,49 @@ async function uploadResume() {
         );
 
 
-        // =================================================
-        // RESET PREVIOUS ATS DATA
-        // =================================================
+        // ====================================================
+        // RESET OLD ATS DATA
+        // ====================================================
 
         localStorage.removeItem(
             "ats_score"
         );
+
 
         localStorage.removeItem(
             "ats_analysis"
         );
 
 
-        // =================================================
-        // RESET ATS UI
-        // =================================================
-
-        const atsScoreElement =
-            document.getElementById("atsScore");
-
-        if (atsScoreElement) {
-
-            atsScoreElement.textContent =
-                "--";
-
-        }
+        resetATSUI();
 
 
-        const atsKeywords =
-            document.getElementById("atsKeywords");
+        // ====================================================
+        // RESET ATS DETAILS BUTTON
+        // ====================================================
 
-        if (atsKeywords) {
+        const viewDetailsButton =
+            document.getElementById(
+                "viewATSDetailsButton"
+            );
 
-            atsKeywords.textContent =
-                "--%";
+
+        if (viewDetailsButton) {
+
+            viewDetailsButton.style.display =
+                "none";
 
         }
 
 
-        const atsSkills =
-            document.getElementById("atsSkills");
-
-        if (atsSkills) {
-
-            atsSkills.textContent =
-                "--%";
-
-        }
-
-
-        const atsProjects =
-            document.getElementById("atsProjects");
-
-        if (atsProjects) {
-
-            atsProjects.textContent =
-                "--%";
-
-        }
-
-
-        const atsStructure =
-            document.getElementById("atsStructure");
-
-        if (atsStructure) {
-
-            atsStructure.textContent =
-                "--%";
-
-        }
-
-
-        // =================================================
-        // SUCCESS
-        // =================================================
-
-        uploadMessage.textContent =
-            "Resume uploaded successfully.";
-
-
-        // =================================================
-        // ENABLE ANALYZE BUTTON
-        // =================================================
+        // ====================================================
+        // ENABLE ATS ANALYSIS
+        // ====================================================
 
         const analyzeButton =
-            document.getElementById("analyzeResumeButton");
+            document.getElementById(
+                "analyzeResumeButton"
+            );
 
 
         if (analyzeButton) {
@@ -455,18 +622,26 @@ async function uploadResume() {
             analyzeButton.style.display =
                 "inline-flex";
 
+            analyzeButton.textContent =
+                "Analyze Resume";
+
         }
 
 
-        // =================================================
+        // ====================================================
         // UPDATE PROGRESS
-        // =================================================
+        // ====================================================
 
         const progressBar =
-            document.getElementById("progressBar");
+            document.getElementById(
+                "progressBar"
+            );
+
 
         const progressStatus =
-            document.getElementById("progressStatus");
+            document.getElementById(
+                "progressStatus"
+            );
 
 
         if (progressBar) {
@@ -485,22 +660,26 @@ async function uploadResume() {
         }
 
 
-        // =================================================
+        // ====================================================
         // SHOW INTERVIEW SECTION
-        // =================================================
+        // ====================================================
 
-        const categorySection =
-            document.getElementById(
-                "categorySection"
-            );
+        showInterviewSection();
 
 
-        if (categorySection) {
+        // ====================================================
+        // SHOW JD ANALYZER
+        // ====================================================
 
-            categorySection.style.display =
-                "block";
+        showJDAnalyzer();
 
-        }
+
+        // ====================================================
+        // SUCCESS
+        // ====================================================
+
+        uploadMessage.textContent =
+            "Resume uploaded successfully.";
 
     }
 
@@ -521,33 +700,33 @@ async function uploadResume() {
 }
 
 
-// ====
+// ============================================================
 // ANALYZE RESUME
-// ====
-//
-// This function is called ONLY when the user clicks:
-//
-//              "Analyze Resume"
-//
-// ====
+// ============================================================
 
 async function analyzeResume() {
 
     const resumeId =
-        localStorage.getItem("resume_id");
+        localStorage.getItem(
+            "resume_id"
+        );
 
 
     const token =
-        localStorage.getItem("token");
+        localStorage.getItem(
+            "token"
+        );
 
 
     const uploadMessage =
-        document.getElementById("uploadMessage");
+        document.getElementById(
+            "uploadMessage"
+        );
 
 
-    // 
-    // CHECK LOGIN
-    // 
+    // ========================================================
+    // LOGIN CHECK
+    // ========================================================
 
     if (!token) {
 
@@ -558,9 +737,9 @@ async function analyzeResume() {
     }
 
 
-    // 
-    // CHECK RESUME
-    // 
+    // ========================================================
+    // RESUME CHECK
+    // ========================================================
 
     if (!resumeId) {
 
@@ -571,20 +750,20 @@ async function analyzeResume() {
     }
 
 
+    const analyzeButton =
+        document.getElementById(
+            "analyzeResumeButton"
+        );
+
+
     try {
 
-        // =================================================
+        // ====================================================
         // ANALYZING
-        // =================================================
+        // ====================================================
 
         uploadMessage.textContent =
             "Analyzing your resume with AI...";
-
-
-        const analyzeButton =
-            document.getElementById(
-                "analyzeResumeButton"
-            );
 
 
         if (analyzeButton) {
@@ -598,18 +777,19 @@ async function analyzeResume() {
         }
 
 
-        // =================================================
+        // ====================================================
         // CALL BACKEND
-        // =================================================
+        // ====================================================
 
         const response =
             await fetch(
 
-                `https://intervo-backend-okao.onrender.com/analyze-resume/${resumeId}`,
+                `${RESUME_API_BASE_URL}/analyze-resume/${resumeId}`,
 
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
 
@@ -623,8 +803,45 @@ async function analyzeResume() {
             );
 
 
-        const data =
-            await response.json();
+        // ====================================================
+        // READ RESPONSE
+        // ====================================================
+
+        const contentType =
+            response.headers.get(
+                "content-type"
+            ) || "";
+
+
+        let data;
+
+
+        if (
+            contentType.includes(
+                "application/json"
+            )
+        ) {
+
+            data =
+                await response.json();
+
+        }
+
+        else {
+
+            const text =
+                await response.text();
+
+
+            data = {
+
+                message:
+                    text ||
+                    "Unexpected server response."
+
+            };
+
+        }
 
 
         console.log(
@@ -633,9 +850,9 @@ async function analyzeResume() {
         );
 
 
-        // =================================================
+        // ====================================================
         // CHECK RESPONSE
-        // =================================================
+        // ====================================================
 
         if (!response.ok) {
 
@@ -647,9 +864,9 @@ async function analyzeResume() {
         }
 
 
-        // =================================================
+        // ====================================================
         // CHECK ATS DATA
-        // =================================================
+        // ====================================================
 
         if (
             data.ats_score === undefined ||
@@ -663,9 +880,9 @@ async function analyzeResume() {
         }
 
 
-        // =================================================
+        // ====================================================
         // SAVE ATS DATA
-        // =================================================
+        // ====================================================
 
         localStorage.setItem(
             "ats_score",
@@ -681,30 +898,19 @@ async function analyzeResume() {
         );
 
 
-        // =================================================
+        // ====================================================
         // UPDATE ATS UI
-        // =================================================
+        // ====================================================
 
         updateATSResult(
-
             data.ats_score,
-
             data.ats_analysis
-
         );
 
 
-        // =================================================
-        // SUCCESS
-        // =================================================
-
-        uploadMessage.textContent =
-            "Resume analyzed successfully.";
-
-
-        // =================================================
+        // ====================================================
         // SHOW VIEW DETAILS BUTTON
-        // =================================================
+        // ====================================================
 
         const viewDetailsButton =
             document.getElementById(
@@ -718,6 +924,14 @@ async function analyzeResume() {
                 "inline-flex";
 
         }
+
+
+        // ====================================================
+        // SUCCESS
+        // ====================================================
+
+        uploadMessage.textContent =
+            "Resume analyzed successfully.";
 
     }
 
@@ -738,12 +952,6 @@ async function analyzeResume() {
 
     finally {
 
-        const analyzeButton =
-            document.getElementById(
-                "analyzeResumeButton"
-            );
-
-
         if (analyzeButton) {
 
             analyzeButton.disabled =
@@ -754,23 +962,33 @@ async function analyzeResume() {
 
         }
 
+
+        // Refresh JD button state.
+
+        if (
+            typeof updateAnalyzeButton ===
+            "function"
+        ) {
+
+            updateAnalyzeButton();
+
+        }
+
     }
 
 }
 
 
-// ====
+// ============================================================
 // VIEW ATS DETAILS
-// ====
-//
-// This opens the detailed ATS result page.
-//
-// ====
+// ============================================================
 
 function viewATSDetails() {
 
     const resumeId =
-        localStorage.getItem("resume_id");
+        localStorage.getItem(
+            "resume_id"
+        );
 
 
     if (!resumeId) {
@@ -784,3 +1002,28 @@ function viewATSDetails() {
 
 }
 
+
+// ============================================================
+// INITIALIZE EXISTING RESUME STATE
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const storedResumeId =
+            localStorage.getItem(
+                "resume_id"
+            );
+
+
+        if (storedResumeId) {
+
+            showInterviewSection();
+
+            showJDAnalyzer();
+
+        }
+
+    }
+);
