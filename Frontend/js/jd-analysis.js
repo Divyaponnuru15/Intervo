@@ -1,143 +1,101 @@
 const JOB_ANALYSIS_API =
-"https://intervo-backend-okao.onrender.com/api/job-analysis";
+    "https://intervo-backend-okao.onrender.com/api/job-analysis";
+
+
+// ============================================================
+// GET TOKEN
+// ============================================================
 
 function getToken() {
 
-
-return localStorage.getItem("token");
-
+    return localStorage.getItem("token");
 
 }
+
+
+// ============================================================
+// GET ANALYSIS ID FROM URL
+// ============================================================
 
 function getAnalysisId() {
 
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
 
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
-
-return params.get("id");
-
+    return params.get("id");
 
 }
+
+
+// ============================================================
+// SAFE RESPONSE READER
+// ============================================================
 
 async function getResponseData(response) {
 
-
-const contentType =
-    response.headers.get("content-type") || "";
-
-
-if (
-    contentType.includes("application/json")
-) {
-
-    return await response.json();
-
-}
+    const contentType =
+        response.headers.get("content-type") || "";
 
 
-const text =
-    await response.text();
+    if (
+        contentType.includes("application/json")
+    ) {
 
+        try {
 
-return {
-    message:
-        text ||
-        "Unexpected server response."
-};
+            return await response.json();
 
+        } catch (error) {
 
-}
-
-async function loadJobAnalysis() {
-
-
-const analysisId =
-    getAnalysisId();
-
-const token =
-    getToken();
-
-
-if (!analysisId) {
-
-    showError(
-        "No job analysis ID was provided."
-    );
-
-    return;
-
-}
-
-
-if (!token) {
-
-    showError(
-        "Your session has expired. Please login again."
-    );
-
-    return;
-
-}
-
-
-try {
-
-    console.log(
-        "Loading job analysis:",
-        analysisId
-    );
-
-
-    const response =
-        await fetch(
-            `${JOB_ANALYSIS_API}/${encodeURIComponent(analysisId)}`,
-            {
-                method: "GET",
-
-                headers: {
-                    "Authorization":
-                        `Bearer ${token}`
-                }
-            }
-        );
-
-
-    const data =
-        await getResponseData(
-            response
-        );
-
-
-    console.log(
-        "Job Analysis Response:",
-        data
-    );
-
-
-    if (!response.ok) {
-
-        if (
-            response.status === 401
-        ) {
-
-            localStorage.removeItem(
-                "token"
-            );
-
-            window.location.href =
-                "index.html";
-
-            return;
+            return {
+                message:
+                    "Invalid JSON response from server."
+            };
 
         }
 
+    }
+
+
+    const text =
+        await response.text();
+
+
+    return {
+
+        message:
+            text ||
+            "Unexpected server response."
+
+    };
+
+}
+
+
+// ============================================================
+// LOAD JOB ANALYSIS
+// ============================================================
+
+async function loadJobAnalysis() {
+
+    const analysisId =
+        getAnalysisId();
+
+
+    const token =
+        getToken();
+
+
+    // --------------------------------------------------------
+    // CHECK ANALYSIS ID
+    // --------------------------------------------------------
+
+    if (!analysisId) {
 
         showError(
-            data.message ||
-            `Unable to load analysis. (${response.status})`
+            "No job analysis ID was provided."
         );
 
         return;
@@ -145,347 +103,797 @@ try {
     }
 
 
-    displayAnalysis(data);
+    // --------------------------------------------------------
+    // CHECK TOKEN
+    // --------------------------------------------------------
 
-}
+    if (!token) {
+
+        showError(
+            "Your session has expired. Please login again."
+        );
+
+        return;
+
+    }
 
 
-catch (error) {
-
-    console.error(
-        "Job Analysis Loading Error:",
-        error
+    console.log(
+        "Loading job analysis:",
+        analysisId
     );
 
 
-    showError(
-        "Unable to connect to the job analysis server."
-    );
+    try {
+
+        const response =
+            await fetch(
+
+                `${JOB_ANALYSIS_API}/${encodeURIComponent(analysisId)}`,
+
+                {
+
+                    method: "GET",
+
+                    headers: {
+
+                        "Authorization":
+                            `Bearer ${token}`,
+
+                        "Accept":
+                            "application/json"
+
+                    }
+
+                }
+
+            );
+
+
+        const data =
+            await getResponseData(
+                response
+            );
+
+
+        console.log(
+            "Job Analysis Response:",
+            data
+        );
+
+
+        // ----------------------------------------------------
+        // HANDLE ERROR
+        // ----------------------------------------------------
+
+        if (!response.ok) {
+
+            console.error(
+                "Job Analysis API Error:",
+                response.status,
+                data
+            );
+
+
+            // JWT expired / invalid
+            if (
+                response.status === 401
+            ) {
+
+                localStorage.removeItem(
+                    "token"
+                );
+
+
+                window.location.href =
+                    "index.html";
+
+
+                return;
+
+            }
+
+
+            showError(
+
+                data.message ||
+
+                `Unable to load analysis. (${response.status})`
+
+            );
+
+
+            return;
+
+        }
+
+
+        // ----------------------------------------------------
+        // DISPLAY RESULT
+        // ----------------------------------------------------
+
+        displayAnalysis(
+            data
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Job Analysis Loading Error:",
+            error
+        );
+
+
+        showError(
+            "Unable to connect to the job analysis server."
+        );
+
+    }
 
 }
 
 
-}
+// ============================================================
+// DISPLAY ANALYSIS
+// ============================================================
 
 function displayAnalysis(data) {
 
-
-const matchScore =
-    document.getElementById(
-        "matchScore"
+    console.log(
+        "Displaying analysis:",
+        data
     );
 
 
-const matchScoreLabel =
-    document.getElementById(
-        "matchScoreLabel"
+    // --------------------------------------------------------
+    // MATCH SCORE
+    // --------------------------------------------------------
+
+    const matchScore =
+        document.getElementById(
+            "matchScore"
+        );
+
+
+    const matchScoreLabel =
+        document.getElementById(
+            "matchScoreLabel"
+        );
+
+
+    const score =
+        Number(
+            data.match_score
+        );
+
+
+    if (
+        matchScore &&
+        !Number.isNaN(score)
+    ) {
+
+        matchScore.textContent =
+            `${score}%`;
+
+    }
+
+
+    if (
+        matchScoreLabel &&
+        !Number.isNaN(score)
+    ) {
+
+        matchScoreLabel.textContent =
+            getScoreLabel(
+                score
+            );
+
+    }
+
+
+    // --------------------------------------------------------
+    // MISSING SKILLS
+    // --------------------------------------------------------
+
+    setMissingSkills(
+        data.missing_skills
     );
 
 
-const score =
-    Number(
-        data.match_score
+    // --------------------------------------------------------
+    // RESUME SUGGESTIONS
+    // --------------------------------------------------------
+
+    setResumeSuggestions(
+        data.resume_suggestions
     );
 
 
-if (
-    matchScore &&
-    !Number.isNaN(score)
-) {
+    // --------------------------------------------------------
+    // OPTIONAL: MATCHING SKILLS
+    // --------------------------------------------------------
 
-    matchScore.textContent =
-        `${score}%`;
+    setMatchingSkills(
+        data.matching_skills
+    );
+
+
+    // --------------------------------------------------------
+    // OPTIONAL: PARTIAL SKILLS
+    // --------------------------------------------------------
+
+    setPartialSkills(
+        data.partial_skills
+    );
+
+
+    // --------------------------------------------------------
+    // OPTIONAL: PRIORITY SKILLS
+    // --------------------------------------------------------
+
+    setPrioritySkills(
+        data.priority_skills
+    );
+
+
+    // --------------------------------------------------------
+    // OPTIONAL: OVERALL ASSESSMENT
+    // --------------------------------------------------------
+
+    setOverallAssessment(
+        data.overall_assessment
+    );
 
 }
 
 
-if (
-    matchScoreLabel &&
-    !Number.isNaN(score)
-) {
-
-    matchScoreLabel.textContent =
-        getScoreLabel(score);
-
-}
-
-
-setMissingSkills(
-    data.missing_skills
-);
-
-
-setResumeSuggestions(
-    data.resume_suggestions
-);
-
-
-}
+// ============================================================
+// SET MISSING SKILLS
+// ============================================================
 
 function setMissingSkills(skills) {
 
-const element =
-    document.getElementById(
-        "missingSkills"
-    );
+    const element =
+        document.getElementById(
+            "missingSkills"
+        );
 
 
-if (!element) {
+    if (!element) {
 
-    return;
+        return;
 
-}
-
-
-if (
-    !Array.isArray(skills) ||
-    skills.length === 0
-) {
-
-    element.innerHTML = `
-
-        <span class="jd-empty-skill">
-
-            No major skill gaps found 🎉
-
-        </span>
-
-    `;
-
-    return;
-
-}
+    }
 
 
-element.innerHTML =
-    skills
-        .map(
-            skill => `
+    if (
+        !Array.isArray(skills) ||
+        skills.length === 0
+    ) {
 
-                <span class="jd-skill-tag">
+        element.innerHTML = `
 
-                    ${escapeHTML(skill)}
+            <span class="jd-empty-skill">
 
-                </span>
+                No major skill gaps found 🎉
 
-            `
-        )
-        .join("");
+            </span>
 
+        `;
 
-}
+        return;
 
-function setResumeSuggestions(suggestions) {
-
-
-const element =
-    document.getElementById(
-        "resumeSuggestions"
-    );
+    }
 
 
-if (!element) {
+    element.innerHTML =
+        skills
+            .map(
+                skill => `
 
-    return;
+                    <span class="jd-skill-tag">
+
+                        ${escapeHTML(skill)}
+
+                    </span>
+
+                `
+            )
+            .join("");
 
 }
 
 
-if (
-    !Array.isArray(suggestions) ||
-    suggestions.length === 0
-) {
+// ============================================================
+// SET MATCHING SKILLS
+// ============================================================
 
-    element.innerHTML = `
+function setMatchingSkills(skills) {
 
-        <p class="jd-empty-suggestion">
+    const element =
+        document.getElementById(
+            "matchingSkills"
+        );
 
-            No specific resume improvements available.
 
-        </p>
+    if (!element) {
 
-    `;
+        return;
 
-    return;
+    }
+
+
+    if (
+        !Array.isArray(skills) ||
+        skills.length === 0
+    ) {
+
+        element.innerHTML = `
+
+            <span class="jd-empty-skill">
+
+                No matching skills found.
+
+            </span>
+
+        `;
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+        skills
+            .map(
+                skill => `
+
+                    <span class="jd-skill-tag">
+
+                        ${escapeHTML(skill)}
+
+                    </span>
+
+                `
+            )
+            .join("");
 
 }
 
 
-element.innerHTML =
+// ============================================================
+// SET PARTIAL SKILLS
+// ============================================================
+
+function setPartialSkills(skills) {
+
+    const element =
+        document.getElementById(
+            "partialSkills"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    if (
+        !Array.isArray(skills) ||
+        skills.length === 0
+    ) {
+
+        element.innerHTML = `
+
+            <span class="jd-empty-skill">
+
+                No partial matches found.
+
+            </span>
+
+        `;
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+        skills
+            .map(
+                skill => `
+
+                    <span class="jd-skill-tag">
+
+                        ${escapeHTML(skill)}
+
+                    </span>
+
+                `
+            )
+            .join("");
+
+}
+
+
+// ============================================================
+// SET PRIORITY SKILLS
+// ============================================================
+
+function setPrioritySkills(skills) {
+
+    const element =
+        document.getElementById(
+            "prioritySkills"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    if (
+        !Array.isArray(skills) ||
+        skills.length === 0
+    ) {
+
+        element.innerHTML = `
+
+            <span class="jd-empty-skill">
+
+                No priority skills identified.
+
+            </span>
+
+        `;
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+        skills
+            .map(
+                skill => `
+
+                    <span class="jd-skill-tag">
+
+                        ${escapeHTML(skill)}
+
+                    </span>
+
+                `
+            )
+            .join("");
+
+}
+
+
+// ============================================================
+// SET RESUME SUGGESTIONS
+// ============================================================
+
+function setResumeSuggestions(
     suggestions
-        .map(
-            suggestion => `
+) {
 
-                <div class="jd-suggestion-item">
+    const element =
+        document.getElementById(
+            "resumeSuggestions"
+        );
 
-                    ${escapeHTML(suggestion)}
 
-                </div>
+    if (!element) {
 
-            `
-        )
-        .join("");
+        return;
 
+    }
+
+
+    if (
+        !Array.isArray(suggestions) ||
+        suggestions.length === 0
+    ) {
+
+        element.innerHTML = `
+
+            <p class="jd-empty-suggestion">
+
+                No specific resume improvements available.
+
+            </p>
+
+        `;
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+        suggestions
+            .map(
+                suggestion => `
+
+                    <div class="jd-suggestion-item">
+
+                        ${escapeHTML(suggestion)}
+
+                    </div>
+
+                `
+            )
+            .join("");
 
 }
+
+
+// ============================================================
+// SET OVERALL ASSESSMENT
+// ============================================================
+
+function setOverallAssessment(
+    assessment
+) {
+
+    const element =
+        document.getElementById(
+            "overallAssessment"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    if (
+        !assessment ||
+        String(assessment).trim() === ""
+    ) {
+
+        element.textContent =
+            "No overall assessment available.";
+
+        return;
+
+    }
+
+
+    element.textContent =
+        String(assessment);
+
+}
+
+
+// ============================================================
+// SCORE LABEL
+// ============================================================
 
 function getScoreLabel(score) {
 
+    if (score >= 80) {
 
-if (score >= 80) {
+        return "Excellent match";
 
-    return "Excellent match";
-
-}
-
-
-if (score >= 60) {
-
-    return "Good match";
-
-}
+    }
 
 
-if (score >= 40) {
+    if (score >= 60) {
 
-    return "Moderate match";
+        return "Good match";
 
-}
+    }
 
 
-return "Needs improvement";
+    if (score >= 40) {
 
+        return "Moderate match";
+
+    }
+
+
+    return "Needs improvement";
 
 }
+
+
+// ============================================================
+// SHOW ERROR
+// ============================================================
 
 function showError(message) {
 
-
-console.error(
-    "JD Analysis Error:",
-    message
-);
-
-
-const matchScore =
-    document.getElementById(
-        "matchScore"
+    console.error(
+        "JD Analysis Error:",
+        message
     );
 
 
-const matchScoreLabel =
-    document.getElementById(
-        "matchScoreLabel"
-    );
+    // --------------------------------------------------------
+    // SCORE
+    // --------------------------------------------------------
+
+    const matchScore =
+        document.getElementById(
+            "matchScore"
+        );
 
 
-if (matchScore) {
+    if (matchScore) {
 
-    matchScore.textContent =
-        "--%";
+        matchScore.textContent =
+            "--%";
+
+    }
+
+
+    // --------------------------------------------------------
+    // SCORE LABEL
+    // --------------------------------------------------------
+
+    const matchScoreLabel =
+        document.getElementById(
+            "matchScoreLabel"
+        );
+
+
+    if (matchScoreLabel) {
+
+        matchScoreLabel.textContent =
+            "Unable to load";
+
+    }
+
+
+    // --------------------------------------------------------
+    // MISSING SKILLS
+    // --------------------------------------------------------
+
+    const missingSkills =
+        document.getElementById(
+            "missingSkills"
+        );
+
+
+    if (missingSkills) {
+
+        missingSkills.innerHTML = `
+
+            <span class="jd-empty-skill">
+
+                Unable to load results.
+
+            </span>
+
+        `;
+
+    }
+
+
+    // --------------------------------------------------------
+    // MATCHING SKILLS
+    // --------------------------------------------------------
+
+    const matchingSkills =
+        document.getElementById(
+            "matchingSkills"
+        );
+
+
+    if (matchingSkills) {
+
+        matchingSkills.innerHTML = `
+
+            <span class="jd-empty-skill">
+
+                Unable to load results.
+
+            </span>
+
+        `;
+
+    }
+
+
+    // --------------------------------------------------------
+    // RESUME SUGGESTIONS
+    // --------------------------------------------------------
+
+    const suggestions =
+        document.getElementById(
+            "resumeSuggestions"
+        );
+
+
+    if (suggestions) {
+
+        suggestions.innerHTML = `
+
+            <p class="jd-empty-suggestion">
+
+                ${escapeHTML(message)}
+
+            </p>
+
+        `;
+
+    }
+
+
+    // --------------------------------------------------------
+    // ACTION MESSAGE
+    // --------------------------------------------------------
+
+    const actionMessage =
+        document.getElementById(
+            "jdActionMessage"
+        );
+
+
+    if (actionMessage) {
+
+        actionMessage.textContent =
+            message;
+
+    }
 
 }
 
 
-if (matchScoreLabel) {
-
-    matchScoreLabel.textContent =
-        "Unable to load";
-
-}
-
-
-const missingSkills =
-    document.getElementById(
-        "missingSkills"
-    );
-
-
-if (missingSkills) {
-
-    missingSkills.innerHTML = `
-
-        <span class="jd-empty-skill">
-
-            Unable to load results.
-
-        </span>
-
-    `;
-
-}
-
-
-const suggestions =
-    document.getElementById(
-        "resumeSuggestions"
-    );
-
-
-if (suggestions) {
-
-    suggestions.innerHTML = `
-
-        <p class="jd-empty-suggestion">
-
-            ${escapeHTML(message)}
-
-        </p>
-
-    `;
-
-}
-
-
-const actionMessage =
-    document.getElementById(
-        "jdActionMessage"
-    );
-
-
-if (actionMessage) {
-
-    actionMessage.textContent =
-        message;
-
-}
-
-
-}
+// ============================================================
+// ESCAPE HTML
+// ============================================================
 
 function escapeHTML(text) {
 
-
-const div =
-    document.createElement(
-        "div"
-    );
-
-
-div.textContent =
-    String(
-        text ?? ""
-    );
+    const div =
+        document.createElement(
+            "div"
+        );
 
 
-return div.innerHTML;
+    div.textContent =
+        String(
+            text ?? ""
+        );
+
+
+    return div.innerHTML;
 
 }
+
+
+// ============================================================
+// GO TO DASHBOARD
+// ============================================================
 
 function goToDashboard() {
 
-
-window.location.href =
-    "dashboard.html";
-
+    window.location.href =
+        "dashboard.html";
 
 }
+
+
+// ============================================================
+// PAGE LOAD
+// ============================================================
 
 document.addEventListener(
-"DOMContentLoaded",
-function () {
+    "DOMContentLoaded",
+    function () {
 
-    loadJobAnalysis();
+        loadJobAnalysis();
 
-}
+    }
 );
