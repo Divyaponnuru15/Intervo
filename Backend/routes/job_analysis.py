@@ -1,3 +1,4 @@
+
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -35,7 +36,6 @@ def analyze_job_description():
 
     user_id = get_jwt_identity()
 
-
     # ========================================================
     # GET REQUEST DATA
     # ========================================================
@@ -44,26 +44,20 @@ def analyze_job_description():
         silent=True
     )
 
-
     if not data:
 
         return jsonify({
-
             "message":
                 "Request body is required."
-
         }), 400
-
 
     resume_id = data.get(
         "resume_id"
     )
 
-
     job_description = data.get(
         "job_description"
     )
-
 
     # ========================================================
     # VALIDATE RESUME ID
@@ -72,12 +66,25 @@ def analyze_job_description():
     if not resume_id:
 
         return jsonify({
-
             "message":
                 "resume_id is required."
-
         }), 400
 
+    try:
+
+        resume_id = int(
+            resume_id
+        )
+
+    except (
+        ValueError,
+        TypeError
+    ):
+
+        return jsonify({
+            "message":
+                "Invalid resume_id."
+        }), 400
 
     # ========================================================
     # VALIDATE JOB DESCRIPTION
@@ -93,15 +100,14 @@ def analyze_job_description():
     ):
 
         return jsonify({
-
             "message":
                 "Job description is required."
-
         }), 400
 
-
-    job_description = job_description.strip()
-
+    job_description = (
+        job_description
+        .strip()
+    )
 
     # ========================================================
     # LIMIT JOB DESCRIPTION LENGTH
@@ -110,13 +116,10 @@ def analyze_job_description():
     if len(job_description) > 20000:
 
         return jsonify({
-
             "message":
                 "Job description is too long. "
                 "Please keep it under 20,000 characters."
-
         }), 400
-
 
     # ========================================================
     # FIND USER RESUME
@@ -130,16 +133,12 @@ def analyze_job_description():
 
     ).first()
 
-
     if not resume:
 
         return jsonify({
-
             "message":
                 "Resume not found."
-
         }), 404
-
 
     # ========================================================
     # CHECK EXTRACTED RESUME TEXT
@@ -149,17 +148,13 @@ def analyze_job_description():
         resume.extracted_text or ""
     ).strip()
 
-
     if not resume_text:
 
         return jsonify({
-
             "message":
                 "Resume text is not available. "
                 "Please upload your resume again."
-
         }), 400
-
 
     # ========================================================
     # AI ANALYSIS
@@ -169,11 +164,9 @@ def analyze_job_description():
 
         analysis = analyze_resume_with_jd(
 
-            resume_text=
-                resume_text,
+            resume_text=resume_text,
 
-            job_description=
-                job_description
+            job_description=job_description
 
         )
 
@@ -185,12 +178,9 @@ def analyze_job_description():
         )
 
         return jsonify({
-
             "message":
                 str(error)
-
         }), 400
-
 
     except RuntimeError as error:
 
@@ -200,12 +190,9 @@ def analyze_job_description():
         )
 
         return jsonify({
-
             "message":
                 str(error)
-
         }), 503
-
 
     except Exception as error:
 
@@ -215,13 +202,10 @@ def analyze_job_description():
         )
 
         return jsonify({
-
             "message":
                 "Unable to analyze the job description. "
                 "Please try again later."
-
         }), 500
-
 
     # ========================================================
     # VALIDATE AI RESULT
@@ -233,57 +217,47 @@ def analyze_job_description():
     ):
 
         return jsonify({
-
             "message":
                 "AI returned an invalid analysis."
-
         }), 500
 
-
     # ========================================================
-    # GET ANALYSIS VALUES
+    # GET AI VALUES
     # ========================================================
 
     match_score = analysis.get(
         "match_score"
     )
 
-
     matching_skills = analysis.get(
         "matching_skills",
         []
     )
-
 
     partial_skills = analysis.get(
         "partial_skills",
         []
     )
 
-
     missing_skills = analysis.get(
         "missing_skills",
         []
     )
-
-
-    resume_suggestions = analysis.get(
-        "resume_suggestions",
-        []
-    )
-
 
     priority_skills = analysis.get(
         "priority_skills",
         []
     )
 
+    resume_suggestions = analysis.get(
+        "resume_suggestions",
+        []
+    )
 
     overall_assessment = analysis.get(
         "overall_assessment",
         ""
     )
-
 
     # ========================================================
     # VALIDATE MATCH SCORE
@@ -301,12 +275,9 @@ def analyze_job_description():
     ):
 
         return jsonify({
-
             "message":
                 "AI returned an invalid match score."
-
         }), 500
-
 
     if (
         match_score < 0
@@ -314,15 +285,12 @@ def analyze_job_description():
     ):
 
         return jsonify({
-
             "message":
                 "AI returned an invalid match score."
-
         }), 500
 
-
     # ========================================================
-    # NORMALIZE LISTS
+    # CLEAN LIST VALUES
     # ========================================================
 
     def clean_list(values):
@@ -334,20 +302,16 @@ def analyze_job_description():
 
             return []
 
-
         cleaned = []
-
 
         for value in values:
 
             if value is None:
                 continue
 
-
             value = str(
                 value
             ).strip()
-
 
             if value:
 
@@ -355,39 +319,35 @@ def analyze_job_description():
                     value
                 )
 
-
         return cleaned
 
+    # ========================================================
+    # CLEAN AI DATA
+    # ========================================================
 
     matching_skills = clean_list(
         matching_skills
     )
 
-
     partial_skills = clean_list(
         partial_skills
     )
-
 
     missing_skills = clean_list(
         missing_skills
     )
 
+    priority_skills = clean_list(
+        priority_skills
+    )
 
     resume_suggestions = clean_list(
         resume_suggestions
     )
 
-
-    priority_skills = clean_list(
-        priority_skills
-    )
-
-
     overall_assessment = str(
         overall_assessment or ""
     ).strip()
-
 
     # ========================================================
     # SAVE ANALYSIS
@@ -417,46 +377,46 @@ def analyze_job_description():
                 missing_skills
             ),
 
+            priority_skills=json.dumps(
+                priority_skills
+            ),
+
             resume_suggestions=json.dumps(
                 resume_suggestions
-            )
+            ),
+
+            overall_assessment=
+                overall_assessment
 
         )
-
 
         db.session.add(
             new_analysis
         )
 
-
         db.session.commit()
-
 
     except Exception as error:
 
         db.session.rollback()
-
 
         print(
             "JD Analysis Database Error:",
             error
         )
 
-
         return jsonify({
-
             "message":
                 "Analysis was completed but "
                 "could not be saved."
-
         }), 500
-
 
     # ========================================================
     # LOG RESULT
     # ========================================================
 
     print()
+
     print(
         "========== JOB DESCRIPTION ANALYSIS =========="
     )
@@ -486,9 +446,16 @@ def analyze_job_description():
     )
 
     print(
-        "=============================================="
+        f"Priority Skills: {len(priority_skills)}"
     )
 
+    print(
+        f"Resume Suggestions: {len(resume_suggestions)}"
+    )
+
+    print(
+        "=============================================="
+    )
 
     # ========================================================
     # SUCCESS RESPONSE
@@ -517,11 +484,11 @@ def analyze_job_description():
         "missing_skills":
             missing_skills,
 
-        "resume_suggestions":
-            resume_suggestions,
-
         "priority_skills":
             priority_skills,
+
+        "resume_suggestions":
+            resume_suggestions,
 
         "overall_assessment":
             overall_assessment
@@ -538,10 +505,11 @@ def analyze_job_description():
     methods=["GET"]
 )
 @jwt_required()
-def get_job_analysis(analysis_id):
+def get_job_analysis(
+    analysis_id
+):
 
     user_id = get_jwt_identity()
-
 
     # ========================================================
     # FIND ANALYSIS
@@ -555,16 +523,12 @@ def get_job_analysis(analysis_id):
 
     ).first()
 
-
     if not analysis:
 
         return jsonify({
-
             "message":
                 "Job analysis not found."
-
         }), 404
-
 
     # ========================================================
     # SAFE JSON LOADER
@@ -573,15 +537,14 @@ def get_job_analysis(analysis_id):
     def load_json_list(value):
 
         if not value:
-            return []
 
+            return []
 
         try:
 
             result = json.loads(
                 value
             )
-
 
             if isinstance(
                 result,
@@ -590,7 +553,6 @@ def get_job_analysis(analysis_id):
 
                 return result
 
-
         except (
             json.JSONDecodeError,
             TypeError
@@ -598,9 +560,7 @@ def get_job_analysis(analysis_id):
 
             pass
 
-
         return []
-
 
     # ========================================================
     # RETURN SAVED ANALYSIS
@@ -635,12 +595,21 @@ def get_job_analysis(analysis_id):
                 analysis.missing_skills
             ),
 
+        "priority_skills":
+            load_json_list(
+                analysis.priority_skills
+            ),
+
         "resume_suggestions":
             load_json_list(
                 analysis.resume_suggestions
             ),
 
+        "overall_assessment":
+            analysis.overall_assessment or "",
+
         "created_at":
             analysis.created_at.isoformat()
 
     }), 200
+

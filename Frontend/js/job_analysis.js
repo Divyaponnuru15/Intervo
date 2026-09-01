@@ -1,5 +1,6 @@
+
 // ============================================================
-// INTERVO - JOB DESCRIPTION ANALYZER
+// INTERVO - JOB DESCRIPTION ANALYSIS RESULT PAGE
 // ============================================================
 
 
@@ -9,26 +10,6 @@
 
 const JOB_ANALYSIS_API =
     "https://intervo-backend-okao.onrender.com/api/job-analysis";
-
-
-// ============================================================
-// STATE
-// ============================================================
-
-let currentJobAnalysisId = null;
-
-
-// ============================================================
-// GET RESUME ID
-// ============================================================
-
-function getResumeId() {
-
-    return localStorage.getItem(
-        "resume_id"
-    );
-
-}
 
 
 // ============================================================
@@ -45,16 +26,35 @@ function getToken() {
 
 
 // ============================================================
+// GET ANALYSIS ID FROM URL
+// ============================================================
+
+function getAnalysisId() {
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    return params.get(
+        "id"
+    );
+
+}
+
+
+// ============================================================
 // SAFE RESPONSE READER
 // ============================================================
 
-async function getResponseData(response) {
+async function getResponseData(
+    response
+) {
 
     const contentType =
         response.headers.get(
             "content-type"
         ) || "";
-
 
     if (
         contentType.includes(
@@ -66,10 +66,8 @@ async function getResponseData(response) {
 
     }
 
-
     const text =
         await response.text();
-
 
     return {
 
@@ -83,192 +81,38 @@ async function getResponseData(response) {
 
 
 // ============================================================
-// INITIALIZE JOB ANALYSIS
+// LOAD JOB ANALYSIS
 // ============================================================
 
-function initializeJobAnalysis() {
+async function loadJobAnalysis() {
 
-    const jobDescription =
-        document.getElementById(
-            "jobDescription"
-        );
-
-
-    const characterCount =
-        document.getElementById(
-            "jdCharacterCount"
-        );
-
-
-    if (!jobDescription) {
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // CHARACTER COUNTER
-    // ========================================================
-
-    jobDescription.addEventListener(
-        "input",
-        function () {
-
-            const length =
-                jobDescription.value.length;
-
-
-            if (characterCount) {
-
-                characterCount.textContent =
-                    length;
-
-            }
-
-
-            updateAnalyzeButton();
-
-        }
-    );
-
-
-    // ========================================================
-    // INITIAL BUTTON STATE
-    // ========================================================
-
-    updateAnalyzeButton();
-
-}
-
-
-// ============================================================
-// UPDATE ANALYZE BUTTON
-// ============================================================
-
-function updateAnalyzeButton() {
-
-    const jobDescription =
-        document.getElementById(
-            "jobDescription"
-        );
-
-
-    const analyzeButton =
-        document.getElementById(
-            "analyzeJDButton"
-        );
-
-
-    if (
-        !jobDescription ||
-        !analyzeButton
-    ) {
-
-        return;
-
-    }
-
-
-    const resumeId =
-        getResumeId();
-
-
-    const hasResume =
-        !!resumeId;
-
-
-    const hasJobDescription =
-        jobDescription.value.trim().length > 0;
-
-
-    analyzeButton.disabled =
-        !hasResume ||
-        !hasJobDescription;
-
-}
-
-
-// ============================================================
-// SHOW JOB ANALYZER
-// ============================================================
-
-function showJobAnalyzer() {
-
-    const jdSection =
-        document.getElementById(
-            "jdSection"
-        );
-
-
-    if (jdSection) {
-
-        jdSection.style.display =
-            "block";
-
-    }
-
-
-    updateAnalyzeButton();
-
-}
-
-
-// ============================================================
-// ANALYZE JOB DESCRIPTION
-// ============================================================
-
-async function analyzeJobDescription() {
-
-    const jobDescription =
-        document.getElementById(
-            "jobDescription"
-        );
-
-
-    const analyzeButton =
-        document.getElementById(
-            "analyzeJDButton"
-        );
-
-
-    const message =
-        document.getElementById(
-            "jdMessage"
-        );
-
-
-    // ========================================================
-    // CHECK ELEMENTS
-    // ========================================================
-
-    if (
-        !jobDescription ||
-        !analyzeButton ||
-        !message
-    ) {
-
-        console.error(
-            "JD analyzer elements not found."
-        );
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // CHECK LOGIN
-    // ========================================================
+    const analysisId =
+        getAnalysisId();
 
     const token =
         getToken();
 
 
-    if (!token) {
+    // ========================================================
+    // CHECK ANALYSIS ID
+    // ========================================================
 
-        message.textContent =
-            "Your session has expired. Please login again.";
+    if (!analysisId) {
+
+        showError(
+            "No job analysis ID was provided."
+        );
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // CHECK TOKEN
+    // ========================================================
+
+    if (!token) {
 
         window.location.href =
             "index.html";
@@ -278,104 +122,33 @@ async function analyzeJobDescription() {
     }
 
 
-    // ========================================================
-    // GET RESUME
-    // ========================================================
-
-    const resumeId =
-        getResumeId();
-
-
-    if (!resumeId) {
-
-        message.textContent =
-            "Please upload your resume first.";
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // GET JOB DESCRIPTION
-    // ========================================================
-
-    const jd =
-        jobDescription.value.trim();
-
-
-    if (!jd) {
-
-        message.textContent =
-            "Please paste a job description.";
-
-        return;
-
-    }
-
-
-    if (jd.length > 20000) {
-
-        message.textContent =
-            "Job description must be 20,000 characters or less.";
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // LOADING STATE
-    // ========================================================
-
-    analyzeButton.disabled =
-        true;
-
-
-    analyzeButton.textContent =
-        "⏳ Analyzing...";
-
-
-    message.textContent =
-        "AI is comparing your resume with the job description...";
-
-
-    hideJDResult();
-
-
     try {
 
-        // ====================================================
-        // SEND REQUEST
-        // ====================================================
+        console.log(
+            "Loading job analysis:",
+            analysisId
+        );
+
 
         const response =
             await fetch(
-                `${JOB_ANALYSIS_API}/analyze`,
+
+                `${JOB_ANALYSIS_API}/${encodeURIComponent(analysisId)}`,
+
                 {
-                    method: "POST",
+
+                    method:
+                        "GET",
 
                     headers: {
-
-                        "Content-Type":
-                            "application/json",
 
                         "Authorization":
                             `Bearer ${token}`
 
-                    },
-
-                    body: JSON.stringify({
-
-                        resume_id:
-                            Number(resumeId),
-
-                        job_description:
-                            jd
-
-                    })
+                    }
 
                 }
+
             );
 
 
@@ -390,62 +163,38 @@ async function analyzeJobDescription() {
 
 
         console.log(
-            "JD Analysis Response:",
+            "Job Analysis Response:",
             data
         );
 
 
         // ====================================================
-        // CHECK RESPONSE
+        // HANDLE ERROR
         // ====================================================
 
         if (!response.ok) {
 
-            if (response.status === 401) {
-
-                message.textContent =
-                    "Your session has expired. Please login again.";
+            if (
+                response.status === 401
+            ) {
 
                 localStorage.removeItem(
                     "token"
                 );
+
+                window.location.href =
+                    "index.html";
 
                 return;
 
             }
 
 
-            message.textContent =
+            showError(
+
                 data.message ||
-                `JD analysis failed. (${response.status})`;
+                `Unable to load analysis. (${response.status})`
 
-            return;
-
-        }
-
-
-        // ====================================================
-        // VALIDATE MATCH SCORE
-        // ====================================================
-
-        const matchScore =
-            Number(
-                data.match_score
-            );
-
-
-        if (
-            Number.isNaN(
-                matchScore
-            )
-        ) {
-
-            message.textContent =
-                "AI returned an invalid match score.";
-
-            console.error(
-                "Invalid match score:",
-                data.match_score
             );
 
             return;
@@ -454,39 +203,12 @@ async function analyzeJobDescription() {
 
 
         // ====================================================
-        // SAVE ANALYSIS ID
+        // DISPLAY DATA
         // ====================================================
 
-        currentJobAnalysisId =
-            data.analysis_id ||
-            null;
-
-
-        if (currentJobAnalysisId) {
-
-            localStorage.setItem(
-                "job_analysis_id",
-                currentJobAnalysisId
-            );
-
-        }
-
-
-        // ====================================================
-        // SHOW RESULT
-        // ========================================================
-
-        showJDResult(
+        displayAnalysis(
             data
         );
-
-
-        // ====================================================
-        // SUCCESS MESSAGE
-        // ====================================================
-
-        message.textContent =
-            "✅ Job description analyzed successfully.";
 
     }
 
@@ -494,23 +216,14 @@ async function analyzeJobDescription() {
     catch (error) {
 
         console.error(
-            "JD Analysis Error:",
+            "Job Analysis Loading Error:",
             error
         );
 
 
-        message.textContent =
-            "Unable to connect to the job analysis server.";
-
-    }
-
-
-    finally {
-
-        updateAnalyzeButton();
-
-        analyzeButton.textContent =
-            "🔍 Analyze Job Description";
+        showError(
+            "Unable to connect to the job analysis server."
+        );
 
     }
 
@@ -518,50 +231,70 @@ async function analyzeJobDescription() {
 
 
 // ============================================================
-// SHOW JD RESULT
+// DISPLAY ANALYSIS
 // ============================================================
 
-function showJDResult(data) {
-
-    const resultPreview =
-        document.getElementById(
-            "jdResultPreview"
-        );
-
-
-    const matchScore =
-        document.getElementById(
-            "jdMatchScore"
-        );
-
-
-    const matchingSkills =
-        document.getElementById(
-            "jdMatchingSkills"
-        );
-
-
-    const missingSkills =
-        document.getElementById(
-            "jdMissingSkills"
-        );
-
-
-    if (!resultPreview) {
-
-        return;
-
-    }
-
+function displayAnalysis(
+    data
+) {
 
     // ========================================================
     // MATCH SCORE
     // ========================================================
 
+    const matchScore =
+        document.getElementById(
+            "matchScore"
+        );
+
+
+    const matchScoreLabel =
+        document.getElementById(
+            "matchScoreLabel"
+        );
+
+
+    const score =
+        Number(
+            data.match_score
+        );
+
+
     if (matchScore) {
 
         matchScore.textContent =
-            `${Number(data.match_score)}%`;
+            `${score}%`;
+
+    }
+
+
+    if (matchScoreLabel) {
+
+        matchScoreLabel.textContent =
+            getScoreLabel(
+                score
+            );
+
+    }
+
+
+    // ========================================================
+    // OVERALL ASSESSMENT
+    // ========================================================
+
+    const overallAssessment =
+        document.getElementById(
+            "overallAssessment"
+        );
+
+
+    if (overallAssessment) {
+
+        overallAssessment.textContent =
+
+            data.overall_assessment ||
+
+            "No overall assessment available.";
 
     }
 
@@ -570,93 +303,82 @@ function showJDResult(data) {
     // MATCHING SKILLS
     // ========================================================
 
-    if (matchingSkills) {
+    setSkills(
 
-        matchingSkills.innerHTML =
-            createSkillTags(
-                data.matching_skills
-            );
+        "matchingSkills",
 
-    }
+        data.matching_skills
+
+    );
+
+
+    // ========================================================
+    // PARTIAL SKILLS
+    // ========================================================
+
+    setSkills(
+
+        "partialSkills",
+
+        data.partial_skills
+
+    );
 
 
     // ========================================================
     // MISSING SKILLS
     // ========================================================
 
-    if (missingSkills) {
+    setSkills(
 
-        missingSkills.innerHTML =
-            createSkillTags(
-                data.missing_skills
-            );
+        "missingSkills",
 
-    }
+        data.missing_skills
+
+    );
 
 
     // ========================================================
-    // SHOW RESULT
+    // PRIORITY SKILLS
     // ========================================================
 
-    resultPreview.style.display =
-        "block";
+    setSkills(
 
-}
+        "prioritySkills",
 
+        data.priority_skills
 
-// ============================================================
-// CREATE SKILL TAGS
-// ============================================================
-
-function createSkillTags(skills) {
-
-    if (
-        !Array.isArray(skills) ||
-        skills.length === 0
-    ) {
-
-        return `
-            <span class="jd-empty-skill">
-                None identified
-            </span>
-        `;
-
-    }
+    );
 
 
-    return skills
-        .map(
-            skill => {
+    // ========================================================
+    // RESUME SUGGESTIONS
+    // ========================================================
 
-                return `
-                    <span class="jd-skill-tag">
-                        ${escapeHTML(skill)}
-                    </span>
-                `;
+    setSuggestions(
 
-            }
-        )
-        .join("");
+        data.resume_suggestions
 
-}
+    );
 
 
-// ============================================================
-// HIDE JD RESULT
-// ============================================================
+    // ========================================================
+    // JOB DESCRIPTION
+    // ========================================================
 
-function hideJDResult() {
-
-    const resultPreview =
+    const jobDescription =
         document.getElementById(
-            "jdResultPreview"
+            "jobDescription"
         );
 
 
-    if (resultPreview) {
+    if (jobDescription) {
 
-        resultPreview.style.display =
-            "none";
+        jobDescription.textContent =
+
+            data.job_description ||
+
+            "No job description available.";
 
     }
 
@@ -664,33 +386,309 @@ function hideJDResult() {
 
 
 // ============================================================
-// VIEW FULL JD ANALYSIS
+// DISPLAY SKILLS
 // ============================================================
 
-function viewJDAnalysis() {
+function setSkills(
+    elementId,
+    skills
+) {
 
-    const analysisId =
-        currentJobAnalysisId ||
-        localStorage.getItem(
-            "job_analysis_id"
+    const element =
+        document.getElementById(
+            elementId
         );
 
 
-    if (!analysisId) {
-
-        alert(
-            "Please analyze a job description first."
-        );
+    if (!element) {
 
         return;
 
     }
 
 
-    window.location.href =
-        `jd-analysis.html?id=${encodeURIComponent(
-            analysisId
-        )}`;
+    if (
+        !Array.isArray(
+            skills
+        )
+        ||
+        skills.length === 0
+    ) {
+
+        element.innerHTML = `
+
+            <span class="jd-empty-skill">
+
+                None identified
+
+            </span>
+
+        `;
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+
+        skills
+            .map(
+                skill => `
+
+                    <span class="jd-skill-tag">
+
+                        ${escapeHTML(skill)}
+
+                    </span>
+
+                `
+            )
+            .join("");
+
+}
+
+
+// ============================================================
+// DISPLAY SUGGESTIONS
+// ============================================================
+
+function setSuggestions(
+    suggestions
+) {
+
+    const element =
+        document.getElementById(
+            "resumeSuggestions"
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    if (
+        !Array.isArray(
+            suggestions
+        )
+        ||
+        suggestions.length === 0
+    ) {
+
+        element.innerHTML = `
+
+            <p class="jd-empty-suggestion">
+
+                No specific resume suggestions available.
+
+            </p>
+
+        `;
+
+        return;
+
+    }
+
+
+    element.innerHTML =
+
+        suggestions
+            .map(
+                suggestion => `
+
+                    <div
+                        class="jd-suggestion-item"
+                    >
+
+                        ${escapeHTML(
+                            suggestion
+                        )}
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+// ============================================================
+// SCORE LABEL
+// ============================================================
+
+function getScoreLabel(
+    score
+) {
+
+    if (score >= 80) {
+
+        return "Excellent match";
+
+    }
+
+
+    if (score >= 60) {
+
+        return "Good match";
+
+    }
+
+
+    if (score >= 40) {
+
+        return "Moderate match";
+
+    }
+
+
+    return "Needs improvement";
+
+}
+
+
+// ============================================================
+// SHOW ERROR
+// ============================================================
+
+function showError(
+    message
+) {
+
+    console.error(
+        "JD Analysis Error:",
+        message
+    );
+
+
+    // ========================================================
+    // ASSESSMENT
+    // ========================================================
+
+    const overallAssessment =
+        document.getElementById(
+            "overallAssessment"
+        );
+
+
+    if (overallAssessment) {
+
+        overallAssessment.textContent =
+            message;
+
+    }
+
+
+    // ========================================================
+    // SCORE
+    // ========================================================
+
+    const matchScore =
+        document.getElementById(
+            "matchScore"
+        );
+
+
+    const matchScoreLabel =
+        document.getElementById(
+            "matchScoreLabel"
+        );
+
+
+    if (matchScore) {
+
+        matchScore.textContent =
+            "--%";
+
+    }
+
+
+    if (matchScoreLabel) {
+
+        matchScoreLabel.textContent =
+            "Unable to load";
+
+    }
+
+
+    // ========================================================
+    // SKILLS
+    // ========================================================
+
+    [
+
+        "matchingSkills",
+
+        "partialSkills",
+
+        "missingSkills",
+
+        "prioritySkills"
+
+    ].forEach(
+        id => {
+
+            const element =
+                document.getElementById(
+                    id
+                );
+
+
+            if (element) {
+
+                element.innerHTML = `
+
+                    <span class="jd-empty-skill">
+
+                        Unable to load results.
+
+                    </span>
+
+                `;
+
+            }
+
+        }
+    );
+
+
+    // ========================================================
+    // SUGGESTIONS
+    // ========================================================
+
+    const suggestions =
+        document.getElementById(
+            "resumeSuggestions"
+        );
+
+
+    if (suggestions) {
+
+        suggestions.textContent =
+            message;
+
+    }
+
+
+    // ========================================================
+    // JOB DESCRIPTION
+    // ========================================================
+
+    const jobDescription =
+        document.getElementById(
+            "jobDescription"
+        );
+
+
+    if (jobDescription) {
+
+        jobDescription.textContent =
+            message;
+
+    }
 
 }
 
@@ -699,7 +697,9 @@ function viewJDAnalysis() {
 // ESCAPE HTML
 // ============================================================
 
-function escapeHTML(text) {
+function escapeHTML(
+    text
+) {
 
     const div =
         document.createElement(
@@ -719,6 +719,18 @@ function escapeHTML(text) {
 
 
 // ============================================================
+// GO TO DASHBOARD
+// ============================================================
+
+function goToDashboard() {
+
+    window.location.href =
+        "dashboard.html";
+
+}
+
+
+// ============================================================
 // INITIALIZE
 // ============================================================
 
@@ -726,17 +738,8 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-        initializeJobAnalysis();
-
-
-        // If a resume already exists,
-        // make the JD analyzer available.
-
-        if (getResumeId()) {
-
-            showJobAnalyzer();
-
-        }
+        loadJobAnalysis();
 
     }
 );
+
