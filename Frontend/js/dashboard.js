@@ -1,4 +1,3 @@
-
 /* =========================================================
    INTERVO DASHBOARD
 ========================================================= */
@@ -82,7 +81,6 @@ function selectInterviewType(category) {
         mode.style.display = "none";
     });
 
-
     const selectedMode =
         document.getElementById(
             "mode-" + category
@@ -91,7 +89,6 @@ function selectInterviewType(category) {
     if (selectedMode) {
         selectedMode.style.display = "block";
     }
-
 
     const message =
         document.getElementById("categoryMessage");
@@ -174,7 +171,7 @@ async function startInterview(category, mode) {
     try {
 
         /* =====================================
-           CREATE SESSION
+           CREATE INTERVIEW SESSION
         ===================================== */
 
         const sessionResponse =
@@ -217,6 +214,10 @@ async function startInterview(category, mode) {
             sessionData
         );
 
+
+        /* -------------------------------------
+           SESSION ERROR
+        ------------------------------------- */
 
         if (!sessionResponse.ok) {
 
@@ -292,12 +293,22 @@ async function startInterview(category, mode) {
 
 
         /* =====================================
-           GENERATE QUESTIONS
+           GENERATE INTERVIEW QUESTIONS
+           
+           IMPORTANT:
+           Backend Blueprint:
+           /api/interview
+           
+           Route:
+           /generate-questions
+           
+           Final endpoint:
+           /api/interview/generate-questions
         ===================================== */
 
         const questionResponse =
             await fetch(
-                `${API_BASE}/generate-questions`,
+                `${API_BASE}/api/interview/generate-questions`,
                 {
                     method: "POST",
 
@@ -336,6 +347,10 @@ async function startInterview(category, mode) {
         );
 
 
+        /* -------------------------------------
+           QUESTION GENERATION ERROR
+        ------------------------------------- */
+
         if (!questionResponse.ok) {
 
             if (
@@ -362,6 +377,10 @@ async function startInterview(category, mode) {
         }
 
 
+        /* -------------------------------------
+           SUCCESS
+        ------------------------------------- */
+
         if (message) {
 
             message.textContent =
@@ -370,7 +389,7 @@ async function startInterview(category, mode) {
 
 
         /* =====================================
-           REDIRECT
+           REDIRECT TO INTERVIEW
         ===================================== */
 
         setTimeout(function () {
@@ -389,6 +408,11 @@ async function startInterview(category, mode) {
         }, 700);
 
     }
+
+
+    /* =========================================
+       GENERAL ERROR
+    ========================================= */
 
     catch (error) {
 
@@ -430,6 +454,7 @@ async function getJSONResponse(response) {
 
 
     return {
+
         message:
             text ||
             "Unexpected server response."
@@ -625,7 +650,7 @@ async function analyzeJobDescription() {
     try {
 
         /* =====================================
-           CALL BACKEND
+           CALL JOB ANALYSIS API
         ===================================== */
 
         const response =
@@ -754,6 +779,10 @@ async function analyzeJobDescription() {
     }
 
 
+    /* =========================================
+       ERROR
+    ========================================= */
+
     catch (error) {
 
         console.error(
@@ -769,6 +798,10 @@ async function analyzeJobDescription() {
         }
     }
 
+
+    /* =========================================
+       RESTORE BUTTON
+    ========================================= */
 
     finally {
 
@@ -885,6 +918,7 @@ function updateProgress() {
 
 
         showCategorySection();
+
         showJDSection();
 
     }
