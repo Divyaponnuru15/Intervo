@@ -1,3 +1,4 @@
+
 //
 // INTERVO - VOICE INTERVIEW
 //
@@ -13,6 +14,14 @@ let recognition = null;
 let isListening = false;
 
 let isReadingQuestion = false;
+
+
+// =========================================================
+// API
+// =========================================================
+
+const API_BASE =
+    "https://intervo-backend-okao.onrender.com";
 
 
 // =========================================================
@@ -166,10 +175,14 @@ async function loadQuestions() {
             "Loading interview questions...";
 
 
+        // =================================================
+        // CORRECT BACKEND ENDPOINT
+        // =================================================
+
         const response =
             await fetch(
 
-                `https://intervo-backend-okao.onrender.com/questions/${sessionId}`,
+                `${API_BASE}/api/interview/questions/${sessionId}`,
 
                 {
 
@@ -300,7 +313,9 @@ function showQuestion() {
     }
 
 
-    // Stop speech recognition
+    // =================================================
+    // STOP SPEECH RECOGNITION
+    // =================================================
 
     if (
         recognition &&
@@ -324,7 +339,9 @@ function showQuestion() {
     }
 
 
-    // Stop text-to-speech
+    // =================================================
+    // STOP TEXT TO SPEECH
+    // =================================================
 
     stopReadingQuestion();
 
@@ -333,24 +350,32 @@ function showQuestion() {
         false;
 
 
-    // Update progress
+    // =================================================
+    // UPDATE PROGRESS
+    // =================================================
 
     progress.textContent =
         `Question ${currentQuestion + 1} / ${questions.length}`;
 
 
-    // Display question
+    // =================================================
+    // DISPLAY QUESTION
+    // =================================================
 
     questionText.textContent =
         question.question;
 
 
-    // Reset answer
+    // =================================================
+    // RESET ANSWER
+    // =================================================
 
     clearVoiceAnswer();
 
 
-    // Reset evaluation
+    // =================================================
+    // RESET EVALUATION
+    // =================================================
 
     evaluationSection.style.display =
         "none";
@@ -359,7 +384,9 @@ function showQuestion() {
         "";
 
 
-    // Show controls
+    // =================================================
+    // SHOW CONTROLS
+    // =================================================
 
     startVoiceButton.style.display =
         "inline-block";
@@ -377,7 +404,9 @@ function showQuestion() {
         "inline-block";
 
 
-    // Reset buttons
+    // =================================================
+    // RESET BUTTONS
+    // =================================================
 
     startVoiceButton.disabled =
         false;
@@ -440,8 +469,6 @@ function readQuestionAloud() {
 
     }
 
-
-    // Stop existing speech
 
     window.speechSynthesis.cancel();
 
@@ -642,8 +669,6 @@ if (!SpeechRecognition) {
             isListening =
                 true;
 
-
-            // Stop question reading
 
             stopReadingQuestion();
 
@@ -916,8 +941,6 @@ startVoiceButton.addEventListener(
         }
 
 
-        // Stop question reading
-
         stopReadingQuestion();
 
 
@@ -1042,7 +1065,7 @@ clearVoiceButton.addEventListener(
 function clearVoiceAnswer() {
 
     voiceAnswer.textContent =
-        "Your spoken answer will appear here...";
+        "Your spoken answer will appear here.";
 
 
     voiceAnswer.dataset.finalText =
@@ -1141,7 +1164,7 @@ async function submitVoiceAnswer() {
         const submitResponse =
             await fetch(
 
-                "https://intervo-backend-okao.onrender.com/api/answer/submit-answer",
+                `${API_BASE}/api/answer/submit-answer`,
 
                 {
 
@@ -1238,7 +1261,8 @@ async function submitVoiceAnswer() {
         const evaluationResponse =
             await fetch(
 
-               `https://intervo-backend-okao.onrender.com/api/answer/evaluate/${answerId}`,
+                `${API_BASE}/api/answer/evaluate/${answerId}`,
+
                 {
 
                     method: "POST",
@@ -1437,6 +1461,10 @@ function displayEvaluation(
     `;
 
 
+    // =================================================
+    // CODING REFERENCE SOLUTION
+    // =================================================
+
     if (
         category === "Coding" &&
         question.solution
@@ -1468,6 +1496,10 @@ function displayEvaluation(
     evaluationSection.style.display =
         "block";
 
+
+    // =================================================
+    // NEXT BUTTON
+    // =================================================
 
     if (
         currentQuestion <
@@ -1570,7 +1602,7 @@ async function generateReport() {
         const response =
             await fetch(
 
-                `https://intervo-backend-okao.onrender.com/api/report/generate/${sessionId}`,
+                `${API_BASE}/api/report/generate/${sessionId}`,
 
                 {
 
@@ -1656,8 +1688,9 @@ function escapeHTML(text) {
 }
 
 
-// ===============================================
+// =========================================================
 // START INTERVIEW
 // =========================================================
 
 loadQuestions();
+
