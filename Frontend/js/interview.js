@@ -7,9 +7,9 @@
 // API CONFIGURATION
 // ============================================================
 
-
 const API_BASE_URL =
     "https://intervo-backend-okao.onrender.com";
+
 const INTERVIEW_API =
     `${API_BASE_URL}/api/interview`;
 
@@ -25,6 +25,7 @@ const REPORT_API =
 // ============================================================
 
 let questions = [];
+
 let currentQuestion = 0;
 
 const MAX_QUESTIONS = 5;
@@ -35,7 +36,9 @@ const MAX_QUESTIONS = 5;
 // ============================================================
 
 let isFollowUpQuestion = false;
+
 let followUpUsed = false;
+
 let pendingFollowUp = null;
 
 
@@ -44,7 +47,9 @@ let pendingFollowUp = null;
 // ============================================================
 
 let questionTimerInterval = null;
+
 let questionStartTime = null;
+
 let questionElapsedSeconds = 0;
 
 
@@ -71,10 +76,16 @@ async function getResponseData(response) {
     const contentType =
         response.headers.get("content-type") || "";
 
-    if (contentType.includes("application/json")) {
+    if (
+        contentType.includes(
+            "application/json"
+        )
+    ) {
 
         try {
+
             return await response.json();
+
         }
 
         catch (error) {
@@ -85,7 +96,8 @@ async function getResponseData(response) {
             );
 
             return {
-                message: "Invalid JSON response from server."
+                message:
+                    "Invalid JSON response from server."
             };
         }
     }
@@ -93,6 +105,7 @@ async function getResponseData(response) {
 
     const text =
         await response.text();
+
 
     return {
         message:
@@ -131,10 +144,14 @@ function checkAuthentication() {
 async function loadQuestions() {
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
     const questionText =
-        document.getElementById("questionText");
+        document.getElementById(
+            "questionText"
+        );
 
 
     console.log(
@@ -238,6 +255,7 @@ async function loadQuestions() {
 
         const url =
             `${INTERVIEW_API}/questions/${sessionId}`;
+
 
         console.log(
             "Fetching:",
@@ -376,6 +394,10 @@ async function loadQuestions() {
         pendingFollowUp = null;
 
 
+        // Reset timer completely
+        resetQuestionTimer();
+
+
         // ----------------------------------------------------
         // CLEAR MESSAGE
         // ----------------------------------------------------
@@ -420,9 +442,6 @@ function getQuestionText(question) {
     }
 
 
-    // Your backend is expected to use "question".
-    // These fallbacks make the frontend more tolerant.
-
     return (
         question.question ||
         question.question_text ||
@@ -439,19 +458,29 @@ function getQuestionText(question) {
 function showQuestion() {
 
     const answerBox =
-        document.getElementById("answer");
+        document.getElementById(
+            "answer"
+        );
 
     const submitButton =
-        document.getElementById("submitButton");
+        document.getElementById(
+            "submitButton"
+        );
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
     const questionTextElement =
-        document.getElementById("questionText");
+        document.getElementById(
+            "questionText"
+        );
 
     const progress =
-        document.getElementById("progress");
+        document.getElementById(
+            "progress"
+        );
 
 
     // ========================================================
@@ -562,19 +591,10 @@ function showQuestion() {
 
 
     // --------------------------------------------------------
-    // TIMER
+    // START TIMER FOR EVERY CATEGORY
     // --------------------------------------------------------
 
-    if (category === "Coding") {
-
-        startQuestionTimer();
-
-    }
-
-    else {
-
-        hideQuestionTimer();
-    }
+    startQuestionTimer();
 }
 
 
@@ -585,22 +605,32 @@ function showQuestion() {
 function completeInterview() {
 
     const answerBox =
-        document.getElementById("answer");
+        document.getElementById(
+            "answer"
+        );
 
     const submitButton =
-        document.getElementById("submitButton");
+        document.getElementById(
+            "submitButton"
+        );
 
     const questionText =
-        document.getElementById("questionText");
+        document.getElementById(
+            "questionText"
+        );
 
     const progress =
-        document.getElementById("progress");
+        document.getElementById(
+            "progress"
+        );
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
 
-    hideQuestionTimer();
+    resetQuestionTimer();
 
 
     progress.textContent =
@@ -651,7 +681,9 @@ function addAnswerTipsButton() {
 
 
     const button =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
 
     button.id =
@@ -724,7 +756,7 @@ async function showAnswerTips() {
         );
 
 
-    // Toggle off if already visible
+    // Toggle off
     if (existingTips) {
 
         existingTips.remove();
@@ -829,7 +861,9 @@ async function showAnswerTips() {
 
 
         const container =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         container.id =
@@ -891,26 +925,39 @@ async function showAnswerTips() {
 
 
 // ============================================================
-// START TIMER
+// START QUESTION TIMER
+// ============================================================
+//
+// IMPORTANT:
+// Timer now works for ALL categories.
+//
+// HR
+// Technical
+// Coding
+// Behavioral
+// Any future category
+//
+// Timer starts whenever a new question is displayed.
 // ============================================================
 
 function startQuestionTimer() {
 
+    // Stop any old timer
     stopQuestionTimer();
 
 
+    // Reset elapsed time
     questionElapsedSeconds =
         0;
 
 
+    // Store exact start time
     questionStartTime =
         Date.now();
 
 
     const timer =
-        document.getElementById(
-            "codingTimer"
-        );
+        getTimerElement();
 
 
     const display =
@@ -919,19 +966,23 @@ function startQuestionTimer() {
         );
 
 
-    if (!timer || !display) {
-        return;
+    // Even if timer UI doesn't exist,
+    // we still keep calculating the time.
+    if (timer) {
+
+        timer.style.display =
+            "inline-flex";
     }
 
 
-    timer.style.display =
-        "inline-flex";
+    if (display) {
+
+        display.textContent =
+            "00:00";
+    }
 
 
-    display.textContent =
-        "00:00";
-
-
+    // Start updating every second
     questionTimerInterval =
         setInterval(
             updateTimer,
@@ -941,16 +992,54 @@ function startQuestionTimer() {
 
 
 // ============================================================
+// GET TIMER ELEMENT
+// ============================================================
+//
+// Supports BOTH:
+//
+// 1. New ID: interviewTimer
+// 2. Existing ID: codingTimer
+//
+// So you don't have to immediately change your HTML.
+// ============================================================
+
+function getTimerElement() {
+
+    return (
+        document.getElementById(
+            "interviewTimer"
+        ) ||
+
+        document.getElementById(
+            "codingTimer"
+        )
+    );
+}
+
+
+// ============================================================
 // RESUME TIMER
 // ============================================================
 
 function resumeQuestionTimer() {
 
+    // Already running
     if (questionTimerInterval) {
         return;
     }
 
 
+    // If timer was never started,
+    // start a completely new timer.
+    if (!questionStartTime) {
+
+        startQuestionTimer();
+
+        return;
+    }
+
+
+    // Continue from previous elapsed time
     questionStartTime =
         Date.now() -
         (
@@ -1010,12 +1099,14 @@ function updateTimerDisplay() {
 
     const minutes =
         Math.floor(
-            questionElapsedSeconds / 60
+            questionElapsedSeconds /
+            60
         );
 
 
     const seconds =
-        questionElapsedSeconds % 60;
+        questionElapsedSeconds %
+        60;
 
 
     display.textContent =
@@ -1028,6 +1119,22 @@ function updateTimerDisplay() {
 // ============================================================
 
 function stopQuestionTimer() {
+
+    // First calculate the latest time
+    // before stopping the interval.
+    if (questionStartTime) {
+
+        questionElapsedSeconds =
+            Math.floor(
+                (
+                    Date.now() -
+                    questionStartTime
+                ) / 1000
+            );
+
+        updateTimerDisplay();
+    }
+
 
     if (questionTimerInterval) {
 
@@ -1042,6 +1149,27 @@ function stopQuestionTimer() {
 
 
 // ============================================================
+// RESET TIMER
+// ============================================================
+
+function resetQuestionTimer() {
+
+    stopQuestionTimer();
+
+
+    questionStartTime =
+        null;
+
+
+    questionElapsedSeconds =
+        0;
+
+
+    updateTimerDisplay();
+}
+
+
+// ============================================================
 // HIDE TIMER
 // ============================================================
 
@@ -1051,9 +1179,7 @@ function hideQuestionTimer() {
 
 
     const timer =
-        document.getElementById(
-            "codingTimer"
-        );
+        getTimerElement();
 
 
     if (timer) {
@@ -1070,14 +1196,21 @@ function hideQuestionTimer() {
 
 function formatTime(totalSeconds) {
 
+    const safeSeconds =
+        Math.max(
+            0,
+            Number(totalSeconds) || 0
+        );
+
+
     const minutes =
         Math.floor(
-            totalSeconds / 60
+            safeSeconds / 60
         );
 
 
     const seconds =
-        totalSeconds % 60;
+        safeSeconds % 60;
 
 
     return (
@@ -1094,13 +1227,19 @@ function formatTime(totalSeconds) {
 async function submitAnswer() {
 
     const answerBox =
-        document.getElementById("answer");
+        document.getElementById(
+            "answer"
+        );
 
     const submitButton =
-        document.getElementById("submitButton");
+        document.getElementById(
+            "submitButton"
+        );
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
 
     const answer =
@@ -1108,7 +1247,7 @@ async function submitAnswer() {
 
 
     // --------------------------------------------------------
-    // VALIDATE
+    // VALIDATE ANSWER
     // --------------------------------------------------------
 
     if (!answer) {
@@ -1155,15 +1294,30 @@ async function submitAnswer() {
     }
 
 
+    // --------------------------------------------------------
+    // STOP TIMER
+    // --------------------------------------------------------
+
     stopQuestionTimer();
 
 
+    // IMPORTANT:
+    // Capture the final time BEFORE API calls.
     const timeUsed =
         questionElapsedSeconds;
 
 
     const formattedTime =
-        formatTime(timeUsed);
+        formatTime(
+            timeUsed
+        );
+
+
+    console.log(
+        "Question time used:",
+        timeUsed,
+        "seconds"
+    );
 
 
     try {
@@ -1228,6 +1382,7 @@ async function submitAnswer() {
             submitButton.disabled =
                 false;
 
+
             resumeQuestionTimer();
 
             return;
@@ -1245,6 +1400,7 @@ async function submitAnswer() {
 
             submitButton.disabled =
                 false;
+
 
             resumeQuestionTimer();
 
@@ -1295,6 +1451,7 @@ async function submitAnswer() {
             submitButton.disabled =
                 false;
 
+
             resumeQuestionTimer();
 
             return;
@@ -1312,6 +1469,7 @@ async function submitAnswer() {
 
             submitButton.disabled =
                 false;
+
 
             resumeQuestionTimer();
 
@@ -1519,7 +1677,7 @@ async function submitAnswer() {
 
 
         // ====================================================
-        // DISPLAY
+        // DISPLAY EVALUATION
         // ====================================================
 
         message.innerHTML =
@@ -1592,7 +1750,7 @@ function continueWithFollowUp() {
 
 
 // ============================================================
-// SHOW FOLLOW-UP
+// SHOW FOLLOW-UP QUESTION
 // ============================================================
 
 function showFollowUpQuestion(
@@ -1600,19 +1758,29 @@ function showFollowUpQuestion(
 ) {
 
     const answerBox =
-        document.getElementById("answer");
+        document.getElementById(
+            "answer"
+        );
 
     const submitButton =
-        document.getElementById("submitButton");
+        document.getElementById(
+            "submitButton"
+        );
 
     const message =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
     const questionText =
-        document.getElementById("questionText");
+        document.getElementById(
+            "questionText"
+        );
 
     const progress =
-        document.getElementById("progress");
+        document.getElementById(
+            "progress"
+        );
 
 
     isFollowUpQuestion =
@@ -1665,13 +1833,11 @@ function showFollowUpQuestion(
         "";
 
 
-    if (category === "Coding") {
-        startQuestionTimer();
-    }
+    // ========================================================
+    // START TIMER FOR FOLLOW-UP TOO
+    // ========================================================
 
-    else {
-        hideQuestionTimer();
-    }
+    startQuestionTimer();
 }
 
 
@@ -1680,6 +1846,10 @@ function showFollowUpQuestion(
 // ============================================================
 
 function nextQuestion() {
+
+    // Make sure current timer is stopped
+    resetQuestionTimer();
+
 
     currentQuestion++;
 
@@ -1796,7 +1966,9 @@ async function generateReport() {
 function escapeHTML(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     div.textContent =
@@ -1812,33 +1984,34 @@ function escapeHTML(text) {
 // ============================================================
 // PAGE INITIALIZATION
 // ============================================================
-//
-// THIS IS VERY IMPORTANT.
-//
-// Your previous file defined loadQuestions()
-// but never called it.
-//
-// This is why your page stayed at:
-// "Loading question..."
-//
-// ============================================================
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
 
         console.log(
+            "========================================"
+        );
+
+        console.log(
             "INTERVO interview.js loaded successfully."
         );
 
+        console.log(
+            "Category:",
+            category
+        );
 
         console.log(
-            "Starting loadQuestions()..."
+            "Session:",
+            sessionId
+        );
+
+        console.log(
+            "========================================"
         );
 
 
         loadQuestions();
-
     }
 );
-
