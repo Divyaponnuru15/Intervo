@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Resume Builder | Intervo</title>
+
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
+
+<link
+    rel="stylesheet"
+    href="css/resume-builder.css"
+>
+
+<link
+    rel="icon"
+    type="image/png"
+    href="images/intervo-favicon.png?v=2"
+>
+
+</head>
+
+<body class="dashboard-body">
+
+<!-- 
+     NAVBAR
+ -->
+
+<header class="dashboard-navbar">
+
+<div class="dashboard-nav-container">
+
+    <a
+        href="dashboard.html"
+        class="dashboard-logo"
+    >
+
+        <span class="dashboard-logo-icon">
+            AI
+        </span>
+
+        <span>
+            Intervo
+        </span>
+
+    </a>
+
+
+    <button
+        type="button"
+        class="dashboard-logout"
+        onclick="logout()"
+    >
+        Logout
+    </button>
+
+</div>
+
+</header>
+
+
+<!-- 
+     MAIN
+ -->
+
+<main class="dashboard-main">
+
+
+<!-- 
+     PAGE HEADER
+ -->
+
+<section class="dashboard-header">
+
+    <div>
+
+        <span class="dashboard-label">
+            AI RESUME BUILDER
+        </span>
+
+        <h1>
+            Create a resume tailored to your job.
+        </h1>
+
+        <p>
+            Use your existing resume and a job description
+            to create an ATS-friendly resume that highlights
+            your most relevant skills and projects.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- 
+     BUILDER GRID
+ -->
+
+<section class="dashboard-grid">
+
+
+    <!-- =================================================
+         JOB DESCRIPTION
+    ================================================= -->
+
+    <article class="dashboard-card jd-card">
+
+        <div class="card-content">
+
+            <span class="card-label">
+                TARGET JOB
+            </span>
+
+
+            <h2>
+                📋 Job Description
+            </h2>
+
+
+            <p>
+                This is the job description your resume
+                will be tailored for.
+            </p>
+
+
+            <div class="jd-input-area">
+
+                <label
+                    for="jobDescription"
+                    class="jd-label"
+                >
+                    Job Description
+                </label>
+
+
+                <textarea
+                    id="jobDescription"
+                    class="jd-textarea"
+                    rows="12"
+                    maxlength="20000"
+                    placeholder="Your job description will appear here..."
+                ></textarea>
+
+
+                <div class="jd-character-count">
+
+                    <span id="jdCharacterCount">
+                        0
+                    </span>
+
+                    / 20000 characters
+
+                </div>
+
+            </div>
+
+
+            <p
+                id="jdMessage"
+                class="dashboard-message"
+                aria-live="polite"
+            ></p>
+
+        </div>
+
+    </article>
+
+    <!-- =================================================
+         GENERATION SECTION
+    ================================================= -->
+
+    <article
+        class="dashboard-card resume-builder-generate-card"
+    >
+
+        <div class="card-content">
+
+            <span class="card-label">
+                AI GENERATION
+            </span>
+
+
+            <h2>
+                ✨ Create Your Tailored Resume
+            </h2>
+
+
+            <p>
+                Intervo will compare your resume with
+                the target job description and create
+                a new resume focused on the most relevant
+                information.
+            </p>
+
+
+            <div class="resume-builder-process">
+
+
+                <!-- STEP 1 -->
+
+                <div class="resume-builder-process-item">
+
+                    <span>
+                        1
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Analyze the job
+                        </strong>
+
+                        <small>
+                            Identify important skills,
+                            keywords, and requirements.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+
+                <div class="resume-builder-process-item">
+
+                    <span>
+                        2
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Match your experience
+                        </strong>
+
+                        <small>
+                            Find relevant skills and
+                            projects from your resume.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+
+                <div class="resume-builder-process-item">
+
+                    <span>
+                        3
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Generate your resume
+                        </strong>
+
+                        <small>
+                            Create an ATS-friendly,
+                            job-focused version.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="dashboard-primary-button"
+                id="createResumeButton"
+            >
+                ✨ Generate Tailored Resume
+            </button>
+
+
+            <p
+                id="resumeBuilderMessage"
+                class="dashboard-message"
+                aria-live="polite"
+            ></p>
+
+        </div>
+
+    </article>
+
+
+    <!-- =================================================
+         GENERATED RESUME PREVIEW
+    ================================================= -->
+
+    <article
+        class="dashboard-card resume-preview-card"
+        id="resumePreviewSection"
+        style="display: none;"
+    >
+
+        <div class="card-content">
+
+            <span class="card-label">
+                RESUME PREVIEW
+            </span>
+
+
+            <h2>
+                Your Tailored Resume
+            </h2>
+
+
+            <p>
+                Review your generated resume before
+                downloading it.
+            </p>
+
+
+            <!-- =========================================
+                 GENERATED RESUME
+            ========================================== -->
+
+            <div
+                id="resumePreview"
+                class="resume-preview"
+            >
+
+                <!--
+                    Generated resume content
+                    will appear here.
+                -->
+
+            </div>
+
+
+            <!-- =========================================
+                 ACTIONS
+            ========================================== -->
+
+            <div class="resume-preview-actions">
+
+                <button
+                    type="button"
+                    class="dashboard-secondary-button"
+                    id="editResumeButton"
+                >
+                    ✏️ Edit Resume
+                </button>
+
+
+                <button
+                    type="button"
+                    class="dashboard-primary-button"
+                    id="saveResumeButton"
+                    style="display: none;"
+                >
+                    💾 Save Changes
+                </button>
+
+
+                <button
+                    type="button"
+                    class="dashboard-primary-button"
+                    id="downloadResumeButton"
+                >
+                    📥 Download PDF
+                </button>
+
+            </div>
+
+
+            <p
+                id="resumeDownloadMessage"
+                class="dashboard-message"
+                aria-live="polite"
+            ></p>
+
+        </div>
+
+    </article>
+
+
+</section>
+
+
+</main>
+
+
+<!-- 
+     FOOTER
+ -->
+
+<footer class="dashboard-footer">
+
+<span>
+    © 2026 Intervo
+</span>
+
+</footer>
+
+
+<!-- 
+     JAVASCRIPT
+ -->
+
+<script src="js/resume-builder.js"></script>
+
+</body>
+
+</html>
+

@@ -30,9 +30,7 @@
 <body class="dashboard-body">
 
 
-<!-- 
-     NAVBAR
- -->
+<!-- NAVBAR -->
 
 <header class="dashboard-navbar">
 
@@ -67,16 +65,13 @@
 </header>
 
 
-<!-- 
-     MAIN
- -->
+
+<!-- MAIN -->
 
 <main class="dashboard-main">
 
 
-<!-- 
-     PAGE HEADER
- -->
+<!-- PAGE HEADER -->
 
 <section class="dashboard-header">
 
@@ -101,9 +96,7 @@
 
 
 
-<!-- 
-     PROGRESS
- -->
+<!-- PROGRESS -->
 
 <section class="progress-card">
 
@@ -189,16 +182,12 @@
 
 
 
-<!-- 
-     DASHBOARD GRID
- -->
+<!-- DASHBOARD GRID -->
 
 <section class="dashboard-grid">
 
 
-<!-- 
-     RESUME
- -->
+<!-- RESUME -->
 
 <article class="dashboard-card resume-card">
 
@@ -274,9 +263,7 @@
 
 
 
-<!-- 
-     ATS SCORE
- -->
+<!-- ATS SCORE -->
 
 <article class="dashboard-card ats-card">
 
@@ -411,9 +398,7 @@
 
 
 
-<!-- 
-     INTERVIEW
- -->
+<!-- INTERVIEW -->
 
 <article
     class="dashboard-card interview-card"
@@ -440,9 +425,7 @@
         <div class="interview-options">
 
 
-            <!-- 
-                 HR
-             -->
+            <!-- HR -->
 
             <button
                 type="button"
@@ -474,9 +457,7 @@
 
 
 
-            <!-- 
-                 TECHNICAL
-             -->
+            <!-- TECHNICAL -->
 
             <button
                 type="button"
@@ -508,9 +489,7 @@
 
 
 
-            <!-- 
-                 CODING
-             -->
+            <!-- CODING -->
 
             <button
                 type="button"
@@ -542,9 +521,7 @@
 
 
 
-            <!-- 
-                 PROJECT
-             -->
+            <!-- PROJECT -->
 
             <button
                 type="button"
@@ -585,9 +562,7 @@
 
 
 
-        <!-- 
-             HR MODE
-         -->
+        <!-- HR MODE -->
 
         <div
             id="mode-HR"
@@ -614,6 +589,7 @@
 
 
             <div class="interview-mode-options">
+
 
                 <!-- TEXT -->
 
@@ -682,9 +658,7 @@
 
 
 
-        <!-- 
-             TECHNICAL MODE
-         -->
+        <!-- TECHNICAL MODE -->
 
         <div
             id="mode-Technical"
@@ -711,6 +685,7 @@
 
 
             <div class="interview-mode-options">
+
 
                 <!-- TEXT -->
 
@@ -779,12 +754,7 @@
 
 
 
-        <!-- 
-             CODING MODE
-             
-             NOTE:
-             Voice Interview has been intentionally removed.
-         -->
+        <!-- CODING MODE -->
 
         <div
             id="mode-Coding"
@@ -811,6 +781,7 @@
 
 
             <div class="interview-mode-options">
+
 
                 <!-- TEXT ONLY -->
 
@@ -848,9 +819,7 @@
 
 
 
-        <!-- 
-             PROJECT MODE
-         -->
+        <!-- PROJECT MODE -->
 
         <div
             id="mode-Project"
@@ -877,6 +846,7 @@
 
 
             <div class="interview-mode-options">
+
 
                 <!-- TEXT -->
 
@@ -949,9 +919,7 @@
 
 
 
-<!-- 
-     JOB DESCRIPTION ANALYZER
- -->
+<!-- JD ANALYZER -->
 
 <article
     class="dashboard-card jd-card"
@@ -966,7 +934,7 @@
         </span>
 
         <h2>
-            💼 Job Description Analyzer
+            🔍 Job Description Analyzer
         </h2>
 
         <p>
@@ -975,9 +943,7 @@
         </p>
 
 
-        <!-- 
-             JD INPUT
-         -->
+        <!-- JD INPUT -->
 
         <div class="jd-input-area">
 
@@ -1011,9 +977,7 @@
         </div>
 
 
-        <!-- 
-             ANALYZE BUTTON
-         -->
+        <!-- ANALYZE BUTTON -->
 
         <button
             type="button"
@@ -1026,9 +990,7 @@
         </button>
 
 
-        <!-- 
-             JD MESSAGE
-         -->
+        <!-- JD MESSAGE -->
 
         <p
             id="jdMessage"
@@ -1037,9 +999,7 @@
         ></p>
 
 
-        <!-- 
-             JD RESULT PREVIEW
-         -->
+        <!-- JD RESULT PREVIEW -->
 
         <div
             id="jdResultPreview"
@@ -1097,22 +1057,25 @@
                 View Full Analysis
             </button>
 
+            <button
+    type="button"
+    class="dashboard-secondary-button"
+    id="createResumeButton"
+    onclick="openResumeBuilder()"
+    style="display: none;"
+>
+    ✨ Create Tailored Resume
+</button>
+
         </div>
 
     </div>
 
 </article>
-
-
 </section>
-
-
 </main>
 
-
-<!-- 
-     FOOTER
- -->
+<!-- FOOTER -->
 
 <footer class="dashboard-footer">
 
@@ -1123,14 +1086,12 @@
 </footer>
 
 
-<!-- 
-     JAVASCRIPT
- -->
+
+<!-- JAVASCRIPT -->
 
 <script src="js/dashboard.js"></script>
 
 <script src="js/resume.js"></script>
-
 
 <script src="js/job_analysis.js"></script>
 

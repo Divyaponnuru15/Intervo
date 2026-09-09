@@ -22,7 +22,7 @@ from routes.report import report
 from routes.session import session
 from routes.pdf_report import pdf_report
 from routes.job_analysis import job_analysis
-
+from routes.resume_builder import resume_builder
 
 # ============================================================
 # CREATE FLASK APPLICATION
@@ -145,7 +145,10 @@ app.register_blueprint(
     job_analysis,
     url_prefix="/api/job-analysis"
 )
-
+app.register_blueprint(
+    resume_builder,
+    url_prefix="/api/resume-builder"
+)
 # ============================================================
 # HOME ROUTE
 # ============================================================

@@ -69,6 +69,99 @@ function showJDSection() {
 
 
 /* =========================================================
+   SHOW RESUME BUILDER SECTION
+========================================================= */
+
+function showResumeBuilderSection() {
+
+    const resumeBuilderSection =
+        document.getElementById("resumeBuilderSection");
+
+    if (resumeBuilderSection) {
+        resumeBuilderSection.style.display = "block";
+    }
+}
+
+
+/* =========================================================
+   HIDE RESUME BUILDER SECTION
+========================================================= */
+
+function hideResumeBuilderSection() {
+
+    const resumeBuilderSection =
+        document.getElementById("resumeBuilderSection");
+
+    if (resumeBuilderSection) {
+        resumeBuilderSection.style.display = "none";
+    }
+}
+
+
+/* =========================================================
+   OPEN RESUME BUILDER
+========================================================= */
+
+function openResumeBuilder() {
+
+    const resumeId =
+        localStorage.getItem("resume_id");
+
+    const analysisId =
+        localStorage.getItem("job_analysis_id");
+
+
+    /* -----------------------------------------
+       RESUME CHECK
+    ----------------------------------------- */
+
+    if (!resumeId) {
+
+        const message =
+            document.getElementById(
+                "resumeBuilderMessage"
+            );
+
+        if (message) {
+            message.textContent =
+                "Please upload your resume first.";
+        }
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       JD ANALYSIS CHECK
+    ----------------------------------------- */
+
+    if (!analysisId) {
+
+        const message =
+            document.getElementById(
+                "resumeBuilderMessage"
+            );
+
+        if (message) {
+            message.textContent =
+                "Please analyze a job description first.";
+        }
+
+        return;
+    }
+
+
+    /* -----------------------------------------
+       OPEN BUILDER
+    ----------------------------------------- */
+
+    window.location.href =
+        "resume-builder.html?id=" +
+        encodeURIComponent(analysisId);
+}
+
+
+/* =========================================================
    INTERVIEW CATEGORY
 ========================================================= */
 
@@ -78,22 +171,33 @@ function selectInterviewType(category) {
         document.querySelectorAll(".interview-mode");
 
     allModes.forEach(function (mode) {
+
         mode.style.display = "none";
+
     });
+
 
     const selectedMode =
         document.getElementById(
             "mode-" + category
         );
 
+
     if (selectedMode) {
-        selectedMode.style.display = "block";
+
+        selectedMode.style.display =
+            "block";
     }
 
+
     const message =
-        document.getElementById("categoryMessage");
+        document.getElementById(
+            "categoryMessage"
+        );
+
 
     if (message) {
+
         message.textContent =
             `${category} interview selected. Choose your interview mode.`;
     }
@@ -113,7 +217,9 @@ async function startInterview(category, mode) {
         localStorage.getItem("resume_id");
 
     const message =
-        document.getElementById("categoryMessage");
+        document.getElementById(
+            "categoryMessage"
+        );
 
 
     /* -----------------------------------------
@@ -122,7 +228,8 @@ async function startInterview(category, mode) {
 
     if (!currentToken) {
 
-        window.location.href = "index.html";
+        window.location.href =
+            "index.html";
 
         return;
     }
@@ -135,6 +242,7 @@ async function startInterview(category, mode) {
     if (!resumeId) {
 
         if (message) {
+
             message.textContent =
                 "Please upload your resume first.";
         }
@@ -181,6 +289,7 @@ async function startInterview(category, mode) {
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json",
 
@@ -225,7 +334,9 @@ async function startInterview(category, mode) {
                 sessionResponse.status === 401
             ) {
 
-                localStorage.removeItem("token");
+                localStorage.removeItem(
+                    "token"
+                );
 
                 window.location.href =
                     "index.html";
@@ -294,16 +405,6 @@ async function startInterview(category, mode) {
 
         /* =====================================
            GENERATE INTERVIEW QUESTIONS
-           
-           IMPORTANT:
-           Backend Blueprint:
-           /api/interview
-           
-           Route:
-           /generate-questions
-           
-           Final endpoint:
-           /api/interview/generate-questions
         ===================================== */
 
         const questionResponse =
@@ -313,6 +414,7 @@ async function startInterview(category, mode) {
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json",
 
@@ -357,7 +459,9 @@ async function startInterview(category, mode) {
                 questionResponse.status === 401
             ) {
 
-                localStorage.removeItem("token");
+                localStorage.removeItem(
+                    "token"
+                );
 
                 window.location.href =
                     "index.html";
@@ -442,7 +546,9 @@ async function getJSONResponse(response) {
 
 
     if (
-        contentType.includes("application/json")
+        contentType.includes(
+            "application/json"
+        )
     ) {
 
         return await response.json();
@@ -760,11 +866,28 @@ async function analyzeJobDescription() {
         );
 
 
+        /* =====================================
+           SAVE JD FOR RESUME BUILDER
+        ===================================== */
+
+        localStorage.setItem(
+            "job_description",
+            jobDescription
+        );
+
+
         if (message) {
 
             message.textContent =
                 "Analysis completed successfully.";
         }
+
+
+        /* =====================================
+           SHOW RESUME BUILDER
+        ===================================== */
+
+        showResumeBuilderSection();
 
 
         /* =====================================
@@ -857,6 +980,11 @@ function updateProgress() {
             "resume_id"
         );
 
+    const analysisId =
+        localStorage.getItem(
+            "job_analysis_id"
+        );
+
 
     const progressBar =
         document.getElementById(
@@ -917,9 +1045,29 @@ function updateProgress() {
         }
 
 
+        /* =====================================
+           SHOW DASHBOARD FEATURES
+        ===================================== */
+
         showCategorySection();
 
         showJDSection();
+
+
+        /* =====================================
+           SHOW RESUME BUILDER ONLY AFTER JD
+           ANALYSIS EXISTS
+        ===================================== */
+
+        if (analysisId) {
+
+            showResumeBuilderSection();
+
+        } else {
+
+            hideResumeBuilderSection();
+
+        }
 
     }
 
@@ -955,6 +1103,9 @@ function updateProgress() {
                 "active"
             );
         }
+
+
+        hideResumeBuilderSection();
     }
 }
 
@@ -1003,4 +1154,3 @@ document.addEventListener(
         }
     }
 );
-

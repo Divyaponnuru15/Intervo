@@ -7,8 +7,9 @@
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
 >
 
 <title>JD Analysis | Intervo</title>
@@ -35,32 +36,31 @@
 <header class="dashboard-navbar">
 
 <div class="dashboard-nav-container">
+<a
+    href="dashboard.html"
+    class="dashboard-logo"
+>
 
-    <a
-        href="dashboard.html"
-        class="dashboard-logo"
-    >
+    <span class="dashboard-logo-icon">
+        AI
+    </span>
 
-        <span class="dashboard-logo-icon">
-            AI
-        </span>
+    <span>
+        Intervo
+    </span>
 
-        <span>
-            Intervo
-        </span>
-
-    </a>
+</a>
 
 
-    <a
-        href="dashboard.html"
-        class="dashboard-logout"
-    >
-        ← Back to Dashboard
-    </a>
+<a
+    href="dashboard.html"
+    class="dashboard-logout"
+>
+    ← Back to Dashboard
+</a>
+
 
 </div>
-
 
 </header>
 
@@ -76,25 +76,25 @@
 
 <section class="dashboard-header">
 
-    <div>
+<div>
 
-        <span class="dashboard-label">
-            JOB PREPARATION
-        </span>
+    <span class="dashboard-label">
+        JOB PREPARATION
+    </span>
 
-        <h1>
-            Job Description Analysis
-        </h1>
+    <h1>
+        Job Description Analysis
+    </h1>
 
-        <p>
-            See how closely your resume matches the
-            job description and discover what to improve.
-        </p>
+    <p>
+        See how closely your resume matches the
+        job description and discover what to improve.
+    </p>
 
-    </div>
+</div>
+
 
 </section>
-
 
 <!-- =====================================================
      RESULTS
@@ -102,166 +102,195 @@
 
 <section class="jd-analysis-page">
 
+<!-- =================================================
+     MATCH SCORE
+================================================= -->
 
-    <!-- =================================================
-         MATCH SCORE
-    ================================================= -->
+<article class="dashboard-card jd-analysis-score-card">
 
-    <article class="dashboard-card jd-analysis-score-card">
+    <div class="card-content">
 
-        <div class="card-content">
+        <span class="card-label">
+            RESUME ↔ JOB MATCH
+        </span>
 
-            <span class="card-label">
-                RESUME ↔ JOB MATCH
-            </span>
+        <h2>
+            Resume Match Score
+        </h2>
 
-            <h2>
-                Resume Match Score
-            </h2>
+        <div class="jd-score-display">
 
+            <strong
+                id="matchScore"
+                class="jd-large-score"
+            >
+                --%
+            </strong>
 
-            <div class="jd-score-display">
-
-                <strong
-                    id="matchScore"
-                    class="jd-large-score"
-                >
-                    --%
-                </strong>
-
-                <span
-                    id="matchScoreLabel"
-                    class="jd-score-label"
-                >
-                    Loading...
-                </span>
-
-            </div>
-
-        </div>
-
-    </article>
-
-
-
-    <!-- =================================================
-         MISSING SKILLS
-    ================================================= -->
-
-    <article class="dashboard-card">
-
-        <div class="card-content">
-
-            <span class="card-label">
-                SKILL GAPS
-            </span>
-
-            <h2>
-                ❌ Missing Skills
-            </h2>
-
-            <p>
-                Important skills from the job description
-                that were not found in your resume.
-            </p>
-
-
-            <div
-                id="missingSkills"
-                class="jd-skill-list jd-large-skill-list"
+            <span
+                id="matchScoreLabel"
+                class="jd-score-label"
             >
                 Loading...
-            </div>
+            </span>
 
         </div>
 
-    </article>
+    </div>
+
+</article>
 
 
+<!-- =================================================
+     MISSING SKILLS
+================================================= -->
 
-    <!-- =================================================
-         RESUME IMPROVEMENTS
-    ================================================= -->
+<article class="dashboard-card">
 
-    <article class="dashboard-card jd-suggestions-card">
+    <div class="card-content">
 
-        <div class="card-content">
+        <span class="card-label">
+            SKILL GAPS
+        </span>
 
-            <span class="card-label">
-                RESUME IMPROVEMENT
-            </span>
+        <h2>
+            ❌ Missing Skills
+        </h2>
 
-            <h2>
-                📝 Resume Improvements
-            </h2>
+        <p>
+            Important skills from the job description
+            that were not found in your resume.
+        </p>
 
-            <p>
-                Suggestions to improve your resume
-                specifically for this job.
-            </p>
+        <div
+            id="missingSkills"
+            class="jd-skill-list jd-large-skill-list"
+        >
+            Loading...
+        </div>
+
+    </div>
+
+</article>
 
 
-            <div
-                id="resumeSuggestions"
-                class="jd-suggestions-list"
+<!-- =================================================
+     RESUME IMPROVEMENTS
+================================================= -->
+
+<article class="dashboard-card jd-suggestions-card">
+
+    <div class="card-content">
+
+        <span class="card-label">
+            RESUME IMPROVEMENT
+        </span>
+
+        <h2>
+            📝 Resume Improvements
+        </h2>
+
+        <p>
+            Suggestions to improve your resume
+            specifically for this job.
+        </p>
+
+        <div
+            id="resumeSuggestions"
+            class="jd-suggestions-list"
+        >
+            Loading suggestions...
+        </div>
+
+    </div>
+
+</article>
+
+
+<!-- =================================================
+     CREATE TAILORED RESUME
+================================================= -->
+
+<article class="dashboard-card resume-builder-card">
+
+    <div class="card-content">
+
+        <span class="card-label">
+            NEXT STEP
+        </span>
+
+        <h2>
+            ✨ Create Tailored Resume
+        </h2>
+
+        <p>
+            Create a resume tailored to this job
+            description using the information from
+            your existing resume.
+        </p>
+
+        <div class="jd-actions">
+
+            <button
+                type="button"
+                class="dashboard-primary-button"
+                onclick="openResumeBuilder()"
             >
-                Loading suggestions...
-            </div>
+                ✨ Create Tailored Resume
+            </button>
 
         </div>
 
-    </article>
+    </div>
+
+</article>
 
 
+<!-- =================================================
+     ACTION
+================================================= -->
 
-    <!-- =================================================
-         ACTION
-    ================================================= -->
+<article class="dashboard-card jd-actions-card">
 
-    <article class="dashboard-card jd-actions-card">
+    <div class="card-content">
 
-        <div class="card-content">
+        <span class="card-label">
+            CONTINUE
+        </span>
 
-            <span class="card-label">
-                NEXT STEP
-            </span>
+        <h2>
+            Continue Preparing
+        </h2>
 
-            <h2>
-                Continue Preparing
-            </h2>
+        <p>
+            Return to your dashboard to continue
+            preparing for this role.
+        </p>
 
-            <p>
-                Use the missing skills and resume
-                improvements to prepare for this role.
-            </p>
+        <div class="jd-actions">
 
-
-            <div class="jd-actions">
-
-                <button
-                    type="button"
-                    class="dashboard-primary-button"
-                    onclick="goToDashboard()"
-                >
-                    ← Back to Dashboard
-                </button>
-
-            </div>
-
-
-            <p
-                id="jdActionMessage"
-                class="dashboard-message"
-                aria-live="polite"
-            ></p>
+            <button
+                type="button"
+                class="dashboard-primary-button"
+                onclick="goToDashboard()"
+            >
+                ← Back to Dashboard
+            </button>
 
         </div>
 
-    </article>
+        <p
+            id="jdActionMessage"
+            class="dashboard-message"
+            aria-live="polite"
+        ></p>
+
+    </div>
+
+</article>
 
 
 </section>
-
 
 </main>
 
@@ -271,11 +300,9 @@
 
 <footer class="dashboard-footer">
 
-
 <span>
     © 2026 Intervo
 </span>
-
 
 </footer>
 
