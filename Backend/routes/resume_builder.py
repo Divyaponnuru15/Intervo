@@ -1,4 +1,6 @@
+python
 import json
+import re
 
 from flask import (
     Blueprint,
@@ -17,7 +19,6 @@ from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import inch
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
@@ -104,7 +105,7 @@ def create_resume():
         }), 400
 
     # ========================================================
-    # VALIDATE JD
+    # VALIDATE JOB DESCRIPTION
     # ========================================================
 
     if (
@@ -135,11 +136,8 @@ def create_resume():
     # ========================================================
 
     resume = Resume.query.filter_by(
-
         id=resume_id,
-
         user_id=user_id
-
     ).first()
 
     if not resume:
@@ -154,13 +152,9 @@ def create_resume():
     # ========================================================
 
     analysis = JobAnalysis.query.filter_by(
-
         id=analysis_id,
-
         user_id=user_id,
-
         resume_id=resume_id
-
     ).first()
 
     if not analysis:
@@ -186,7 +180,7 @@ def create_resume():
         }), 400
 
     # ========================================================
-    # USE SAVED JD ANALYSIS
+    # LOAD SAVED JD ANALYSIS
     # ========================================================
 
     def load_json_list(value):
@@ -326,656 +320,872 @@ def create_resume():
 @jwt_required()
 def generate_resume_pdf():
 
-    data = request.get_json(
-        silent=True
-    )
+    try:
 
-    if not data:
+        data = request.get_json(
+            silent=True
+        )
 
-        return jsonify({
-            "message":
-                "Resume data is required."
-        }), 400
+        if not data:
 
-    resume_data = data.get(
-        "resume"
-    )
+            return jsonify({
+                "message":
+                    "Resume data is required."
+            }), 400
 
-    if not isinstance(
-        resume_data,
-        dict
-    ):
+        resume_data = data.get(
+            "resume"
+        )
 
-        return jsonify({
-            "message":
-                "Invalid resume data."
-        }), 400
+        if not isinstance(
+            resume_data,
+            dict
+        ):
 
-    # ========================================================
-    # PDF BUFFER
-    # ========================================================
+            return jsonify({
+                "message":
+                    "Invalid resume data."
+            }), 400
 
-    buffer = BytesIO()
+        # ====================================================
+        # PDF BUFFER
+        # ====================================================
 
-    document = SimpleDocTemplate(
+        buffer = BytesIO()
 
-        buffer,
+        document = SimpleDocTemplate(
 
-        pagesize=A4,
+            buffer,
 
-        rightMargin=45,
-        leftMargin=45,
-        topMargin=40,
-        bottomMargin=40
-    )
+            pagesize=A4,
 
-    styles = getSampleStyleSheet()
+            rightMargin=45,
 
-    name_style = styles["Title"]
-    name_style.alignment = TA_CENTER
-    name_style.fontSize = 20
-    name_style.leading = 24
+            leftMargin=45,
 
-    contact_style = styles["Normal"]
-    contact_style.alignment = TA_CENTER
-    contact_style.fontSize = 9
+            topMargin=40,
 
-    heading_style = styles["Heading2"]
-    heading_style.fontSize = 12
-    heading_style.leading = 15
-    heading_style.spaceBefore = 10
-    heading_style.spaceAfter = 5
+            bottomMargin=40
+        )
 
-    body_style = styles["BodyText"]
-    body_style.fontSize = 9.5
-    body_style.leading = 13
+        styles = getSampleStyleSheet()
 
-    story = []
+        # ====================================================
+        # STYLES
+        # ====================================================
 
-    # ========================================================
-    # CONTACT
-    # ========================================================
+        name_style = styles["Title"]
 
-    contact = resume_data.get(
-        "contact",
-        {}
-    )
+        name_style.alignment = TA_CENTER
 
-    name = str(
-        contact.get("name", "")
-        or ""
-    ).strip()
+        name_style.fontSize = 20
 
-    if name:
+        name_style.leading = 24
 
-        story.append(
-            Paragraph(
-                escape_pdf(name),
-                name_style
+        contact_style = styles["Normal"]
+
+        contact_style.alignment = TA_CENTER
+
+        contact_style.fontSize = 9
+
+        heading_style = styles["Heading2"]
+
+        heading_style.fontSize = 12
+
+        heading_style.leading = 15
+
+        heading_style.spaceBefore = 10
+
+        heading_style.spaceAfter = 5
+
+        body_style = styles["BodyText"]
+
+        body_style.fontSize = 9.5
+
+        body_style.leading = 13
+
+        story = []
+
+        # ====================================================
+        # CONTACT
+        # ====================================================
+
+        contact = resume_data.get(
+            "contact",
+            {}
+        )
+
+        if not isinstance(
+            contact,
+            dict
+        ):
+
+            contact = {}
+
+        name = safe_pdf_text(
+            contact.get(
+                "name",
+                ""
             )
         )
 
-    contact_items = []
+        if name:
 
-    for field in [
-        "email",
-        "phone",
-        "linkedin",
-        "github",
-        "portfolio"
-    ]:
-
-        value = str(
-            contact.get(field, "")
-            or ""
-        ).strip()
-
-        if value:
-
-            contact_items.append(
-                value
+            story.append(
+                Paragraph(
+                    escape_pdf(name),
+                    name_style
+                )
             )
 
-    if contact_items:
+        contact_items = []
+
+        for field in [
+            "email",
+            "phone",
+            "linkedin",
+            "github",
+            "portfolio"
+        ]:
+
+            value = safe_pdf_text(
+                contact.get(
+                    field,
+                    ""
+                )
+            )
+
+            if value:
+
+                contact_items.append(
+                    value
+                )
+
+        if contact_items:
+
+            story.append(
+                Paragraph(
+                    escape_pdf(
+                        " | ".join(
+                            contact_items
+                        )
+                    ),
+                    contact_style
+                )
+            )
 
         story.append(
-            Paragraph(
-                escape_pdf(
-                    " | ".join(
-                        contact_items
+            Spacer(
+                1,
+                10
+            )
+        )
+
+        story.append(
+            HRFlowable(
+                width="100%",
+                thickness=1
+            )
+        )
+
+        # ====================================================
+        # SUMMARY
+        # ====================================================
+
+        add_heading_and_text(
+
+            story,
+
+            "SUMMARY",
+
+            resume_data.get(
+                "summary",
+                ""
+            ),
+
+            heading_style,
+
+            body_style
+        )
+
+        # ====================================================
+        # SKILLS
+        # ====================================================
+
+        skills = resume_data.get(
+            "skills",
+            []
+        )
+
+        if isinstance(
+            skills,
+            list
+        ) and skills:
+
+            story.append(
+                Paragraph(
+                    "SKILLS",
+                    heading_style
+                )
+            )
+
+            skill_text = ", ".join(
+                safe_pdf_text(skill)
+                for skill in skills
+            )
+
+            story.append(
+                Paragraph(
+                    escape_pdf(
+                        skill_text
+                    ),
+                    body_style
+                )
+            )
+
+        # ====================================================
+        # EXPERIENCE
+        # ====================================================
+
+        experience = resume_data.get(
+            "experience",
+            []
+        )
+
+        if isinstance(
+            experience,
+            list
+        ) and experience:
+
+            story.append(
+                Paragraph(
+                    "EXPERIENCE",
+                    heading_style
+                )
+            )
+
+            for item in experience:
+
+                if not isinstance(
+                    item,
+                    dict
+                ):
+
+                    continue
+
+                job_title = safe_pdf_text(
+                    item.get(
+                        "job_title",
+                        ""
                     )
-                ),
-                contact_style
-            )
-        )
-
-    story.append(
-        Spacer(
-            1,
-            10
-        )
-    )
-
-    story.append(
-        HRFlowable(
-            width="100%",
-            thickness=1
-        )
-    )
-
-    # ========================================================
-    # SUMMARY
-    # ========================================================
-
-    add_heading_and_text(
-
-        story,
-
-        "SUMMARY",
-
-        resume_data.get(
-            "summary",
-            ""
-        ),
-
-        heading_style,
-
-        body_style
-    )
-
-    # ========================================================
-    # SKILLS
-    # ========================================================
-
-    skills = resume_data.get(
-        "skills",
-        []
-    )
-
-    if skills:
-
-        story.append(
-            Paragraph(
-                "SKILLS",
-                heading_style
-            )
-        )
-
-        skill_text = ", ".join(
-            str(skill)
-            for skill in skills
-        )
-
-        story.append(
-            Paragraph(
-                escape_pdf(
-                    skill_text
-                ),
-                body_style
-            )
-        )
-
-    # ========================================================
-    # EXPERIENCE
-    # ========================================================
-
-    experience = resume_data.get(
-        "experience",
-        []
-    )
-
-    if experience:
-
-        story.append(
-            Paragraph(
-                "EXPERIENCE",
-                heading_style
-            )
-        )
-
-        for item in experience:
-
-            job_title = str(
-                item.get(
-                    "job_title",
-                    ""
                 )
-                or ""
-            )
 
-            company = str(
-                item.get(
-                    "company",
-                    ""
+                company = safe_pdf_text(
+                    item.get(
+                        "company",
+                        ""
+                    )
                 )
-                or ""
-            )
 
-            dates = str(
-                item.get(
-                    "dates",
-                    ""
+                dates = safe_pdf_text(
+                    item.get(
+                        "dates",
+                        ""
+                    )
                 )
-                or ""
-            )
 
-            header = " — ".join(
-                value
-                for value in [
-                    job_title,
-                    company
+                header_parts = [
+                    value
+                    for value in [
+                        job_title,
+                        company
+                    ]
+                    if value
                 ]
-                if value.strip()
+
+                header = " - ".join(
+                    header_parts
+                )
+
+                if dates:
+
+                    if header:
+
+                        header += (
+                            f" | {dates}"
+                        )
+
+                    else:
+
+                        header = dates
+
+                if header:
+
+                    story.append(
+                        Paragraph(
+                            escape_pdf(
+                                header
+                            ),
+                            body_style
+                        )
+                    )
+
+                bullets = item.get(
+                    "bullets",
+                    []
+                )
+
+                if not isinstance(
+                    bullets,
+                    list
+                ):
+
+                    bullets = []
+
+                for bullet in bullets:
+
+                    bullet_text = safe_pdf_text(
+                        bullet
+                    )
+
+                    if not bullet_text:
+
+                        continue
+
+                    story.append(
+                        Paragraph(
+                            "- "
+                            + escape_pdf(
+                                bullet_text
+                            ),
+                            body_style
+                        )
+                    )
+
+                    story.append(
+                        Spacer(
+                            1,
+                            2
+                        )
+                    )
+
+        # ====================================================
+        # PROJECTS
+        # ====================================================
+
+        projects = resume_data.get(
+            "projects",
+            []
+        )
+
+        if isinstance(
+            projects,
+            list
+        ) and projects:
+
+            story.append(
+                Paragraph(
+                    "PROJECTS",
+                    heading_style
+                )
             )
 
-            if dates:
+            for project in projects:
 
-                header += (
-                    f" | {dates}"
-                )
+                if not isinstance(
+                    project,
+                    dict
+                ):
 
-            if header:
+                    continue
 
-                story.append(
-                    Paragraph(
-                        escape_pdf(
-                            header
-                        ),
-                        body_style
+                project_name = safe_pdf_text(
+                    project.get(
+                        "name",
+                        ""
                     )
                 )
 
-            for bullet in item.get(
-                "bullets",
-                []
-            ):
+                technologies = project.get(
+                    "technologies",
+                    []
+                )
 
-                story.append(
-                    Paragraph(
-                        "• "
-                        + escape_pdf(
-                            str(bullet)
-                        ),
-                        body_style
+                description = safe_pdf_text(
+                    project.get(
+                        "description",
+                        ""
                     )
                 )
+
+                if project_name:
+
+                    story.append(
+                        Paragraph(
+                            escape_pdf(
+                                project_name
+                            ),
+                            body_style
+                        )
+                    )
+
+                if isinstance(
+                    technologies,
+                    list
+                ) and technologies:
+
+                    tech_text = (
+                        "Technologies: "
+                        +
+                        ", ".join(
+                            safe_pdf_text(tech)
+                            for tech in technologies
+                        )
+                    )
+
+                    story.append(
+                        Paragraph(
+                            escape_pdf(
+                                tech_text
+                            ),
+                            body_style
+                        )
+                    )
+
+                if description:
+
+                    story.append(
+                        Paragraph(
+                            escape_pdf(
+                                description
+                            ),
+                            body_style
+                        )
+                    )
+
+                bullets = project.get(
+                    "bullets",
+                    []
+                )
+
+                if not isinstance(
+                    bullets,
+                    list
+                ):
+
+                    bullets = []
+
+                for bullet in bullets:
+
+                    bullet_text = safe_pdf_text(
+                        bullet
+                    )
+
+                    if not bullet_text:
+
+                        continue
+
+                    story.append(
+                        Paragraph(
+                            "- "
+                            + escape_pdf(
+                                bullet_text
+                            ),
+                            body_style
+                        )
+                    )
 
                 story.append(
                     Spacer(
                         1,
-                        2
+                        5
                     )
                 )
 
-    # ========================================================
-    # PROJECTS
-    # ========================================================
+        # ====================================================
+        # EDUCATION
+        # ====================================================
 
-    projects = resume_data.get(
-        "projects",
-        []
-    )
-
-    if projects:
-
-        story.append(
-            Paragraph(
-                "PROJECTS",
-                heading_style
-            )
+        education = resume_data.get(
+            "education",
+            []
         )
 
-        for project in projects:
-
-            project_name = str(
-                project.get(
-                    "name",
-                    ""
-                )
-                or ""
-            )
-
-            technologies = project.get(
-                "technologies",
-                []
-            )
-
-            description = str(
-                project.get(
-                    "description",
-                    ""
-                )
-                or ""
-            )
-
-            if project_name:
-
-                story.append(
-                    Paragraph(
-                        escape_pdf(
-                            project_name
-                        ),
-                        body_style
-                    )
-                )
-
-            if technologies:
-
-                tech_text = (
-                    "Technologies: "
-                    +
-                    ", ".join(
-                        str(tech)
-                        for tech in technologies
-                    )
-                )
-
-                story.append(
-                    Paragraph(
-                        escape_pdf(
-                            tech_text
-                        ),
-                        body_style
-                    )
-                )
-
-            if description:
-
-                story.append(
-                    Paragraph(
-                        escape_pdf(
-                            description
-                        ),
-                        body_style
-                    )
-                )
-
-            for bullet in project.get(
-                "bullets",
-                []
-            ):
-
-                story.append(
-                    Paragraph(
-                        "• "
-                        + escape_pdf(
-                            str(bullet)
-                        ),
-                        body_style
-                    )
-                )
+        if isinstance(
+            education,
+            list
+        ) and education:
 
             story.append(
-                Spacer(
-                    1,
-                    5
+                Paragraph(
+                    "EDUCATION",
+                    heading_style
                 )
             )
 
-    # ========================================================
-    # EDUCATION
-    # ========================================================
+            for item in education:
 
-    education = resume_data.get(
-        "education",
-        []
-    )
+                if not isinstance(
+                    item,
+                    dict
+                ):
 
-    if education:
+                    continue
 
-        story.append(
-            Paragraph(
-                "EDUCATION",
-                heading_style
-            )
+                degree = safe_pdf_text(
+                    item.get(
+                        "degree",
+                        ""
+                    )
+                )
+
+                institution = safe_pdf_text(
+                    item.get(
+                        "institution",
+                        ""
+                    )
+                )
+
+                dates = safe_pdf_text(
+                    item.get(
+                        "dates",
+                        ""
+                    )
+                )
+
+                line_parts = [
+                    value
+                    for value in [
+                        degree,
+                        institution
+                    ]
+                    if value
+                ]
+
+                line = " - ".join(
+                    line_parts
+                )
+
+                if dates:
+
+                    if line:
+
+                        line += (
+                            f" | {dates}"
+                        )
+
+                    else:
+
+                        line = dates
+
+                if line:
+
+                    story.append(
+                        Paragraph(
+                            escape_pdf(
+                                line
+                            ),
+                            body_style
+                        )
+                    )
+
+                details = item.get(
+                    "details",
+                    []
+                )
+
+                if not isinstance(
+                    details,
+                    list
+                ):
+
+                    details = []
+
+                for detail in details:
+
+                    detail_text = safe_pdf_text(
+                        detail
+                    )
+
+                    if not detail_text:
+
+                        continue
+
+                    story.append(
+                        Paragraph(
+                            "- "
+                            + escape_pdf(
+                                detail_text
+                            ),
+                            body_style
+                        )
+                    )
+
+        # ====================================================
+        # CERTIFICATIONS
+        # ====================================================
+
+        certifications = resume_data.get(
+            "certifications",
+            []
         )
 
-        for item in education:
+        if isinstance(
+            certifications,
+            list
+        ) and certifications:
 
-            degree = str(
-                item.get(
-                    "degree",
-                    ""
+            story.append(
+                Paragraph(
+                    "CERTIFICATIONS",
+                    heading_style
                 )
-                or ""
             )
 
-            institution = str(
-                item.get(
-                    "institution",
-                    ""
-                )
-                or ""
-            )
+            for item in certifications:
 
-            dates = str(
-                item.get(
-                    "dates",
-                    ""
-                )
-                or ""
-            )
+                if not isinstance(
+                    item,
+                    dict
+                ):
 
-            line = " — ".join(
-                value
-                for value in [
-                    degree,
-                    institution
+                    continue
+
+                certification_name = safe_pdf_text(
+                    item.get(
+                        "name",
+                        ""
+                    )
+                )
+
+                issuer = safe_pdf_text(
+                    item.get(
+                        "issuer",
+                        ""
+                    )
+                )
+
+                date = safe_pdf_text(
+                    item.get(
+                        "date",
+                        ""
+                    )
+                )
+
+                line_parts = [
+                    value
+                    for value in [
+                        certification_name,
+                        issuer
+                    ]
+                    if value
                 ]
-                if value.strip()
-            )
 
-            if dates:
-
-                line += (
-                    f" | {dates}"
+                line = " - ".join(
+                    line_parts
                 )
 
-            if line:
+                if date:
 
-                story.append(
-                    Paragraph(
-                        escape_pdf(
-                            line
-                        ),
-                        body_style
+                    if line:
+
+                        line += (
+                            f" | {date}"
+                        )
+
+                    else:
+
+                        line = date
+
+                if line:
+
+                    story.append(
+                        Paragraph(
+                            escape_pdf(
+                                line
+                            ),
+                            body_style
+                        )
                     )
-                )
 
-            for detail in item.get(
-                "details",
-                []
-            ):
+        # ====================================================
+        # ACHIEVEMENTS
+        # ====================================================
 
-                story.append(
-                    Paragraph(
-                        "• "
-                        + escape_pdf(
-                            str(detail)
-                        ),
-                        body_style
-                    )
-                )
-
-    # ========================================================
-    # CERTIFICATIONS
-    # ========================================================
-
-    certifications = resume_data.get(
-        "certifications",
-        []
-    )
-
-    if certifications:
-
-        story.append(
-            Paragraph(
-                "CERTIFICATIONS",
-                heading_style
-            )
+        achievements = resume_data.get(
+            "achievements",
+            []
         )
 
-        for item in certifications:
+        if isinstance(
+            achievements,
+            list
+        ) and achievements:
 
-            name = str(
-                item.get(
-                    "name",
-                    ""
+            story.append(
+                Paragraph(
+                    "ACHIEVEMENTS",
+                    heading_style
                 )
-                or ""
             )
 
-            issuer = str(
-                item.get(
-                    "issuer",
-                    ""
-                )
-                or ""
-            )
+            for item in achievements:
 
-            date = str(
-                item.get(
-                    "date",
-                    ""
-                )
-                or ""
-            )
+                if not isinstance(
+                    item,
+                    dict
+                ):
 
-            line = " — ".join(
-                value
-                for value in [
-                    name,
-                    issuer
-                ]
-                if value.strip()
-            )
+                    continue
 
-            if date:
-
-                line += (
-                    f" | {date}"
-                )
-
-            if line:
-
-                story.append(
-                    Paragraph(
-                        escape_pdf(
-                            line
-                        ),
-                        body_style
+                title = safe_pdf_text(
+                    item.get(
+                        "title",
+                        ""
                     )
                 )
 
-    # ========================================================
-    # ACHIEVEMENTS
-    # ========================================================
-
-    achievements = resume_data.get(
-        "achievements",
-        []
-    )
-
-    if achievements:
-
-        story.append(
-            Paragraph(
-                "ACHIEVEMENTS",
-                heading_style
-            )
-        )
-
-        for item in achievements:
-
-            title = str(
-                item.get(
-                    "title",
-                    ""
-                )
-                or ""
-            )
-
-            description = str(
-                item.get(
-                    "description",
-                    ""
-                )
-                or ""
-            )
-
-            line = " — ".join(
-                value
-                for value in [
-                    title,
-                    description
-                ]
-                if value.strip()
-            )
-
-            if line:
-
-                story.append(
-                    Paragraph(
-                        "• "
-                        + escape_pdf(
-                            line
-                        ),
-                        body_style
+                description = safe_pdf_text(
+                    item.get(
+                        "description",
+                        ""
                     )
                 )
 
-    # ========================================================
-    # BUILD PDF
-    # ========================================================
+                line_parts = [
+                    value
+                    for value in [
+                        title,
+                        description
+                    ]
+                    if value
+                ]
 
-    try:
+                line = " - ".join(
+                    line_parts
+                )
+
+                if line:
+
+                    story.append(
+                        Paragraph(
+                            "- "
+                            + escape_pdf(
+                                line
+                            ),
+                            body_style
+                        )
+                    )
+
+        # ====================================================
+        # BUILD PDF
+        # ====================================================
 
         document.build(
             story
         )
 
+        buffer.seek(0)
+
+        return send_file(
+
+            buffer,
+
+            mimetype="application/pdf",
+
+            as_attachment=True,
+
+            download_name=
+                "Intervo_Tailored_Resume.pdf"
+        )
+
     except Exception as error:
 
         print(
-            "PDF generation error:",
-            error
+            "Resume PDF Error:",
+            repr(error)
         )
 
         return jsonify({
             "message":
-                "Failed to generate PDF."
+                "Failed to generate PDF.",
+            "error":
+                str(error)
         }), 500
-
-    buffer.seek(0)
-
-    return send_file(
-
-        buffer,
-
-        mimetype="application/pdf",
-
-        as_attachment=True,
-
-        download_name=
-            "Intervo_Tailored_Resume.pdf"
-    )
 
 
 # ============================================================
 # PDF HELPERS
 # ============================================================
 
-def escape_pdf(value):
+def safe_pdf_text(value):
+
+    if value is None:
+
+        return ""
 
     value = str(
-        value or ""
+        value
+    )
+
+    # Replace common Unicode punctuation
+    # that can cause problems with ReportLab
+    # default fonts.
+
+    replacements = {
+
+        "\u2018": "'",   # left single quote
+        "\u2019": "'",   # right single quote
+        "\u201c": '"',   # left double quote
+        "\u201d": '"',   # right double quote
+        "\u2013": "-",   # en dash
+        "\u2014": "-",   # em dash
+        "\u2212": "-",   # minus sign
+        "\u2022": "-",   # bullet
+        "\u00a0": " ",   # non-breaking space
+        "\u2026": "...", # ellipsis
+        "\u00ae": "(R)",
+        "\u2122": "(TM)"
+    }
+
+    for old, new in replacements.items():
+
+        value = value.replace(
+            old,
+            new
+        )
+
+    # Remove remaining control characters.
+
+    value = re.sub(
+        r"[\x00-\x08\x0B\x0C\x0E-\x1F]",
+        "",
+        value
+    )
+
+    return value.strip()
+
+
+def escape_pdf(value):
+
+    value = safe_pdf_text(
+        value
     )
 
     return (
         value
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
+        .replace(
+            "&",
+            "&amp;"
+        )
+        .replace(
+            "<",
+            "&lt;"
+        )
+        .replace(
+            ">",
+            "&gt;"
+        )
     )
 
 
@@ -987,23 +1197,29 @@ def add_heading_and_text(
     body_style
 ):
 
-    text = str(
-        text or ""
-    ).strip()
+    text = safe_pdf_text(
+        text
+    )
 
     if not text:
+
         return
 
     story.append(
         Paragraph(
-            heading,
+            escape_pdf(
+                heading
+            ),
             heading_style
         )
     )
 
     story.append(
         Paragraph(
-            escape_pdf(text),
+            escape_pdf(
+                text
+            ),
             body_style
         )
     )
+
