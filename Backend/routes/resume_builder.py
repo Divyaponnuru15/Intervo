@@ -61,7 +61,6 @@ def create_resume():
     )
 
     if not data:
-
         return jsonify({
             "message":
                 "Request body is required."
@@ -197,7 +196,6 @@ def create_resume():
                 result,
                 list
             ):
-
                 return result
 
         except (
@@ -244,11 +242,8 @@ def create_resume():
     try:
 
         generated_resume = generate_tailored_resume(
-
             resume_text=resume_text,
-
             job_description=job_description,
-
             job_analysis=job_analysis_data
         )
 
@@ -353,17 +348,11 @@ def generate_resume_pdf():
         buffer = BytesIO()
 
         document = SimpleDocTemplate(
-
             buffer,
-
             pagesize=A4,
-
             rightMargin=45,
-
             leftMargin=45,
-
             topMargin=40,
-
             bottomMargin=40
         )
 
@@ -373,34 +362,57 @@ def generate_resume_pdf():
         # STYLES
         # ====================================================
 
+        # -----------------------------
+        # NAME
+        # -----------------------------
+
         name_style = styles["Title"]
 
         name_style.alignment = TA_CENTER
-
         name_style.fontSize = 20
-
         name_style.leading = 24
+
+        # -----------------------------
+        # CONTACT
+        # -----------------------------
 
         contact_style = styles["Normal"]
 
         contact_style.alignment = TA_CENTER
-
         contact_style.fontSize = 9
+
+        # -----------------------------
+        # SECTION HEADINGS
+        # -----------------------------
 
         heading_style = styles["Heading2"]
 
         heading_style.fontSize = 12
-
         heading_style.leading = 15
-
         heading_style.spaceBefore = 10
-
         heading_style.spaceAfter = 5
+
+        # -----------------------------
+        # PROJECT HEADINGS
+        # -----------------------------
+        # Makes project names bold
+        # and slightly larger than body text.
+
+        project_heading_style = styles["Heading3"]
+
+        project_heading_style.fontSize = 11
+        project_heading_style.leading = 14
+        project_heading_style.spaceBefore = 6
+        project_heading_style.spaceAfter = 2
+        project_heading_style.fontName = "Helvetica-Bold"
+
+        # -----------------------------
+        # BODY
+        # -----------------------------
 
         body_style = styles["BodyText"]
 
         body_style.fontSize = 9.5
-
         body_style.leading = 13
 
         story = []
@@ -492,18 +504,13 @@ def generate_resume_pdf():
         # ====================================================
 
         add_heading_and_text(
-
             story,
-
             "SUMMARY",
-
             resume_data.get(
                 "summary",
                 ""
             ),
-
             heading_style,
-
             body_style
         )
 
@@ -569,7 +576,6 @@ def generate_resume_pdf():
                     item,
                     dict
                 ):
-
                     continue
 
                 job_title = safe_pdf_text(
@@ -648,7 +654,6 @@ def generate_resume_pdf():
                     )
 
                     if not bullet_text:
-
                         continue
 
                     story.append(
@@ -695,7 +700,6 @@ def generate_resume_pdf():
                     project,
                     dict
                 ):
-
                     continue
 
                 project_name = safe_pdf_text(
@@ -717,6 +721,13 @@ def generate_resume_pdf():
                     )
                 )
 
+                # =================================================
+                # PROJECT NAME
+                # =================================================
+                # IMPORTANT:
+                # Uses project_heading_style instead of body_style.
+                # This makes the project name bold and prominent.
+
                 if project_name:
 
                     story.append(
@@ -724,9 +735,13 @@ def generate_resume_pdf():
                             escape_pdf(
                                 project_name
                             ),
-                            body_style
+                            project_heading_style
                         )
                     )
+
+                # =================================================
+                # TECHNOLOGIES
+                # =================================================
 
                 if isinstance(
                     technologies,
@@ -751,6 +766,10 @@ def generate_resume_pdf():
                         )
                     )
 
+                # =================================================
+                # DESCRIPTION
+                # =================================================
+
                 if description:
 
                     story.append(
@@ -761,6 +780,10 @@ def generate_resume_pdf():
                             body_style
                         )
                     )
+
+                # =================================================
+                # PROJECT BULLETS
+                # =================================================
 
                 bullets = project.get(
                     "bullets",
@@ -781,7 +804,6 @@ def generate_resume_pdf():
                     )
 
                     if not bullet_text:
-
                         continue
 
                     story.append(
@@ -828,7 +850,6 @@ def generate_resume_pdf():
                     item,
                     dict
                 ):
-
                     continue
 
                 degree = safe_pdf_text(
@@ -907,7 +928,6 @@ def generate_resume_pdf():
                     )
 
                     if not detail_text:
-
                         continue
 
                     story.append(
@@ -947,7 +967,6 @@ def generate_resume_pdf():
                     item,
                     dict
                 ):
-
                     continue
 
                 certification_name = safe_pdf_text(
@@ -1034,7 +1053,6 @@ def generate_resume_pdf():
                     item,
                     dict
                 ):
-
                     continue
 
                 title = safe_pdf_text(
@@ -1087,13 +1105,9 @@ def generate_resume_pdf():
         buffer.seek(0)
 
         return send_file(
-
             buffer,
-
             mimetype="application/pdf",
-
             as_attachment=True,
-
             download_name=
                 "Intervo_Tailored_Resume.pdf"
         )
@@ -1120,7 +1134,6 @@ def generate_resume_pdf():
 def safe_pdf_text(value):
 
     if value is None:
-
         return ""
 
     value = str(
@@ -1133,16 +1146,16 @@ def safe_pdf_text(value):
 
     replacements = {
 
-        "\u2018": "'",   # left single quote
-        "\u2019": "'",   # right single quote
-        "\u201c": '"',   # left double quote
-        "\u201d": '"',   # right double quote
-        "\u2013": "-",   # en dash
-        "\u2014": "-",   # em dash
-        "\u2212": "-",   # minus sign
-        "\u2022": "-",   # bullet
-        "\u00a0": " ",   # non-breaking space
-        "\u2026": "...", # ellipsis
+        "\u2018": "'",       # left single quote
+        "\u2019": "'",       # right single quote
+        "\u201c": '"',       # left double quote
+        "\u201d": '"',       # right double quote
+        "\u2013": "-",       # en dash
+        "\u2014": "-",       # em dash
+        "\u2212": "-",       # minus sign
+        "\u2022": "-",       # bullet
+        "\u00a0": " ",       # non-breaking space
+        "\u2026": "...",     # ellipsis
         "\u00ae": "(R)",
         "\u2122": "(TM)"
     }
@@ -1201,7 +1214,6 @@ def add_heading_and_text(
     )
 
     if not text:
-
         return
 
     story.append(
@@ -1221,4 +1233,3 @@ def add_heading_and_text(
             body_style
         )
     )
-
